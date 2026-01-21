@@ -5,19 +5,12 @@
 scMetaLink models metabolite-mediated cell communication as a two-step
 process:
 
-    ┌─────────────────┐                         ┌─────────────────┐
-    │   Sender Cell   │                         │  Receiver Cell  │
-    │                 │                         │                 │
-    │  ┌───────────┐  │      Metabolite         │  ┌───────────┐  │
-    │  │ Synthesis │──┼─────────────────----->──┼──│ Receptor  │  │
-    │  │  Enzymes  │  │                         │  │ Binding   │  │
-    │  └───────────┘  │                         │  └───────────┘  │
-    │       ↓         │                         │       or        │
-    │  ┌───────────┐  │                         │  ┌───────────┐  │
-    │  │ Secretion │  │                         │  │  Uptake   │  │
-    │  │Transporter│  │                         │  │Transporter│  │
-    │  └───────────┘  │                         │  └───────────┘  │
-    └─────────────────┘                         └─────────────────┘
+![\*\*Figure 1: scMetaLink Workflow.\*\* Schematic overview of the
+analysis pipeline for inferring metabolite-mediated cell-cell
+communication.](flowchart.png)
+
+**Figure 1: scMetaLink Workflow.** Schematic overview of the analysis
+pipeline for inferring metabolite-mediated cell-cell communication.
 
 ## The MetalinksDB Knowledge Base
 

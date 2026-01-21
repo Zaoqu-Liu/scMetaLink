@@ -15,6 +15,10 @@ underexplored. scMetaLink addresses this gap by integrating enzyme
 expression, transporter activity, and receptor-metabolite interactions
 to reconstruct metabolite-mediated communication networks.
 
+## Workflow
+
+![](reference/figures/flowchart.png)
+
 ## Features
 
 - **Metabolite Production Inference**: Estimate metabolite production

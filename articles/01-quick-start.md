@@ -7,6 +7,12 @@ single-cell RNA-seq data. Unlike traditional ligand-receptor analysis,
 scMetaLink focuses on metabolites as signaling mediators, capturing a
 crucial but often overlooked layer of intercellular communication.
 
+![\*\*Figure 1: scMetaLink Workflow.\*\* Overview of the scMetaLink
+analysis pipeline.](flowchart.png)
+
+**Figure 1: scMetaLink Workflow.** Overview of the scMetaLink analysis
+pipeline.
+
 ### What You’ll Learn
 
 1.  How to set up a scMetaLink analysis
