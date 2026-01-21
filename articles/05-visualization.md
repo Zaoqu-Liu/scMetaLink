@@ -12,7 +12,7 @@ obj <- createScMetaLink(crc_expr, crc_meta, "cell_type")
 obj <- inferProduction(obj, verbose = FALSE)
 obj <- inferSensing(obj, verbose = FALSE)
 obj <- computeCommunication(obj, n_permutations = 100, verbose = FALSE)
-obj <- filterSignificantInteractions(obj, adjust_method = "none")  # For demo
+obj <- filterSignificantInteractions(obj, adjust_method = "none") # For demo
 ```
 
 ## 1. Communication Heatmap
@@ -40,9 +40,9 @@ indicate stronger communication potential.
 ``` r
 plotCommunicationHeatmap(
   obj,
-  cluster_rows = TRUE,           # Cluster senders
-  cluster_cols = TRUE,           # Cluster receivers
-  show_values = FALSE            # Show score values
+  cluster_rows = TRUE, # Cluster senders
+  cluster_cols = TRUE, # Cluster receivers
+  show_values = FALSE # Show score values
 )
 ```
 
@@ -64,13 +64,16 @@ if (nrow(lactate_sig) > 0) {
   # Build matrix
   cell_types <- unique(c(lactate_sig$sender, lactate_sig$receiver))
   mat <- matrix(0, length(cell_types), length(cell_types),
-                dimnames = list(cell_types, cell_types))
+    dimnames = list(cell_types, cell_types)
+  )
   for (i in 1:nrow(lactate_sig)) {
     mat[lactate_sig$sender[i], lactate_sig$receiver[i]] <- lactate_sig$communication_score[i]
   }
-  
-  heatmap(mat, col = hcl.colors(50, "Reds"), scale = "none",
-          main = "Lactate-Mediated Communication")
+
+  heatmap(mat,
+    col = hcl.colors(50, "Reds"), scale = "none",
+    main = "Lactate-Mediated Communication"
+  )
 }
 ```
 
@@ -102,8 +105,8 @@ strength, and colors represent the sender cell type.
 ``` r
 plotCommunicationCircle(
   obj,
-  top_n = 30,                    # Top interactions
-  transparency = 0.4,            # Link opacity (0-1)
+  top_n = 30, # Top interactions
+  transparency = 0.4, # Link opacity (0-1)
   title = "Top 30 Metabolic Communications"
 )
 ```
@@ -132,10 +135,10 @@ plotCommunicationNetwork(obj)
 ``` r
 plotCommunicationNetwork(
   obj,
-  layout = "circle",             # Layout algorithm: "fr", "circle", "kk", etc.
-  node_size_by = "degree",       # Size by: "degree" or "centrality"
-  edge_width_scale = 3,          # Scale factor for edge widths
-  min_score = 0.1                # Minimum score threshold
+  layout = "circle", # Layout algorithm: "fr", "circle", "kk", etc.
+  node_size_by = "degree", # Size by: "degree" or "centrality"
+  edge_width_scale = 3, # Scale factor for edge widths
+  min_score = 0.1 # Minimum score threshold
 )
 ```
 
@@ -170,13 +173,16 @@ scores across cell types for a specific metabolite.
 par(mfrow = c(2, 2))
 top_mets <- names(sort(table(sig$metabolite_name), decreasing = TRUE))[1:4]
 for (met in top_mets) {
-  tryCatch({
-    plotMetaboliteProfile(obj, metabolite = met)
-    title(sub = met)
-  }, error = function(e) {
-    plot.new()
-    text(0.5, 0.5, paste(met, "\nNot found"), cex = 1.2)
-  })
+  tryCatch(
+    {
+      plotMetaboliteProfile(obj, metabolite = met)
+      title(sub = met)
+    },
+    error = function(e) {
+      plot.new()
+      text(0.5, 0.5, paste(met, "\nNot found"), cex = 1.2)
+    }
+  )
 }
 par(mfrow = c(1, 1))
 ```
@@ -194,12 +200,13 @@ common_mets <- intersect(rownames(prod_scores), rownames(sens_scores))
 if (length(common_mets) > 0) {
   avg_prod <- colMeans(prod_scores[common_mets, ])
   avg_sens <- colMeans(sens_scores[common_mets, ])
-  
+
   plot(avg_prod, avg_sens,
-       xlab = "Average Production Potential",
-       ylab = "Average Sensing Capability",
-       main = "Cell Type Metabolic Roles",
-       pch = 19, cex = 1.5, col = "#1976D2")
+    xlab = "Average Production Potential",
+    ylab = "Average Sensing Capability",
+    main = "Cell Type Metabolic Roles",
+    pch = 19, cex = 1.5, col = "#1976D2"
+  )
   text(avg_prod, avg_sens, names(avg_prod), pos = 3, cex = 0.7)
   abline(0, 1, lty = 2, col = "gray")
 }
@@ -225,12 +232,16 @@ lactate_id <- "HMDB0000190"
 if (lactate_id %in% rownames(prod_scores) && lactate_id %in% rownames(sens_scores)) {
   prod <- prod_scores[lactate_id, ]
   sens <- sens_scores[lactate_id, ]
-  
+
   par(mfrow = c(1, 2))
-  barplot(sort(prod, decreasing = TRUE), las = 2, col = "#FF7043",
-          main = "Lactate Production", ylab = "Score", cex.names = 0.7)
-  barplot(sort(sens, decreasing = TRUE), las = 2, col = "#42A5F5",
-          main = "Lactate Sensing", ylab = "Score", cex.names = 0.7)
+  barplot(sort(prod, decreasing = TRUE),
+    las = 2, col = "#FF7043",
+    main = "Lactate Production", ylab = "Score", cex.names = 0.7
+  )
+  barplot(sort(sens, decreasing = TRUE),
+    las = 2, col = "#42A5F5",
+    main = "Lactate Sensing", ylab = "Score", cex.names = 0.7
+  )
   par(mfrow = c(1, 1))
 }
 ```
@@ -256,16 +267,20 @@ par(mfrow = c(1, 2))
 # Outgoing
 outgoing <- aggregate(communication_score ~ sender, data = sig, FUN = sum)
 outgoing <- outgoing[order(-outgoing$communication_score), ]
-barplot(outgoing$communication_score, names.arg = outgoing$sender,
-        las = 2, col = "#FF7043", main = "Outgoing Signals",
-        ylab = "Total Communication")
+barplot(outgoing$communication_score,
+  names.arg = outgoing$sender,
+  las = 2, col = "#FF7043", main = "Outgoing Signals",
+  ylab = "Total Communication"
+)
 
 # Incoming
 incoming <- aggregate(communication_score ~ receiver, data = sig, FUN = sum)
 incoming <- incoming[order(-incoming$communication_score), ]
-barplot(incoming$communication_score, names.arg = incoming$receiver,
-        las = 2, col = "#42A5F5", main = "Incoming Signals",
-        ylab = "Total Communication")
+barplot(incoming$communication_score,
+  names.arg = incoming$receiver,
+  las = 2, col = "#42A5F5", main = "Incoming Signals",
+  ylab = "Total Communication"
+)
 ```
 
 ![](05-visualization_files/figure-html/summary_celltype-1.png)
@@ -281,9 +296,11 @@ par(mfrow = c(1, 1))
 met_counts <- table(sig$metabolite_name)
 met_counts <- sort(met_counts, decreasing = TRUE)
 
-barplot(head(met_counts, 20), las = 2, col = "#9575CD",
-        main = "Top 20 Metabolite Mediators",
-        ylab = "Number of Significant Interactions")
+barplot(head(met_counts, 20),
+  las = 2, col = "#9575CD",
+  main = "Top 20 Metabolite Mediators",
+  ylab = "Number of Significant Interactions"
+)
 ```
 
 ![](05-visualization_files/figure-html/metabolite_dist-1.png)
@@ -304,13 +321,19 @@ names(comm_df) <- c("Sender", "Receiver", "Score")
 
 ggplot(comm_df, aes(x = Receiver, y = Sender, fill = Score)) +
   geom_tile(color = "white") +
-  scale_fill_gradient2(low = "white", mid = "#FFCDD2", high = "#C62828",
-                       midpoint = median(comm_df$Score[comm_df$Score > 0])) +
+  scale_fill_gradient2(
+    low = "white", mid = "#FFCDD2", high = "#C62828",
+    midpoint = median(comm_df$Score[comm_df$Score > 0])
+  ) +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 8),
-        axis.text.y = element_text(size = 8)) +
-  labs(title = "Cell-Cell Communication via Metabolites",
-       fill = "Score")
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1, size = 8),
+    axis.text.y = element_text(size = 8)
+  ) +
+  labs(
+    title = "Cell-Cell Communication via Metabolites",
+    fill = "Score"
+  )
 ```
 
 ![](05-visualization_files/figure-html/custom_ggplot-1.png)
@@ -327,11 +350,15 @@ ggplot(top_int, aes(x = metabolite_name, y = interaction)) +
   scale_color_gradient(low = "gray70", high = "red") +
   scale_size_continuous(range = c(2, 8)) +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 8),
-        axis.text.y = element_text(size = 8)) +
-  labs(title = "Top Metabolite-Mediated Interactions",
-       x = "Metabolite", y = "Sender -> Receiver",
-       size = "Score", color = "-log10(p)")
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1, size = 8),
+    axis.text.y = element_text(size = 8)
+  ) +
+  labs(
+    title = "Top Metabolite-Mediated Interactions",
+    x = "Metabolite", y = "Sender -> Receiver",
+    size = "Score", color = "-log10(p)"
+  )
 ```
 
 ![](05-visualization_files/figure-html/dotplot-1.png)
@@ -342,12 +369,15 @@ ggplot(top_int, aes(x = metabolite_name, y = interaction)) +
 
 ``` r
 layout(matrix(c(1, 1, 2, 3, 3, 4), nrow = 2, byrow = TRUE),
-       widths = c(2, 2, 2), heights = c(1, 1))
+  widths = c(2, 2, 2), heights = c(1, 1)
+)
 
 # Panel A: Heatmap
 comm_mat <- getCommunicationMatrix(obj)
-heatmap(comm_mat, col = hcl.colors(50, "Reds"), scale = "none",
-        main = "A. Communication Heatmap", margins = c(8, 8))
+heatmap(comm_mat,
+  col = hcl.colors(50, "Reds"), scale = "none",
+  main = "A. Communication Heatmap", margins = c(8, 8)
+)
 ```
 
 ![](05-visualization_files/figure-html/panel-1.png)
@@ -357,8 +387,10 @@ heatmap(comm_mat, col = hcl.colors(50, "Reds"), scale = "none",
 # Panel B: Top metabolites
 par(mar = c(8, 4, 4, 2))
 met_counts <- head(sort(table(sig$metabolite_name), decreasing = TRUE), 10)
-barplot(met_counts, las = 2, col = "#7E57C2",
-        main = "B. Top Metabolites")
+barplot(met_counts,
+  las = 2, col = "#7E57C2",
+  main = "B. Top Metabolites"
+)
 
 # Panel C: Chord
 par(mar = c(2, 2, 4, 2))
@@ -367,8 +399,8 @@ plotCommunicationCircle(obj, top_n = 20, title = "C. Communication Network")
 # Panel D: Sender/Receiver summary
 par(mar = c(8, 4, 4, 2))
 net_flow <- sapply(unique(c(sig$sender, sig$receiver)), function(ct) {
-  sum(sig$communication_score[sig$sender == ct]) - 
-  sum(sig$communication_score[sig$receiver == ct])
+  sum(sig$communication_score[sig$sender == ct]) -
+    sum(sig$communication_score[sig$receiver == ct])
 })
 net_flow <- sort(net_flow)
 cols <- ifelse(net_flow > 0, "#FF7043", "#42A5F5")
@@ -405,8 +437,10 @@ palettes <- c("RdYlBu", "Reds", "Blues", "Greens", "YlOrRd", "PuBuGn", "Spectral
 
 par(mfrow = c(1, length(palettes)))
 for (pal in palettes) {
-  image(matrix(1:50, nrow = 1), col = hcl.colors(50, pal),
-        axes = FALSE, main = pal)
+  image(matrix(1:50, nrow = 1),
+    col = hcl.colors(50, pal),
+    axes = FALSE, main = pal
+  )
 }
 ```
 

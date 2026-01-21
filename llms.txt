@@ -2,6 +2,8 @@
 
 ## Single-Cell Metabolite-Mediated Cell Communication Analysis
 
+📖 **Documentation**: <https://Zaoqu-Liu.github.io/scMetaLink/>
+
 **scMetaLink** is a comprehensive R package for inferring
 metabolite-mediated cell-cell communication from single-cell
 transcriptomic data. While existing tools like CellChat and CellPhoneDB
@@ -37,7 +39,7 @@ associations
 
 ``` r
 # Install from GitHub
-devtools::install_github("liuzaoqu/scMetaLink")
+devtools::install_github("Zaoqu-Liu/scMetaLink")
 
 # Or install from local
 install.packages("scMetaLink", repos = NULL, type = "source")
@@ -166,7 +168,8 @@ MIT License
 
 - **Author**: Zaoqu Liu
 - **Email**: <liuzaoqu@163.com>
-- **GitHub**: <https://github.com/liuzaoqu/scMetaLink>
+- **GitHub**: <https://github.com/Zaoqu-Liu/scMetaLink>
+- **Documentation**: <https://Zaoqu-Liu.github.io/scMetaLink/>
 
 # Package index
 

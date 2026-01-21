@@ -143,7 +143,7 @@ $$\text{Trimean} = \frac{Q_{1} + 2Q_{2} + Q_{3}}{4}$$
 
 ``` r
 # Example: Trimean vs Arithmetic Mean
-expr_with_outlier <- c(0, 0, 0, 1, 2, 3, 100)  # Outlier = 100
+expr_with_outlier <- c(0, 0, 0, 1, 2, 3, 100) # Outlier = 100
 
 cat("Data:", paste(expr_with_outlier, collapse = ", "), "\n")
 #> Data: 0, 0, 0, 1, 2, 3, 100
@@ -154,7 +154,7 @@ cat("Median:", median(expr_with_outlier), "\n")
 
 # Trimean calculation
 q <- quantile(expr_with_outlier, c(0.25, 0.5, 0.75))
-trimean <- (q[1] + 2*q[2] + q[3]) / 4
+trimean <- (q[1] + 2 * q[2] + q[3]) / 4
 cat("Trimean:", round(trimean, 2), "\n")
 #> Trimean: 1.12
 cat("\nTrimean is robust to the outlier!\n")
@@ -200,16 +200,19 @@ Where: - $E$: Expression level (normalized) - $n$: Hill coefficient
 x <- seq(0, 1, 0.01)
 hill <- function(x, n, Kh) x^n / (Kh^n + x^n)
 
-plot(x, x, type = "l", lty = 2, col = "gray",
-     xlab = "Expression (normalized)", ylab = "Response",
-     main = "Hill Function Transformation")
+plot(x, x,
+  type = "l", lty = 2, col = "gray",
+  xlab = "Expression (normalized)", ylab = "Response",
+  main = "Hill Function Transformation"
+)
 lines(x, hill(x, n = 1, Kh = 0.5), col = "blue", lwd = 2)
 lines(x, hill(x, n = 2, Kh = 0.5), col = "red", lwd = 2)
 lines(x, hill(x, n = 0.5, Kh = 0.5), col = "green", lwd = 2)
-legend("bottomright", 
-       legend = c("Linear", "n=1 (Michaelis-Menten)", "n=2 (Cooperative)", "n=0.5"),
-       col = c("gray", "blue", "red", "green"), 
-       lty = c(2, 1, 1, 1), lwd = 2)
+legend("bottomright",
+  legend = c("Linear", "n=1 (Michaelis-Menten)", "n=2 (Cooperative)", "n=0.5"),
+  col = c("gray", "blue", "red", "green"),
+  lty = c(2, 1, 1, 1), lwd = 2
+)
 abline(h = 0.5, v = 0.5, lty = 3, col = "gray")
 ```
 

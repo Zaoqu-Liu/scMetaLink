@@ -41,7 +41,8 @@ data.frame with differential communication results
 # \donttest{
 # Compare tumor vs normal
 diff <- compareCommunication(tumor_obj, normal_obj,
-                             condition_names = c("Tumor", "Normal"))
+  condition_names = c("Tumor", "Normal")
+)
 #> Error: object 'tumor_obj' not found
 # }
 ```

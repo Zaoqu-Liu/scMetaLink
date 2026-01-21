@@ -118,7 +118,7 @@ microenvironment?<a class="anchor" aria-label="anchor" href="#question-how-do-tu
 <span><span class="va">obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/inferProduction.html">inferProduction</a></span><span class="op">(</span><span class="va">obj</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="va">obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/inferSensing.html">inferSensing</a></span><span class="op">(</span><span class="va">obj</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="va">obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/computeCommunication.html">computeCommunication</a></span><span class="op">(</span><span class="va">obj</span>, n_permutations <span class="op">=</span> <span class="fl">100</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span><span class="va">obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/filterSignificantInteractions.html">filterSignificantInteractions</a></span><span class="op">(</span><span class="va">obj</span>, adjust_method <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span>  <span class="co"># For demo</span></span>
+<span><span class="va">obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/filterSignificantInteractions.html">filterSignificantInteractions</a></span><span class="op">(</span><span class="va">obj</span>, adjust_method <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="co"># For demo</span></span>
 <span></span>
 <span><span class="co"># Get significant interactions</span></span>
 <span><span class="va">sig</span> <span class="op">&lt;-</span> <span class="va">obj</span><span class="op">@</span><span class="va">significant_interactions</span></span>
@@ -143,11 +143,13 @@ microenvironment?<a class="anchor" aria-label="anchor" href="#question-how-do-tu
 <span>  <span class="co"># What metabolites do tumors secrete?</span></span>
 <span>  <span class="va">tumor_secreted</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">tumor_sender</span><span class="op">$</span><span class="va">metabolite_name</span><span class="op">)</span></span>
 <span>  <span class="va">tumor_secreted</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sort.html" class="external-link">sort</a></span><span class="op">(</span><span class="va">tumor_secreted</span>, decreasing <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span>  </span>
+<span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mar <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">4</span>, <span class="fl">4</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/graphics/barplot.html" class="external-link">barplot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">tumor_secreted</span>, <span class="fl">15</span><span class="op">)</span>, las <span class="op">=</span> <span class="fl">2</span>, col <span class="op">=</span> <span class="st">"#E57373"</span>,</span>
-<span>          main <span class="op">=</span> <span class="st">"Metabolites Secreted by Tumor Cells"</span>,</span>
-<span>          ylab <span class="op">=</span> <span class="st">"Number of Target Cell Types"</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/graphics/barplot.html" class="external-link">barplot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">tumor_secreted</span>, <span class="fl">15</span><span class="op">)</span>,</span>
+<span>    las <span class="op">=</span> <span class="fl">2</span>, col <span class="op">=</span> <span class="st">"#E57373"</span>,</span>
+<span>    main <span class="op">=</span> <span class="st">"Metabolites Secreted by Tumor Cells"</span>,</span>
+<span>    ylab <span class="op">=</span> <span class="st">"Number of Target Cell Types"</span></span>
+<span>  <span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
 <img src="06-applications_files/figure-html/tumor_outgoing-1.png" class="r-plt" alt="**Figure 1: Tumor-Secreted Metabolites.** Bar plot showing the top metabolites produced by tumor cells and the number of different cell types that sense each metabolite." width="100%"><p class="caption">
@@ -165,11 +167,13 @@ cell types that sense each metabolite.
 <span>  <span class="co"># What metabolites do tumors sense?</span></span>
 <span>  <span class="va">tumor_sensed</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">tumor_receiver</span><span class="op">$</span><span class="va">metabolite_name</span><span class="op">)</span></span>
 <span>  <span class="va">tumor_sensed</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sort.html" class="external-link">sort</a></span><span class="op">(</span><span class="va">tumor_sensed</span>, decreasing <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span>  </span>
+<span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mar <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">4</span>, <span class="fl">4</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/graphics/barplot.html" class="external-link">barplot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">tumor_sensed</span>, <span class="fl">15</span><span class="op">)</span>, las <span class="op">=</span> <span class="fl">2</span>, col <span class="op">=</span> <span class="st">"#64B5F6"</span>,</span>
-<span>          main <span class="op">=</span> <span class="st">"Metabolites Sensed by Tumor Cells"</span>,</span>
-<span>          ylab <span class="op">=</span> <span class="st">"Number of Source Cell Types"</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/graphics/barplot.html" class="external-link">barplot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">tumor_sensed</span>, <span class="fl">15</span><span class="op">)</span>,</span>
+<span>    las <span class="op">=</span> <span class="fl">2</span>, col <span class="op">=</span> <span class="st">"#64B5F6"</span>,</span>
+<span>    main <span class="op">=</span> <span class="st">"Metabolites Sensed by Tumor Cells"</span>,</span>
+<span>    ylab <span class="op">=</span> <span class="st">"Number of Source Cell Types"</span></span>
+<span>  <span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
 <img src="06-applications_files/figure-html/tumor_incoming-1.png" class="r-plt" alt="**Figure 1b: Tumor-Sensed Metabolites.** Top metabolites detected or taken up by tumor cells. These metabolites may provide nutrients or signaling molecules that support tumor growth." width="100%"><p class="caption">
@@ -191,20 +195,24 @@ oxygen.</p>
 <span></span>
 <span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">lactate_sig</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"Lactate-mediated interactions:"</span>, <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">lactate_sig</span><span class="op">)</span>, <span class="st">"\n\n"</span><span class="op">)</span></span>
-<span>  </span>
+<span></span>
 <span>  <span class="co"># Who produces lactate?</span></span>
 <span>  <span class="va">lactate_prod</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/aggregate.html" class="external-link">aggregate</a></span><span class="op">(</span><span class="va">communication_score</span> <span class="op">~</span> <span class="va">sender</span>, data <span class="op">=</span> <span class="va">lactate_sig</span>, FUN <span class="op">=</span> <span class="va">sum</span><span class="op">)</span></span>
 <span>  <span class="va">lactate_prod</span> <span class="op">&lt;-</span> <span class="va">lactate_prod</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/order.html" class="external-link">order</a></span><span class="op">(</span><span class="op">-</span><span class="va">lactate_prod</span><span class="op">$</span><span class="va">communication_score</span><span class="op">)</span>, <span class="op">]</span></span>
-<span>  </span>
+<span></span>
 <span>  <span class="co"># Who senses lactate?</span></span>
 <span>  <span class="va">lactate_sens</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/aggregate.html" class="external-link">aggregate</a></span><span class="op">(</span><span class="va">communication_score</span> <span class="op">~</span> <span class="va">receiver</span>, data <span class="op">=</span> <span class="va">lactate_sig</span>, FUN <span class="op">=</span> <span class="va">sum</span><span class="op">)</span></span>
 <span>  <span class="va">lactate_sens</span> <span class="op">&lt;-</span> <span class="va">lactate_sens</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/order.html" class="external-link">order</a></span><span class="op">(</span><span class="op">-</span><span class="va">lactate_sens</span><span class="op">$</span><span class="va">communication_score</span><span class="op">)</span>, <span class="op">]</span></span>
-<span>  </span>
+<span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mfrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/graphics/barplot.html" class="external-link">barplot</a></span><span class="op">(</span><span class="va">lactate_prod</span><span class="op">$</span><span class="va">communication_score</span>, names.arg <span class="op">=</span> <span class="va">lactate_prod</span><span class="op">$</span><span class="va">sender</span>,</span>
-<span>          las <span class="op">=</span> <span class="fl">2</span>, col <span class="op">=</span> <span class="st">"#FF8A65"</span>, main <span class="op">=</span> <span class="st">"Lactate Producers"</span><span class="op">)</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/graphics/barplot.html" class="external-link">barplot</a></span><span class="op">(</span><span class="va">lactate_sens</span><span class="op">$</span><span class="va">communication_score</span>, names.arg <span class="op">=</span> <span class="va">lactate_sens</span><span class="op">$</span><span class="va">receiver</span>,</span>
-<span>          las <span class="op">=</span> <span class="fl">2</span>, col <span class="op">=</span> <span class="st">"#4FC3F7"</span>, main <span class="op">=</span> <span class="st">"Lactate Sensors"</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/graphics/barplot.html" class="external-link">barplot</a></span><span class="op">(</span><span class="va">lactate_prod</span><span class="op">$</span><span class="va">communication_score</span>,</span>
+<span>    names.arg <span class="op">=</span> <span class="va">lactate_prod</span><span class="op">$</span><span class="va">sender</span>,</span>
+<span>    las <span class="op">=</span> <span class="fl">2</span>, col <span class="op">=</span> <span class="st">"#FF8A65"</span>, main <span class="op">=</span> <span class="st">"Lactate Producers"</span></span>
+<span>  <span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/graphics/barplot.html" class="external-link">barplot</a></span><span class="op">(</span><span class="va">lactate_sens</span><span class="op">$</span><span class="va">communication_score</span>,</span>
+<span>    names.arg <span class="op">=</span> <span class="va">lactate_sens</span><span class="op">$</span><span class="va">receiver</span>,</span>
+<span>    las <span class="op">=</span> <span class="fl">2</span>, col <span class="op">=</span> <span class="st">"#4FC3F7"</span>, main <span class="op">=</span> <span class="st">"Lactate Sensors"</span></span>
+<span>  <span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mfrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span><span class="co">#&gt; Lactate-mediated interactions: 3</span></span></code></pre></div>
@@ -246,16 +254,19 @@ progression.</p>
 <span>  <span class="co"># Build communication matrix for immune cells</span></span>
 <span>  <span class="va">immune_cells</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">immune_sig</span><span class="op">$</span><span class="va">sender</span>, <span class="va">immune_sig</span><span class="op">$</span><span class="va">receiver</span><span class="op">)</span><span class="op">)</span></span>
 <span>  <span class="va">immune_mat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">immune_cells</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">immune_cells</span><span class="op">)</span>,</span>
-<span>                       dimnames <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">immune_cells</span>, <span class="va">immune_cells</span><span class="op">)</span><span class="op">)</span></span>
-<span>  </span>
+<span>    dimnames <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">immune_cells</span>, <span class="va">immune_cells</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
+<span></span>
 <span>  <span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">immune_sig</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
-<span>    <span class="va">immune_mat</span><span class="op">[</span><span class="va">immune_sig</span><span class="op">$</span><span class="va">sender</span><span class="op">[</span><span class="va">i</span><span class="op">]</span>, <span class="va">immune_sig</span><span class="op">$</span><span class="va">receiver</span><span class="op">[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> </span>
-<span>      <span class="va">immune_mat</span><span class="op">[</span><span class="va">immune_sig</span><span class="op">$</span><span class="va">sender</span><span class="op">[</span><span class="va">i</span><span class="op">]</span>, <span class="va">immune_sig</span><span class="op">$</span><span class="va">receiver</span><span class="op">[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span> <span class="op">+</span> </span>
+<span>    <span class="va">immune_mat</span><span class="op">[</span><span class="va">immune_sig</span><span class="op">$</span><span class="va">sender</span><span class="op">[</span><span class="va">i</span><span class="op">]</span>, <span class="va">immune_sig</span><span class="op">$</span><span class="va">receiver</span><span class="op">[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span></span>
+<span>      <span class="va">immune_mat</span><span class="op">[</span><span class="va">immune_sig</span><span class="op">$</span><span class="va">sender</span><span class="op">[</span><span class="va">i</span><span class="op">]</span>, <span class="va">immune_sig</span><span class="op">$</span><span class="va">receiver</span><span class="op">[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span> <span class="op">+</span></span>
 <span>      <span class="va">immune_sig</span><span class="op">$</span><span class="va">communication_score</span><span class="op">[</span><span class="va">i</span><span class="op">]</span></span>
 <span>  <span class="op">}</span></span>
-<span>  </span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/stats/heatmap.html" class="external-link">heatmap</a></span><span class="op">(</span><span class="va">immune_mat</span>, col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grDevices/palettes.html" class="external-link">hcl.colors</a></span><span class="op">(</span><span class="fl">50</span>, <span class="st">"YlOrRd"</span><span class="op">)</span>, scale <span class="op">=</span> <span class="st">"none"</span>,</span>
-<span>          main <span class="op">=</span> <span class="st">"Immune Cell Metabolic Communication"</span><span class="op">)</span></span>
+<span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/stats/heatmap.html" class="external-link">heatmap</a></span><span class="op">(</span><span class="va">immune_mat</span>,</span>
+<span>    col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grDevices/palettes.html" class="external-link">hcl.colors</a></span><span class="op">(</span><span class="fl">50</span>, <span class="st">"YlOrRd"</span><span class="op">)</span>, scale <span class="op">=</span> <span class="st">"none"</span>,</span>
+<span>    main <span class="op">=</span> <span class="st">"Immune Cell Metabolic Communication"</span></span>
+<span>  <span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
 <img src="06-applications_files/figure-html/immune_network-1.png" class="r-plt" alt="**Figure 3: Immune Cell Communication Network.** Heatmap showing metabolite-mediated communication strength between immune cell types. T cells, macrophages, and B cells often form key communication hubs." width="100%"><p class="caption">
@@ -277,16 +288,16 @@ hubs.
 <span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">mac_sig</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="co"># Compare metabolites</span></span>
 <span>  <span class="va">tam_mets</span> <span class="op">&lt;-</span> <span class="va">mac_sig</span><span class="op">$</span><span class="va">metabolite_name</span><span class="op">[</span><span class="va">mac_sig</span><span class="op">$</span><span class="va">sender</span> <span class="op">==</span> <span class="st">"TAM"</span> <span class="op">|</span> <span class="va">mac_sig</span><span class="op">$</span><span class="va">receiver</span> <span class="op">==</span> <span class="st">"TAM"</span><span class="op">]</span></span>
-<span>  <span class="va">normal_mac_mets</span> <span class="op">&lt;-</span> <span class="va">mac_sig</span><span class="op">$</span><span class="va">metabolite_name</span><span class="op">[</span><span class="va">mac_sig</span><span class="op">$</span><span class="va">sender</span> <span class="op">==</span> <span class="st">"Normal Macrophage"</span> <span class="op">|</span> </span>
-<span>                                              <span class="va">mac_sig</span><span class="op">$</span><span class="va">receiver</span> <span class="op">==</span> <span class="st">"Normal Macrophage"</span><span class="op">]</span></span>
-<span>  </span>
+<span>  <span class="va">normal_mac_mets</span> <span class="op">&lt;-</span> <span class="va">mac_sig</span><span class="op">$</span><span class="va">metabolite_name</span><span class="op">[</span><span class="va">mac_sig</span><span class="op">$</span><span class="va">sender</span> <span class="op">==</span> <span class="st">"Normal Macrophage"</span> <span class="op">|</span></span>
+<span>    <span class="va">mac_sig</span><span class="op">$</span><span class="va">receiver</span> <span class="op">==</span> <span class="st">"Normal Macrophage"</span><span class="op">]</span></span>
+<span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"TAM-associated metabolites:"</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">tam_mets</span><span class="op">)</span><span class="op">)</span>, <span class="st">"\n"</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"Normal Macrophage-associated metabolites:"</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">normal_mac_mets</span><span class="op">)</span><span class="op">)</span>, <span class="st">"\n"</span><span class="op">)</span></span>
-<span>  </span>
+<span></span>
 <span>  <span class="co"># Unique to each</span></span>
 <span>  <span class="va">tam_unique</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sets.html" class="external-link">setdiff</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">tam_mets</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">normal_mac_mets</span><span class="op">)</span><span class="op">)</span></span>
 <span>  <span class="va">normal_unique</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sets.html" class="external-link">setdiff</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">normal_mac_mets</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">tam_mets</span><span class="op">)</span><span class="op">)</span></span>
-<span>  </span>
+<span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"\nUnique to TAM:\n"</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">tam_unique</span>, <span class="fl">10</span><span class="op">)</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"\nUnique to Normal Macrophage:\n"</span><span class="op">)</span></span>
@@ -338,29 +349,33 @@ epithelium?<a class="anchor" aria-label="anchor" href="#question-how-do-cafs-com
 </h3>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">caf_tumor</span> <span class="op">&lt;-</span> <span class="va">sig</span><span class="op">[</span><span class="op">(</span><span class="va">sig</span><span class="op">$</span><span class="va">sender</span> <span class="op">==</span> <span class="st">"CAF"</span> <span class="op">&amp;</span> <span class="va">sig</span><span class="op">$</span><span class="va">receiver</span> <span class="op">==</span> <span class="st">"Tumor Epithelial"</span><span class="op">)</span> <span class="op">|</span></span>
-<span>                 <span class="op">(</span><span class="va">sig</span><span class="op">$</span><span class="va">sender</span> <span class="op">==</span> <span class="st">"Tumor Epithelial"</span> <span class="op">&amp;</span> <span class="va">sig</span><span class="op">$</span><span class="va">receiver</span> <span class="op">==</span> <span class="st">"CAF"</span><span class="op">)</span>, <span class="op">]</span></span>
+<span>  <span class="op">(</span><span class="va">sig</span><span class="op">$</span><span class="va">sender</span> <span class="op">==</span> <span class="st">"Tumor Epithelial"</span> <span class="op">&amp;</span> <span class="va">sig</span><span class="op">$</span><span class="va">receiver</span> <span class="op">==</span> <span class="st">"CAF"</span><span class="op">)</span>, <span class="op">]</span></span>
 <span></span>
 <span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">caf_tumor</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"CAF-Tumor interactions:"</span>, <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">caf_tumor</span><span class="op">)</span>, <span class="st">"\n\n"</span><span class="op">)</span></span>
-<span>  </span>
+<span></span>
 <span>  <span class="co"># Split by direction</span></span>
 <span>  <span class="va">caf_to_tumor</span> <span class="op">&lt;-</span> <span class="va">caf_tumor</span><span class="op">[</span><span class="va">caf_tumor</span><span class="op">$</span><span class="va">sender</span> <span class="op">==</span> <span class="st">"CAF"</span>, <span class="op">]</span></span>
 <span>  <span class="va">tumor_to_caf</span> <span class="op">&lt;-</span> <span class="va">caf_tumor</span><span class="op">[</span><span class="va">caf_tumor</span><span class="op">$</span><span class="va">sender</span> <span class="op">==</span> <span class="st">"Tumor Epithelial"</span>, <span class="op">]</span></span>
-<span>  </span>
+<span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mfrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
-<span>  </span>
+<span></span>
 <span>  <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">caf_to_tumor</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="va">caf_mets</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">caf_to_tumor</span><span class="op">$</span><span class="va">metabolite_name</span><span class="op">)</span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/graphics/barplot.html" class="external-link">barplot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sort.html" class="external-link">sort</a></span><span class="op">(</span><span class="va">caf_mets</span>, decreasing <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, las <span class="op">=</span> <span class="fl">2</span>, col <span class="op">=</span> <span class="st">"#A5D6A7"</span>,</span>
-<span>            main <span class="op">=</span> <span class="st">"CAF -&gt; Tumor"</span>, cex.names <span class="op">=</span> <span class="fl">0.7</span><span class="op">)</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/graphics/barplot.html" class="external-link">barplot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sort.html" class="external-link">sort</a></span><span class="op">(</span><span class="va">caf_mets</span>, decreasing <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
+<span>      las <span class="op">=</span> <span class="fl">2</span>, col <span class="op">=</span> <span class="st">"#A5D6A7"</span>,</span>
+<span>      main <span class="op">=</span> <span class="st">"CAF -&gt; Tumor"</span>, cex.names <span class="op">=</span> <span class="fl">0.7</span></span>
+<span>    <span class="op">)</span></span>
 <span>  <span class="op">}</span></span>
-<span>  </span>
+<span></span>
 <span>  <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">tumor_to_caf</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="va">tumor_mets</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">tumor_to_caf</span><span class="op">$</span><span class="va">metabolite_name</span><span class="op">)</span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/graphics/barplot.html" class="external-link">barplot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sort.html" class="external-link">sort</a></span><span class="op">(</span><span class="va">tumor_mets</span>, decreasing <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, las <span class="op">=</span> <span class="fl">2</span>, col <span class="op">=</span> <span class="st">"#EF9A9A"</span>,</span>
-<span>            main <span class="op">=</span> <span class="st">"Tumor -&gt; CAF"</span>, cex.names <span class="op">=</span> <span class="fl">0.7</span><span class="op">)</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/graphics/barplot.html" class="external-link">barplot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sort.html" class="external-link">sort</a></span><span class="op">(</span><span class="va">tumor_mets</span>, decreasing <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
+<span>      las <span class="op">=</span> <span class="fl">2</span>, col <span class="op">=</span> <span class="st">"#EF9A9A"</span>,</span>
+<span>      main <span class="op">=</span> <span class="st">"Tumor -&gt; CAF"</span>, cex.names <span class="op">=</span> <span class="fl">0.7</span></span>
+<span>    <span class="op">)</span></span>
 <span>  <span class="op">}</span></span>
-<span>  </span>
+<span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mfrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span><span class="co">#&gt; CAF-Tumor interactions: 106</span></span></code></pre></div>
@@ -404,12 +419,14 @@ communication?<a class="anchor" aria-label="anchor" href="#question-which-metabo
 <span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NULL.html" class="external-link">is.null</a></span><span class="op">(</span><span class="va">pathway_enrichment</span><span class="op">)</span> <span class="op">&amp;&amp;</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">pathway_enrichment</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="co"># Top enriched pathways</span></span>
 <span>  <span class="va">top_pathways</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">pathway_enrichment</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/order.html" class="external-link">order</a></span><span class="op">(</span><span class="va">pathway_enrichment</span><span class="op">$</span><span class="va">pvalue</span><span class="op">)</span>, <span class="op">]</span>, <span class="fl">15</span><span class="op">)</span></span>
-<span>  </span>
+<span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mar <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4</span>, <span class="fl">15</span>, <span class="fl">4</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/graphics/barplot.html" class="external-link">barplot</a></span><span class="op">(</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log10</a></span><span class="op">(</span><span class="va">top_pathways</span><span class="op">$</span><span class="va">pvalue</span><span class="op">)</span>, horiz <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>          names.arg <span class="op">=</span> <span class="va">top_pathways</span><span class="op">$</span><span class="va">pathway</span>, las <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>          col <span class="op">=</span> <span class="st">"#9575CD"</span>, main <span class="op">=</span> <span class="st">"Enriched Metabolic Pathways"</span>,</span>
-<span>          xlab <span class="op">=</span> <span class="st">"-log10(p-value)"</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/graphics/barplot.html" class="external-link">barplot</a></span><span class="op">(</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log10</a></span><span class="op">(</span><span class="va">top_pathways</span><span class="op">$</span><span class="va">pvalue</span><span class="op">)</span>,</span>
+<span>    horiz <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>    names.arg <span class="op">=</span> <span class="va">top_pathways</span><span class="op">$</span><span class="va">pathway</span>, las <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>    col <span class="op">=</span> <span class="st">"#9575CD"</span>, main <span class="op">=</span> <span class="st">"Enriched Metabolic Pathways"</span>,</span>
+<span>    xlab <span class="op">=</span> <span class="st">"-log10(p-value)"</span></span>
+<span>  <span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/abline.html" class="external-link">abline</a></span><span class="op">(</span>v <span class="op">=</span> <span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log10</a></span><span class="op">(</span><span class="fl">0.05</span><span class="op">)</span>, lty <span class="op">=</span> <span class="fl">2</span>, col <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
 <p><img src="06-applications_files/figure-html/pathway_analysis-1.png" class="r-plt" alt="" width="100%" style="display: block; margin: auto;"></p>
@@ -419,9 +436,11 @@ communication?<a class="anchor" aria-label="anchor" href="#question-which-metabo
 </h3>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Filter for amino acid-related metabolites</span></span>
-<span><span class="va">amino_acids</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"L-Glutamic acid"</span>, <span class="st">"L-Glutamine"</span>, <span class="st">"L-Alanine"</span>, <span class="st">"Glycine"</span>, </span>
-<span>                 <span class="st">"L-Serine"</span>, <span class="st">"L-Proline"</span>, <span class="st">"L-Aspartic acid"</span>, <span class="st">"L-Arginine"</span>,</span>
-<span>                 <span class="st">"L-Leucine"</span>, <span class="st">"L-Isoleucine"</span>, <span class="st">"L-Valine"</span>, <span class="st">"L-Tryptophan"</span><span class="op">)</span></span>
+<span><span class="va">amino_acids</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>  <span class="st">"L-Glutamic acid"</span>, <span class="st">"L-Glutamine"</span>, <span class="st">"L-Alanine"</span>, <span class="st">"Glycine"</span>,</span>
+<span>  <span class="st">"L-Serine"</span>, <span class="st">"L-Proline"</span>, <span class="st">"L-Aspartic acid"</span>, <span class="st">"L-Arginine"</span>,</span>
+<span>  <span class="st">"L-Leucine"</span>, <span class="st">"L-Isoleucine"</span>, <span class="st">"L-Valine"</span>, <span class="st">"L-Tryptophan"</span></span>
+<span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">aa_sig</span> <span class="op">&lt;-</span> <span class="va">sig</span><span class="op">[</span><span class="va">sig</span><span class="op">$</span><span class="va">metabolite_name</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">amino_acids</span>, <span class="op">]</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"Amino acid-mediated interactions:"</span>, <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">aa_sig</span><span class="op">)</span>, <span class="st">"\n"</span><span class="op">)</span></span>
@@ -431,10 +450,12 @@ communication?<a class="anchor" aria-label="anchor" href="#question-which-metabo
 <span>  <span class="co"># Which amino acids are most involved?</span></span>
 <span>  <span class="va">aa_counts</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">aa_sig</span><span class="op">$</span><span class="va">metabolite_name</span><span class="op">)</span></span>
 <span>  <span class="va">aa_counts</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sort.html" class="external-link">sort</a></span><span class="op">(</span><span class="va">aa_counts</span>, decreasing <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span>  </span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/graphics/barplot.html" class="external-link">barplot</a></span><span class="op">(</span><span class="va">aa_counts</span>, las <span class="op">=</span> <span class="fl">2</span>, col <span class="op">=</span> <span class="st">"#FFB74D"</span>,</span>
-<span>          main <span class="op">=</span> <span class="st">"Amino Acid Communication"</span>,</span>
-<span>          ylab <span class="op">=</span> <span class="st">"Number of Interactions"</span><span class="op">)</span></span>
+<span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/graphics/barplot.html" class="external-link">barplot</a></span><span class="op">(</span><span class="va">aa_counts</span>,</span>
+<span>    las <span class="op">=</span> <span class="fl">2</span>, col <span class="op">=</span> <span class="st">"#FFB74D"</span>,</span>
+<span>    main <span class="op">=</span> <span class="st">"Amino Acid Communication"</span>,</span>
+<span>    ylab <span class="op">=</span> <span class="st">"Number of Interactions"</span></span>
+<span>  <span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
 <p><img src="06-applications_files/figure-html/amino_acid_pathway-1.png" class="r-plt" alt="" width="100%" style="display: block; margin: auto;"></p>
 <hr>
@@ -457,8 +478,10 @@ communication?<a class="anchor" aria-label="anchor" href="#question-which-metabo
 <span><span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">sig_sorted</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">row</span> <span class="op">&lt;-</span> <span class="va">sig_sorted</span><span class="op">[</span><span class="va">i</span>, <span class="op">]</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sprintf.html" class="external-link">sprintf</a></span><span class="op">(</span><span class="st">"%d. %s -&gt; %s via %s\n"</span>, <span class="va">i</span>, <span class="va">row</span><span class="op">$</span><span class="va">sender</span>, <span class="va">row</span><span class="op">$</span><span class="va">receiver</span>, <span class="va">row</span><span class="op">$</span><span class="va">metabolite_name</span><span class="op">)</span><span class="op">)</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sprintf.html" class="external-link">sprintf</a></span><span class="op">(</span><span class="st">"   Score: %.3f, Adjusted p-value: %.4f\n\n"</span>, </span>
-<span>              <span class="va">row</span><span class="op">$</span><span class="va">communication_score</span>, <span class="va">row</span><span class="op">$</span><span class="va">pvalue_adjusted</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sprintf.html" class="external-link">sprintf</a></span><span class="op">(</span></span>
+<span>    <span class="st">"   Score: %.3f, Adjusted p-value: %.4f\n\n"</span>,</span>
+<span>    <span class="va">row</span><span class="op">$</span><span class="va">communication_score</span>, <span class="va">row</span><span class="op">$</span><span class="va">pvalue_adjusted</span></span>
+<span>  <span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span><span class="co">#&gt; 1. Monocyte -&gt; Mast via Epinephrine</span></span>
 <span><span class="co">#&gt;    Score: 1.000, Adjusted p-value: 0.0099</span></span>
@@ -502,11 +525,13 @@ communication?<a class="anchor" aria-label="anchor" href="#question-which-metabo
 <span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">autocrine</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="co"># Which cell types have autocrine signaling?</span></span>
 <span>  <span class="va">auto_counts</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">autocrine</span><span class="op">$</span><span class="va">sender</span><span class="op">)</span></span>
-<span>  </span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/graphics/barplot.html" class="external-link">barplot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sort.html" class="external-link">sort</a></span><span class="op">(</span><span class="va">auto_counts</span>, decreasing <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, las <span class="op">=</span> <span class="fl">2</span>, col <span class="op">=</span> <span class="st">"#81D4FA"</span>,</span>
-<span>          main <span class="op">=</span> <span class="st">"Autocrine Metabolite Signaling"</span>,</span>
-<span>          ylab <span class="op">=</span> <span class="st">"Number of Autocrine Interactions"</span><span class="op">)</span></span>
-<span>  </span>
+<span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/graphics/barplot.html" class="external-link">barplot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sort.html" class="external-link">sort</a></span><span class="op">(</span><span class="va">auto_counts</span>, decreasing <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
+<span>    las <span class="op">=</span> <span class="fl">2</span>, col <span class="op">=</span> <span class="st">"#81D4FA"</span>,</span>
+<span>    main <span class="op">=</span> <span class="st">"Autocrine Metabolite Signaling"</span>,</span>
+<span>    ylab <span class="op">=</span> <span class="st">"Number of Autocrine Interactions"</span></span>
+<span>  <span class="op">)</span></span>
+<span></span>
 <span>  <span class="co"># What metabolites are involved in autocrine signaling?</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"\nTop autocrine metabolites:\n"</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sort.html" class="external-link">sort</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">autocrine</span><span class="op">$</span><span class="va">metabolite_name</span><span class="op">)</span>, decreasing <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, <span class="fl">10</span><span class="op">)</span><span class="op">)</span></span>
@@ -582,16 +607,21 @@ communication?<a class="anchor" aria-label="anchor" href="#question-which-metabo
 <span><span class="co"># Visualize</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mfrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">hub_stats</span><span class="op">$</span><span class="va">out_strength</span>, <span class="va">hub_stats</span><span class="op">$</span><span class="va">in_strength</span>,</span>
-<span>     pch <span class="op">=</span> <span class="fl">19</span>, cex <span class="op">=</span> <span class="fl">2</span>, col <span class="op">=</span> <span class="st">"#1976D2"</span>,</span>
-<span>     xlab <span class="op">=</span> <span class="st">"Outgoing Strength"</span>, ylab <span class="op">=</span> <span class="st">"Incoming Strength"</span>,</span>
-<span>     main <span class="op">=</span> <span class="st">"Cell Type Communication Profile"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/text.html" class="external-link">text</a></span><span class="op">(</span><span class="va">hub_stats</span><span class="op">$</span><span class="va">out_strength</span>, <span class="va">hub_stats</span><span class="op">$</span><span class="va">in_strength</span>, </span>
-<span>     <span class="va">hub_stats</span><span class="op">$</span><span class="va">cell_type</span>, pos <span class="op">=</span> <span class="fl">3</span>, cex <span class="op">=</span> <span class="fl">0.7</span><span class="op">)</span></span>
+<span>  pch <span class="op">=</span> <span class="fl">19</span>, cex <span class="op">=</span> <span class="fl">2</span>, col <span class="op">=</span> <span class="st">"#1976D2"</span>,</span>
+<span>  xlab <span class="op">=</span> <span class="st">"Outgoing Strength"</span>, ylab <span class="op">=</span> <span class="st">"Incoming Strength"</span>,</span>
+<span>  main <span class="op">=</span> <span class="st">"Cell Type Communication Profile"</span></span>
+<span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/text.html" class="external-link">text</a></span><span class="op">(</span><span class="va">hub_stats</span><span class="op">$</span><span class="va">out_strength</span>, <span class="va">hub_stats</span><span class="op">$</span><span class="va">in_strength</span>,</span>
+<span>  <span class="va">hub_stats</span><span class="op">$</span><span class="va">cell_type</span>,</span>
+<span>  pos <span class="op">=</span> <span class="fl">3</span>, cex <span class="op">=</span> <span class="fl">0.7</span></span>
+<span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/abline.html" class="external-link">abline</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, lty <span class="op">=</span> <span class="fl">2</span>, col <span class="op">=</span> <span class="st">"gray"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Degree distribution</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/barplot.html" class="external-link">barplot</a></span><span class="op">(</span><span class="va">hub_stats</span><span class="op">$</span><span class="va">total_degree</span>, names.arg <span class="op">=</span> <span class="va">hub_stats</span><span class="op">$</span><span class="va">cell_type</span>,</span>
-<span>        las <span class="op">=</span> <span class="fl">2</span>, col <span class="op">=</span> <span class="st">"#4CAF50"</span>, main <span class="op">=</span> <span class="st">"Communication Degree"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/barplot.html" class="external-link">barplot</a></span><span class="op">(</span><span class="va">hub_stats</span><span class="op">$</span><span class="va">total_degree</span>,</span>
+<span>  names.arg <span class="op">=</span> <span class="va">hub_stats</span><span class="op">$</span><span class="va">cell_type</span>,</span>
+<span>  las <span class="op">=</span> <span class="fl">2</span>, col <span class="op">=</span> <span class="st">"#4CAF50"</span>, main <span class="op">=</span> <span class="st">"Communication Degree"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 <p><img src="06-applications_files/figure-html/hub_analysis-1.png" class="r-plt" alt="" width="100%" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mfrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>

@@ -43,7 +43,7 @@ obj <- createScMetaLink(crc_expr, crc_meta, "cell_type")
 obj <- inferProduction(obj, verbose = FALSE)
 obj <- inferSensing(obj, verbose = FALSE)
 obj <- computeCommunication(obj, n_permutations = 100, verbose = FALSE)
-obj <- filterSignificantInteractions(obj, adjust_method = "none")  # For demo
+obj <- filterSignificantInteractions(obj, adjust_method = "none") # For demo
 
 # Get significant interactions
 sig <- obj@significant_interactions
@@ -68,11 +68,13 @@ if (nrow(tumor_sender) > 0) {
   # What metabolites do tumors secrete?
   tumor_secreted <- table(tumor_sender$metabolite_name)
   tumor_secreted <- sort(tumor_secreted, decreasing = TRUE)
-  
+
   par(mar = c(10, 4, 4, 2))
-  barplot(head(tumor_secreted, 15), las = 2, col = "#E57373",
-          main = "Metabolites Secreted by Tumor Cells",
-          ylab = "Number of Target Cell Types")
+  barplot(head(tumor_secreted, 15),
+    las = 2, col = "#E57373",
+    main = "Metabolites Secreted by Tumor Cells",
+    ylab = "Number of Target Cell Types"
+  )
 }
 ```
 
@@ -92,11 +94,13 @@ if (nrow(tumor_receiver) > 0) {
   # What metabolites do tumors sense?
   tumor_sensed <- table(tumor_receiver$metabolite_name)
   tumor_sensed <- sort(tumor_sensed, decreasing = TRUE)
-  
+
   par(mar = c(10, 4, 4, 2))
-  barplot(head(tumor_sensed, 15), las = 2, col = "#64B5F6",
-          main = "Metabolites Sensed by Tumor Cells",
-          ylab = "Number of Source Cell Types")
+  barplot(head(tumor_sensed, 15),
+    las = 2, col = "#64B5F6",
+    main = "Metabolites Sensed by Tumor Cells",
+    ylab = "Number of Source Cell Types"
+  )
 }
 ```
 
@@ -121,20 +125,24 @@ lactate_sig <- sig[sig$metabolite_name == "L-Lactic acid", ]
 
 if (nrow(lactate_sig) > 0) {
   cat("Lactate-mediated interactions:", nrow(lactate_sig), "\n\n")
-  
+
   # Who produces lactate?
   lactate_prod <- aggregate(communication_score ~ sender, data = lactate_sig, FUN = sum)
   lactate_prod <- lactate_prod[order(-lactate_prod$communication_score), ]
-  
+
   # Who senses lactate?
   lactate_sens <- aggregate(communication_score ~ receiver, data = lactate_sig, FUN = sum)
   lactate_sens <- lactate_sens[order(-lactate_sens$communication_score), ]
-  
+
   par(mfrow = c(1, 2))
-  barplot(lactate_prod$communication_score, names.arg = lactate_prod$sender,
-          las = 2, col = "#FF8A65", main = "Lactate Producers")
-  barplot(lactate_sens$communication_score, names.arg = lactate_sens$receiver,
-          las = 2, col = "#4FC3F7", main = "Lactate Sensors")
+  barplot(lactate_prod$communication_score,
+    names.arg = lactate_prod$sender,
+    las = 2, col = "#FF8A65", main = "Lactate Producers"
+  )
+  barplot(lactate_sens$communication_score,
+    names.arg = lactate_sens$receiver,
+    las = 2, col = "#4FC3F7", main = "Lactate Sensors"
+  )
   par(mfrow = c(1, 1))
 }
 #> Lactate-mediated interactions: 3
@@ -178,16 +186,19 @@ if (nrow(immune_sig) > 0) {
   # Build communication matrix for immune cells
   immune_cells <- unique(c(immune_sig$sender, immune_sig$receiver))
   immune_mat <- matrix(0, length(immune_cells), length(immune_cells),
-                       dimnames = list(immune_cells, immune_cells))
-  
+    dimnames = list(immune_cells, immune_cells)
+  )
+
   for (i in 1:nrow(immune_sig)) {
-    immune_mat[immune_sig$sender[i], immune_sig$receiver[i]] <- 
-      immune_mat[immune_sig$sender[i], immune_sig$receiver[i]] + 
+    immune_mat[immune_sig$sender[i], immune_sig$receiver[i]] <-
+      immune_mat[immune_sig$sender[i], immune_sig$receiver[i]] +
       immune_sig$communication_score[i]
   }
-  
-  heatmap(immune_mat, col = hcl.colors(50, "YlOrRd"), scale = "none",
-          main = "Immune Cell Metabolic Communication")
+
+  heatmap(immune_mat,
+    col = hcl.colors(50, "YlOrRd"), scale = "none",
+    main = "Immune Cell Metabolic Communication"
+  )
 }
 ```
 
@@ -210,16 +221,16 @@ mac_sig <- sig[sig$sender %in% mac_types | sig$receiver %in% mac_types, ]
 if (nrow(mac_sig) > 0) {
   # Compare metabolites
   tam_mets <- mac_sig$metabolite_name[mac_sig$sender == "TAM" | mac_sig$receiver == "TAM"]
-  normal_mac_mets <- mac_sig$metabolite_name[mac_sig$sender == "Normal Macrophage" | 
-                                              mac_sig$receiver == "Normal Macrophage"]
-  
+  normal_mac_mets <- mac_sig$metabolite_name[mac_sig$sender == "Normal Macrophage" |
+    mac_sig$receiver == "Normal Macrophage"]
+
   cat("TAM-associated metabolites:", length(unique(tam_mets)), "\n")
   cat("Normal Macrophage-associated metabolites:", length(unique(normal_mac_mets)), "\n")
-  
+
   # Unique to each
   tam_unique <- setdiff(unique(tam_mets), unique(normal_mac_mets))
   normal_unique <- setdiff(unique(normal_mac_mets), unique(tam_mets))
-  
+
   cat("\nUnique to TAM:\n")
   print(head(tam_unique, 10))
   cat("\nUnique to Normal Macrophage:\n")
@@ -269,29 +280,33 @@ cat("Epithelial -> Stromal:", nrow(epi_to_stroma), "interactions\n")
 
 ``` r
 caf_tumor <- sig[(sig$sender == "CAF" & sig$receiver == "Tumor Epithelial") |
-                 (sig$sender == "Tumor Epithelial" & sig$receiver == "CAF"), ]
+  (sig$sender == "Tumor Epithelial" & sig$receiver == "CAF"), ]
 
 if (nrow(caf_tumor) > 0) {
   cat("CAF-Tumor interactions:", nrow(caf_tumor), "\n\n")
-  
+
   # Split by direction
   caf_to_tumor <- caf_tumor[caf_tumor$sender == "CAF", ]
   tumor_to_caf <- caf_tumor[caf_tumor$sender == "Tumor Epithelial", ]
-  
+
   par(mfrow = c(1, 2))
-  
+
   if (nrow(caf_to_tumor) > 0) {
     caf_mets <- table(caf_to_tumor$metabolite_name)
-    barplot(sort(caf_mets, decreasing = TRUE), las = 2, col = "#A5D6A7",
-            main = "CAF -> Tumor", cex.names = 0.7)
+    barplot(sort(caf_mets, decreasing = TRUE),
+      las = 2, col = "#A5D6A7",
+      main = "CAF -> Tumor", cex.names = 0.7
+    )
   }
-  
+
   if (nrow(tumor_to_caf) > 0) {
     tumor_mets <- table(tumor_to_caf$metabolite_name)
-    barplot(sort(tumor_mets, decreasing = TRUE), las = 2, col = "#EF9A9A",
-            main = "Tumor -> CAF", cex.names = 0.7)
+    barplot(sort(tumor_mets, decreasing = TRUE),
+      las = 2, col = "#EF9A9A",
+      main = "Tumor -> CAF", cex.names = 0.7
+    )
   }
-  
+
   par(mfrow = c(1, 1))
 }
 #> CAF-Tumor interactions: 106
@@ -335,12 +350,14 @@ pathway_enrichment <- enrichPathways(obj)
 if (!is.null(pathway_enrichment) && nrow(pathway_enrichment) > 0) {
   # Top enriched pathways
   top_pathways <- head(pathway_enrichment[order(pathway_enrichment$pvalue), ], 15)
-  
+
   par(mar = c(4, 15, 4, 2))
-  barplot(-log10(top_pathways$pvalue), horiz = TRUE,
-          names.arg = top_pathways$pathway, las = 1,
-          col = "#9575CD", main = "Enriched Metabolic Pathways",
-          xlab = "-log10(p-value)")
+  barplot(-log10(top_pathways$pvalue),
+    horiz = TRUE,
+    names.arg = top_pathways$pathway, las = 1,
+    col = "#9575CD", main = "Enriched Metabolic Pathways",
+    xlab = "-log10(p-value)"
+  )
   abline(v = -log10(0.05), lty = 2, col = "red")
 }
 ```
@@ -351,9 +368,11 @@ if (!is.null(pathway_enrichment) && nrow(pathway_enrichment) > 0) {
 
 ``` r
 # Filter for amino acid-related metabolites
-amino_acids <- c("L-Glutamic acid", "L-Glutamine", "L-Alanine", "Glycine", 
-                 "L-Serine", "L-Proline", "L-Aspartic acid", "L-Arginine",
-                 "L-Leucine", "L-Isoleucine", "L-Valine", "L-Tryptophan")
+amino_acids <- c(
+  "L-Glutamic acid", "L-Glutamine", "L-Alanine", "Glycine",
+  "L-Serine", "L-Proline", "L-Aspartic acid", "L-Arginine",
+  "L-Leucine", "L-Isoleucine", "L-Valine", "L-Tryptophan"
+)
 
 aa_sig <- sig[sig$metabolite_name %in% amino_acids, ]
 cat("Amino acid-mediated interactions:", nrow(aa_sig), "\n")
@@ -363,10 +382,12 @@ if (nrow(aa_sig) > 0) {
   # Which amino acids are most involved?
   aa_counts <- table(aa_sig$metabolite_name)
   aa_counts <- sort(aa_counts, decreasing = TRUE)
-  
-  barplot(aa_counts, las = 2, col = "#FFB74D",
-          main = "Amino Acid Communication",
-          ylab = "Number of Interactions")
+
+  barplot(aa_counts,
+    las = 2, col = "#FFB74D",
+    main = "Amino Acid Communication",
+    ylab = "Number of Interactions"
+  )
 }
 ```
 
@@ -389,8 +410,10 @@ cat("=== Top Novel Communication Axes ===\n\n")
 for (i in 1:min(10, nrow(sig_sorted))) {
   row <- sig_sorted[i, ]
   cat(sprintf("%d. %s -> %s via %s\n", i, row$sender, row$receiver, row$metabolite_name))
-  cat(sprintf("   Score: %.3f, Adjusted p-value: %.4f\n\n", 
-              row$communication_score, row$pvalue_adjusted))
+  cat(sprintf(
+    "   Score: %.3f, Adjusted p-value: %.4f\n\n",
+    row$communication_score, row$pvalue_adjusted
+  ))
 }
 #> 1. Monocyte -> Mast via Epinephrine
 #>    Score: 1.000, Adjusted p-value: 0.0099
@@ -434,11 +457,13 @@ cat("Autocrine interactions:", nrow(autocrine), "\n\n")
 if (nrow(autocrine) > 0) {
   # Which cell types have autocrine signaling?
   auto_counts <- table(autocrine$sender)
-  
-  barplot(sort(auto_counts, decreasing = TRUE), las = 2, col = "#81D4FA",
-          main = "Autocrine Metabolite Signaling",
-          ylab = "Number of Autocrine Interactions")
-  
+
+  barplot(sort(auto_counts, decreasing = TRUE),
+    las = 2, col = "#81D4FA",
+    main = "Autocrine Metabolite Signaling",
+    ylab = "Number of Autocrine Interactions"
+  )
+
   # What metabolites are involved in autocrine signaling?
   cat("\nTop autocrine metabolites:\n")
   print(head(sort(table(autocrine$metabolite_name), decreasing = TRUE), 10))
@@ -516,16 +541,21 @@ print(hub_stats)
 # Visualize
 par(mfrow = c(1, 2))
 plot(hub_stats$out_strength, hub_stats$in_strength,
-     pch = 19, cex = 2, col = "#1976D2",
-     xlab = "Outgoing Strength", ylab = "Incoming Strength",
-     main = "Cell Type Communication Profile")
-text(hub_stats$out_strength, hub_stats$in_strength, 
-     hub_stats$cell_type, pos = 3, cex = 0.7)
+  pch = 19, cex = 2, col = "#1976D2",
+  xlab = "Outgoing Strength", ylab = "Incoming Strength",
+  main = "Cell Type Communication Profile"
+)
+text(hub_stats$out_strength, hub_stats$in_strength,
+  hub_stats$cell_type,
+  pos = 3, cex = 0.7
+)
 abline(0, 1, lty = 2, col = "gray")
 
 # Degree distribution
-barplot(hub_stats$total_degree, names.arg = hub_stats$cell_type,
-        las = 2, col = "#4CAF50", main = "Communication Degree")
+barplot(hub_stats$total_degree,
+  names.arg = hub_stats$cell_type,
+  las = 2, col = "#4CAF50", main = "Communication Degree"
+)
 ```
 
 ![](06-applications_files/figure-html/hub_analysis-1.png)

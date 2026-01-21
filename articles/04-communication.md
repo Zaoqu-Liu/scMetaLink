@@ -32,13 +32,13 @@ Communication from **sender** to **receiver** via **metabolite**:
 ``` r
 obj <- computeCommunication(
   obj,
-  method = "geometric",      # How to combine production and sensing
-  min_production = 0.1,      # Minimum production threshold
-  min_sensing = 0.1,         # Minimum sensing threshold
-  population.size = FALSE,   # Weight by cell type abundance
-  n_permutations = 100,      # Permutations for significance
-  n_cores = 1,               # Parallel cores
-  seed = 42,                 # Reproducibility
+  method = "geometric", # How to combine production and sensing
+  min_production = 0.1, # Minimum production threshold
+  min_sensing = 0.1, # Minimum sensing threshold
+  population.size = FALSE, # Weight by cell type abundance
+  n_permutations = 100, # Permutations for significance
+  n_cores = 1, # Parallel cores
+  seed = 42, # Reproducibility
   verbose = TRUE
 )
 #>   |                                                                              |                                                                      |   0%  |                                                                              |=                                                                     |   1%  |                                                                              |=                                                                     |   2%  |                                                                              |==                                                                    |   3%  |                                                                              |===                                                                   |   4%  |                                                                              |====                                                                  |   5%  |                                                                              |====                                                                  |   6%  |                                                                              |=====                                                                 |   7%  |                                                                              |======                                                                |   8%  |                                                                              |======                                                                |   9%  |                                                                              |=======                                                               |  10%  |                                                                              |========                                                              |  11%  |                                                                              |========                                                              |  12%  |                                                                              |=========                                                             |  13%  |                                                                              |==========                                                            |  14%  |                                                                              |==========                                                            |  15%  |                                                                              |===========                                                           |  16%  |                                                                              |============                                                          |  17%  |                                                                              |=============                                                         |  18%  |                                                                              |=============                                                         |  19%  |                                                                              |==============                                                        |  20%  |                                                                              |===============                                                       |  21%  |                                                                              |===============                                                       |  22%  |                                                                              |================                                                      |  23%  |                                                                              |=================                                                     |  24%  |                                                                              |==================                                                    |  25%  |                                                                              |==================                                                    |  26%  |                                                                              |===================                                                   |  27%  |                                                                              |====================                                                  |  28%  |                                                                              |====================                                                  |  29%  |                                                                              |=====================                                                 |  30%  |                                                                              |======================                                                |  31%  |                                                                              |======================                                                |  32%  |                                                                              |=======================                                               |  33%  |                                                                              |========================                                              |  34%  |                                                                              |========================                                              |  35%  |                                                                              |=========================                                             |  36%  |                                                                              |==========================                                            |  37%  |                                                                              |===========================                                           |  38%  |                                                                              |===========================                                           |  39%  |                                                                              |============================                                          |  40%  |                                                                              |=============================                                         |  41%  |                                                                              |=============================                                         |  42%  |                                                                              |==============================                                        |  43%  |                                                                              |===============================                                       |  44%  |                                                                              |================================                                      |  45%  |                                                                              |================================                                      |  46%  |                                                                              |=================================                                     |  47%  |                                                                              |==================================                                    |  48%  |                                                                              |==================================                                    |  49%  |                                                                              |===================================                                   |  50%  |                                                                              |====================================                                  |  51%  |                                                                              |====================================                                  |  52%  |                                                                              |=====================================                                 |  53%  |                                                                              |======================================                                |  54%  |                                                                              |======================================                                |  55%  |                                                                              |=======================================                               |  56%  |                                                                              |========================================                              |  57%  |                                                                              |=========================================                             |  58%  |                                                                              |=========================================                             |  59%  |                                                                              |==========================================                            |  60%  |                                                                              |===========================================                           |  61%  |                                                                              |===========================================                           |  62%  |                                                                              |============================================                          |  63%  |                                                                              |=============================================                         |  64%  |                                                                              |==============================================                        |  65%  |                                                                              |==============================================                        |  66%  |                                                                              |===============================================                       |  67%  |                                                                              |================================================                      |  68%  |                                                                              |================================================                      |  69%  |                                                                              |=================================================                     |  70%  |                                                                              |==================================================                    |  71%  |                                                                              |==================================================                    |  72%  |                                                                              |===================================================                   |  73%  |                                                                              |====================================================                  |  74%  |                                                                              |====================================================                  |  75%  |                                                                              |=====================================================                 |  76%  |                                                                              |======================================================                |  77%  |                                                                              |=======================================================               |  78%  |                                                                              |=======================================================               |  79%  |                                                                              |========================================================              |  80%  |                                                                              |=========================================================             |  81%  |                                                                              |=========================================================             |  82%  |                                                                              |==========================================================            |  83%  |                                                                              |===========================================================           |  84%  |                                                                              |============================================================          |  85%  |                                                                              |============================================================          |  86%  |                                                                              |=============================================================         |  87%  |                                                                              |==============================================================        |  88%  |                                                                              |==============================================================        |  89%  |                                                                              |===============================================================       |  90%  |                                                                              |================================================================      |  91%  |                                                                              |================================================================      |  92%  |                                                                              |=================================================================     |  93%  |                                                                              |==================================================================    |  94%  |                                                                              |==================================================================    |  95%  |                                                                              |===================================================================   |  96%  |                                                                              |====================================================================  |  97%  |                                                                              |===================================================================== |  98%  |                                                                              |===================================================================== |  99%  |                                                                              |======================================================================| 100%
@@ -59,16 +59,22 @@ obj_harm <- computeCommunication(obj, method = "harmonic", n_permutations = 0, v
 # Compare total communication strength
 par(mfrow = c(1, 3))
 
-total_geom <- apply(obj_geom@communication_scores, c(1,2), sum)
-total_prod <- apply(obj_prod@communication_scores, c(1,2), sum)
-total_harm <- apply(obj_harm@communication_scores, c(1,2), sum)
+total_geom <- apply(obj_geom@communication_scores, c(1, 2), sum)
+total_prod <- apply(obj_prod@communication_scores, c(1, 2), sum)
+total_harm <- apply(obj_harm@communication_scores, c(1, 2), sum)
 
-image(total_geom, main = "Geometric: sqrt(PxS)", col = hcl.colors(50, "YlOrRd"),
-      axes = FALSE)
-image(total_prod, main = "Product: PxS", col = hcl.colors(50, "YlOrRd"),
-      axes = FALSE)
-image(total_harm, main = "Harmonic: 2PS/(P+S)", col = hcl.colors(50, "YlOrRd"),
-      axes = FALSE)
+image(total_geom,
+  main = "Geometric: sqrt(PxS)", col = hcl.colors(50, "YlOrRd"),
+  axes = FALSE
+)
+image(total_prod,
+  main = "Product: PxS", col = hcl.colors(50, "YlOrRd"),
+  axes = FALSE
+)
+image(total_harm,
+  main = "Harmonic: 2PS/(P+S)", col = hcl.colors(50, "YlOrRd"),
+  axes = FALSE
+)
 ```
 
 ![\*\*Figure 1: Communication Score Method Comparison.\*\* Heatmaps
@@ -102,16 +108,20 @@ par(mfrow = c(1, 1))
 # Compare different thresholds
 thresholds <- c(0.05, 0.1, 0.2, 0.3)
 n_interactions <- sapply(thresholds, function(t) {
-  obj_t <- computeCommunication(obj, min_production = t, min_sensing = t, 
-                                n_permutations = 0, verbose = FALSE)
+  obj_t <- computeCommunication(obj,
+    min_production = t, min_sensing = t,
+    n_permutations = 0, verbose = FALSE
+  )
   sum(obj_t@communication_scores > 0)
 })
 
-barplot(n_interactions, names.arg = thresholds,
-        xlab = "Threshold (min_production = min_sensing)",
-        ylab = "Number of Non-zero Interactions",
-        main = "Effect of Thresholds on Detected Interactions",
-        col = "#64B5F6")
+barplot(n_interactions,
+  names.arg = thresholds,
+  xlab = "Threshold (min_production = min_sensing)",
+  ylab = "Number of Non-zero Interactions",
+  main = "Effect of Thresholds on Detected Interactions",
+  col = "#64B5F6"
+)
 ```
 
 ![\*\*Figure 2: Effect of Expression Thresholds.\*\* Higher thresholds
@@ -135,14 +145,18 @@ $$\text{Comm}_{\text{weighted}} = \text{Comm} \times \sqrt{\frac{n_{\text{sender
 
 ``` r
 # Compare with and without population size correction
-obj_no_pop <- computeCommunication(obj, population.size = FALSE, 
-                                   n_permutations = 0, verbose = FALSE)
-obj_with_pop <- computeCommunication(obj, population.size = TRUE, 
-                                     n_permutations = 0, verbose = FALSE)
+obj_no_pop <- computeCommunication(obj,
+  population.size = FALSE,
+  n_permutations = 0, verbose = FALSE
+)
+obj_with_pop <- computeCommunication(obj,
+  population.size = TRUE,
+  n_permutations = 0, verbose = FALSE
+)
 
 # Total communication per cell type pair
-total_no_pop <- apply(obj_no_pop@communication_scores, c(1,2), sum)
-total_with_pop <- apply(obj_with_pop@communication_scores, c(1,2), sum)
+total_no_pop <- apply(obj_no_pop@communication_scores, c(1, 2), sum)
+total_with_pop <- apply(obj_with_pop@communication_scores, c(1, 2), sum)
 
 cat("Without population size correction:\n")
 #> Without population size correction:
@@ -202,8 +216,10 @@ obj <- computeCommunication(obj, n_permutations = 100, verbose = TRUE)
 
 # Check p-value distribution
 pvals <- as.vector(obj@communication_pvalues)
-hist(pvals, breaks = 50, main = "P-value Distribution",
-     xlab = "P-value", col = "#90CAF9", border = "white")
+hist(pvals,
+  breaks = 50, main = "P-value Distribution",
+  xlab = "P-value", col = "#90CAF9", border = "white"
+)
 abline(v = 0.05, col = "red", lwd = 2, lty = 2)
 text(0.1, par("usr")[4] * 0.9, "p = 0.05", col = "red")
 ```
@@ -249,9 +265,9 @@ permutations, we use no adjustment.
 # In real analysis, use adjust_method = "BH" with more permutations
 obj <- filterSignificantInteractions(
   obj,
-  pvalue_threshold = 0.05,              # Significance level
-  adjust_method = "none",               # Use "BH" for real analysis
-  min_score = 0                         # Minimum communication score
+  pvalue_threshold = 0.05, # Significance level
+  adjust_method = "none", # Use "BH" for real analysis
+  min_score = 0 # Minimum communication score
 )
 
 # View results
@@ -259,8 +275,10 @@ cat("Total significant interactions:", nrow(obj@significant_interactions), "\n\n
 #> Total significant interactions: 2754
 cat("Top interactions:\n")
 #> Top interactions:
-head(obj@significant_interactions[, c("sender", "receiver", "metabolite_name", 
-                                       "communication_score", "pvalue_adjusted")])
+head(obj@significant_interactions[, c(
+  "sender", "receiver", "metabolite_name",
+  "communication_score", "pvalue_adjusted"
+)])
 #>              sender receiver        metabolite_name communication_score
 #> 1          Monocyte     Mast            Epinephrine           0.9999641
 #> 2 Normal Epithelial   Plasma       5-Androstenediol           0.9992733
@@ -347,10 +365,11 @@ head(count_result)
 comm_mat <- getCommunicationMatrix(obj, aggregate_method = "sum")
 
 # Visualize
-heatmap(comm_mat, 
-        col = hcl.colors(50, "Reds"),
-        scale = "none",
-        main = "Cell-Cell Communication Strength")
+heatmap(comm_mat,
+  col = hcl.colors(50, "Reds"),
+  scale = "none",
+  main = "Cell-Cell Communication Strength"
+)
 ```
 
 ![\*\*Figure 7: Cell-Cell Communication Matrix.\*\* Aggregated
@@ -425,8 +444,10 @@ head(met_counts, 15)
 
 ``` r
 # Filter for specific metabolites (e.g., amino acids)
-amino_acids <- c("L-Glutamic acid", "L-Glutamine", "L-Alanine", "Glycine", 
-                 "L-Serine", "L-Proline", "L-Aspartic acid")
+amino_acids <- c(
+  "L-Glutamic acid", "L-Glutamine", "L-Alanine", "Glycine",
+  "L-Serine", "L-Proline", "L-Aspartic acid"
+)
 
 aa_interactions <- sig[sig$metabolite_name %in% amino_acids, ]
 cat("Amino acid-mediated interactions:", nrow(aa_interactions), "\n\n")
@@ -434,8 +455,9 @@ cat("Amino acid-mediated interactions:", nrow(aa_interactions), "\n\n")
 
 if (nrow(aa_interactions) > 0) {
   # Summarize
-  aa_summary <- aggregate(communication_score ~ sender + receiver + metabolite_name, 
-                          data = aa_interactions, FUN = sum)
+  aa_summary <- aggregate(communication_score ~ sender + receiver + metabolite_name,
+    data = aa_interactions, FUN = sum
+  )
   aa_summary <- aa_summary[order(-aa_summary$communication_score), ]
   head(aa_summary, 10)
 }
@@ -461,10 +483,12 @@ if (nrow(aa_interactions) > 0) {
 outgoing <- aggregate(communication_score ~ sender, data = sig, FUN = sum)
 outgoing <- outgoing[order(-outgoing$communication_score), ]
 
-barplot(outgoing$communication_score, names.arg = outgoing$sender,
-        las = 2, col = "#FF7043",
-        main = "Outgoing Communication Strength",
-        ylab = "Total Communication Score")
+barplot(outgoing$communication_score,
+  names.arg = outgoing$sender,
+  las = 2, col = "#FF7043",
+  main = "Outgoing Communication Strength",
+  ylab = "Total Communication Score"
+)
 ```
 
 ![\*\*Figure 4: Outgoing Communication Strength.\*\* Total communication
@@ -483,10 +507,12 @@ cell types that produce more metabolites for intercellular signaling.
 incoming <- aggregate(communication_score ~ receiver, data = sig, FUN = sum)
 incoming <- incoming[order(-incoming$communication_score), ]
 
-barplot(incoming$communication_score, names.arg = incoming$receiver,
-        las = 2, col = "#42A5F5",
-        main = "Incoming Communication Strength",
-        ylab = "Total Communication Score")
+barplot(incoming$communication_score,
+  names.arg = incoming$receiver,
+  las = 2, col = "#42A5F5",
+  main = "Incoming Communication Strength",
+  ylab = "Total Communication Score"
+)
 ```
 
 ![\*\*Figure 5: Incoming Communication Strength.\*\* Total communication
@@ -513,12 +539,16 @@ net_flow <- sapply(cell_types, function(ct) {
 net_flow <- sort(net_flow, decreasing = TRUE)
 cols <- ifelse(net_flow > 0, "#FF7043", "#42A5F5")
 
-barplot(net_flow, col = cols, las = 2,
-        main = "Net Communication Flow",
-        ylab = "Outgoing - Incoming")
+barplot(net_flow,
+  col = cols, las = 2,
+  main = "Net Communication Flow",
+  ylab = "Outgoing - Incoming"
+)
 abline(h = 0, lty = 2)
-legend("topright", legend = c("Net Sender", "Net Receiver"),
-       fill = c("#FF7043", "#42A5F5"))
+legend("topright",
+  legend = c("Net Sender", "Net Receiver"),
+  fill = c("#FF7043", "#42A5F5")
+)
 ```
 
 ![\*\*Figure 6: Net Communication Flow.\*\* Difference between outgoing

@@ -106,13 +106,13 @@ space</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/inferProduction.html">inferProduction</a></span><span class="op">(</span></span>
 <span>  <span class="va">obj</span>,</span>
-<span>  method <span class="op">=</span> <span class="st">"combined"</span>,           <span class="co"># Expression scoring method</span></span>
-<span>  mean_method <span class="op">=</span> <span class="st">"arithmetic"</span>,    <span class="co"># Mean calculation method</span></span>
-<span>  min_expression <span class="op">=</span> <span class="fl">0</span>,            <span class="co"># Minimum expression threshold</span></span>
-<span>  min_pct <span class="op">=</span> <span class="fl">0.1</span>,                 <span class="co"># Minimum % of expressing cells</span></span>
-<span>  consider_degradation <span class="op">=</span> <span class="cn">TRUE</span>,   <span class="co"># Account for degradation enzymes</span></span>
-<span>  consider_secretion <span class="op">=</span> <span class="cn">TRUE</span>,     <span class="co"># Weight by extracellular localization</span></span>
-<span>  normalize <span class="op">=</span> <span class="cn">TRUE</span>,              <span class="co"># Normalize across cell types</span></span>
+<span>  method <span class="op">=</span> <span class="st">"combined"</span>, <span class="co"># Expression scoring method</span></span>
+<span>  mean_method <span class="op">=</span> <span class="st">"arithmetic"</span>, <span class="co"># Mean calculation method</span></span>
+<span>  min_expression <span class="op">=</span> <span class="fl">0</span>, <span class="co"># Minimum expression threshold</span></span>
+<span>  min_pct <span class="op">=</span> <span class="fl">0.1</span>, <span class="co"># Minimum % of expressing cells</span></span>
+<span>  consider_degradation <span class="op">=</span> <span class="cn">TRUE</span>, <span class="co"># Account for degradation enzymes</span></span>
+<span>  consider_secretion <span class="op">=</span> <span class="cn">TRUE</span>, <span class="co"># Weight by extracellular localization</span></span>
+<span>  normalize <span class="op">=</span> <span class="cn">TRUE</span>, <span class="co"># Normalize across cell types</span></span>
 <span>  verbose <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 </div>
@@ -134,11 +134,14 @@ space</p>
 <span></span>
 <span><span class="kw">if</span> <span class="op">(</span><span class="va">lactate_id</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">obj_mean</span><span class="op">@</span><span class="va">production_scores</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/barplot.html" class="external-link">barplot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sort.html" class="external-link">sort</a></span><span class="op">(</span><span class="va">obj_mean</span><span class="op">@</span><span class="va">production_scores</span><span class="op">[</span><span class="va">lactate_id</span>, <span class="op">]</span>, decreasing <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
-<span>          las <span class="op">=</span> <span class="fl">2</span>, main <span class="op">=</span> <span class="st">"method = 'mean'"</span>, col <span class="op">=</span> <span class="st">"#64B5F6"</span>, cex.names <span class="op">=</span> <span class="fl">0.7</span><span class="op">)</span></span>
+<span>    las <span class="op">=</span> <span class="fl">2</span>, main <span class="op">=</span> <span class="st">"method = 'mean'"</span>, col <span class="op">=</span> <span class="st">"#64B5F6"</span>, cex.names <span class="op">=</span> <span class="fl">0.7</span></span>
+<span>  <span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/barplot.html" class="external-link">barplot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sort.html" class="external-link">sort</a></span><span class="op">(</span><span class="va">obj_prop</span><span class="op">@</span><span class="va">production_scores</span><span class="op">[</span><span class="va">lactate_id</span>, <span class="op">]</span>, decreasing <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
-<span>          las <span class="op">=</span> <span class="fl">2</span>, main <span class="op">=</span> <span class="st">"method = 'proportion'"</span>, col <span class="op">=</span> <span class="st">"#81C784"</span>, cex.names <span class="op">=</span> <span class="fl">0.7</span><span class="op">)</span></span>
+<span>    las <span class="op">=</span> <span class="fl">2</span>, main <span class="op">=</span> <span class="st">"method = 'proportion'"</span>, col <span class="op">=</span> <span class="st">"#81C784"</span>, cex.names <span class="op">=</span> <span class="fl">0.7</span></span>
+<span>  <span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/barplot.html" class="external-link">barplot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sort.html" class="external-link">sort</a></span><span class="op">(</span><span class="va">obj_comb</span><span class="op">@</span><span class="va">production_scores</span><span class="op">[</span><span class="va">lactate_id</span>, <span class="op">]</span>, decreasing <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
-<span>          las <span class="op">=</span> <span class="fl">2</span>, main <span class="op">=</span> <span class="st">"method = 'combined'"</span>, col <span class="op">=</span> <span class="st">"#FFB74D"</span>, cex.names <span class="op">=</span> <span class="fl">0.7</span><span class="op">)</span></span>
+<span>    las <span class="op">=</span> <span class="fl">2</span>, main <span class="op">=</span> <span class="st">"method = 'combined'"</span>, col <span class="op">=</span> <span class="st">"#FFB74D"</span>, cex.names <span class="op">=</span> <span class="fl">0.7</span></span>
+<span>  <span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
 <img src="03-production-sensing_files/figure-html/method_comparison-1.png" class="r-plt" alt="**Figure 1: Expression Scoring Method Comparison.** Lactate production potential across cell types using three different scoring methods. 'mean' uses average expression, 'proportion' uses percentage of expressing cells, and 'combined' multiplies both for a balanced score." width="100%"><p class="caption">
@@ -168,8 +171,10 @@ on/off</p>
 <span></span>
 <span><span class="co"># Correlation between methods</span></span>
 <span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">obj_arith</span><span class="op">@</span><span class="va">production_scores</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="va">cor_val</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/vector.html" class="external-link">as.vector</a></span><span class="op">(</span><span class="va">obj_arith</span><span class="op">@</span><span class="va">production_scores</span><span class="op">)</span>, </span>
-<span>                 <span class="fu"><a href="https://rdrr.io/r/base/vector.html" class="external-link">as.vector</a></span><span class="op">(</span><span class="va">obj_trim</span><span class="op">@</span><span class="va">production_scores</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="va">cor_val</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/vector.html" class="external-link">as.vector</a></span><span class="op">(</span><span class="va">obj_arith</span><span class="op">@</span><span class="va">production_scores</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/vector.html" class="external-link">as.vector</a></span><span class="op">(</span><span class="va">obj_trim</span><span class="op">@</span><span class="va">production_scores</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"Correlation between arithmetic and trimean:"</span>, <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">cor_val</span>, <span class="fl">3</span><span class="op">)</span>, <span class="st">"\n"</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span><span class="co">#&gt; Correlation between arithmetic and trimean: 0.786</span></span></code></pre></div>
@@ -266,11 +271,12 @@ full weight (1.0), while intracellular metabolites are downweighted
 <span><span class="va">top_mets</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sort.html" class="external-link">sort</a></span><span class="op">(</span><span class="va">prod_var</span>, decreasing <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">30</span><span class="op">]</span></span>
 <span></span>
 <span><span class="co"># Simple heatmap</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/stats/heatmap.html" class="external-link">heatmap</a></span><span class="op">(</span><span class="va">prod_scores</span><span class="op">[</span><span class="va">top_mets</span>, <span class="op">]</span>, </span>
-<span>        scale <span class="op">=</span> <span class="st">"row"</span>,</span>
-<span>        col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grDevices/palettes.html" class="external-link">hcl.colors</a></span><span class="op">(</span><span class="fl">50</span>, <span class="st">"RdYlBu"</span>, rev <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
-<span>        margins <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">15</span><span class="op">)</span>,</span>
-<span>        main <span class="op">=</span> <span class="st">"Production Potential (Top 30 Variable Metabolites)"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/stats/heatmap.html" class="external-link">heatmap</a></span><span class="op">(</span><span class="va">prod_scores</span><span class="op">[</span><span class="va">top_mets</span>, <span class="op">]</span>,</span>
+<span>  scale <span class="op">=</span> <span class="st">"row"</span>,</span>
+<span>  col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grDevices/palettes.html" class="external-link">hcl.colors</a></span><span class="op">(</span><span class="fl">50</span>, <span class="st">"RdYlBu"</span>, rev <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
+<span>  margins <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">15</span><span class="op">)</span>,</span>
+<span>  main <span class="op">=</span> <span class="st">"Production Potential (Top 30 Variable Metabolites)"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
 <img src="03-production-sensing_files/figure-html/prod_heatmap-1.png" class="r-plt" alt="**Figure 2: Production Potential Heatmap.** Top 30 metabolites with highest variance across cell types. Row-scaled values show relative production potential. Clustering reveals cell types with similar metabolic production profiles." width="100%"><p class="caption">
 <strong>Figure 2: Production Potential Heatmap.</strong> Top 30
@@ -300,15 +306,15 @@ transporters</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/inferSensing.html">inferSensing</a></span><span class="op">(</span></span>
 <span>  <span class="va">obj</span>,</span>
-<span>  method <span class="op">=</span> <span class="st">"combined"</span>,           <span class="co"># Expression scoring method</span></span>
-<span>  mean_method <span class="op">=</span> <span class="st">"arithmetic"</span>,    <span class="co"># Mean calculation method</span></span>
-<span>  min_expression <span class="op">=</span> <span class="fl">0</span>,            <span class="co"># Minimum expression threshold</span></span>
-<span>  min_pct <span class="op">=</span> <span class="fl">0.1</span>,                 <span class="co"># Minimum % of expressing cells</span></span>
-<span>  weight_by_affinity <span class="op">=</span> <span class="cn">TRUE</span>,     <span class="co"># Weight by binding affinity</span></span>
-<span>  include_transporters <span class="op">=</span> <span class="cn">TRUE</span>,   <span class="co"># Include uptake transporters</span></span>
-<span>  use_hill <span class="op">=</span> <span class="cn">FALSE</span>,              <span class="co"># Apply Hill function transformation</span></span>
-<span>  hill_n <span class="op">=</span> <span class="fl">1</span>,                    <span class="co"># Hill coefficient</span></span>
-<span>  hill_Kh <span class="op">=</span> <span class="fl">0.5</span>,                 <span class="co"># Half-maximal threshold</span></span>
+<span>  method <span class="op">=</span> <span class="st">"combined"</span>, <span class="co"># Expression scoring method</span></span>
+<span>  mean_method <span class="op">=</span> <span class="st">"arithmetic"</span>, <span class="co"># Mean calculation method</span></span>
+<span>  min_expression <span class="op">=</span> <span class="fl">0</span>, <span class="co"># Minimum expression threshold</span></span>
+<span>  min_pct <span class="op">=</span> <span class="fl">0.1</span>, <span class="co"># Minimum % of expressing cells</span></span>
+<span>  weight_by_affinity <span class="op">=</span> <span class="cn">TRUE</span>, <span class="co"># Weight by binding affinity</span></span>
+<span>  include_transporters <span class="op">=</span> <span class="cn">TRUE</span>, <span class="co"># Include uptake transporters</span></span>
+<span>  use_hill <span class="op">=</span> <span class="cn">FALSE</span>, <span class="co"># Apply Hill function transformation</span></span>
+<span>  hill_n <span class="op">=</span> <span class="fl">1</span>, <span class="co"># Hill coefficient</span></span>
+<span>  hill_Kh <span class="op">=</span> <span class="fl">0.5</span>, <span class="co"># Half-maximal threshold</span></span>
 <span>  normalize <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -368,31 +374,37 @@ receptor-mediated signaling (not metabolic uptake).</p>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mfrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Find a common metabolite</span></span>
-<span><span class="va">common_met</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sets.html" class="external-link">intersect</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">obj_linear</span><span class="op">@</span><span class="va">sensing_scores</span><span class="op">)</span>, </span>
-<span>                        <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">obj_hill</span><span class="op">@</span><span class="va">sensing_scores</span><span class="op">)</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span></span>
+<span><span class="va">common_met</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sets.html" class="external-link">intersect</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">obj_linear</span><span class="op">@</span><span class="va">sensing_scores</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">obj_hill</span><span class="op">@</span><span class="va">sensing_scores</span><span class="op">)</span></span>
+<span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span></span>
 <span></span>
 <span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">common_met</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">obj_linear</span><span class="op">@</span><span class="va">sensing_scores</span><span class="op">[</span><span class="va">common_met</span>, <span class="op">]</span>,</span>
-<span>       <span class="va">obj_hill</span><span class="op">@</span><span class="va">sensing_scores</span><span class="op">[</span><span class="va">common_met</span>, <span class="op">]</span>,</span>
-<span>       xlab <span class="op">=</span> <span class="st">"Linear Sensing Score"</span>,</span>
-<span>       ylab <span class="op">=</span> <span class="st">"Hill-transformed Score"</span>,</span>
-<span>       main <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"Effect of Hill Function on"</span>, <span class="va">common_met</span><span class="op">)</span>,</span>
-<span>       pch <span class="op">=</span> <span class="fl">19</span>, col <span class="op">=</span> <span class="st">"#1976D2"</span><span class="op">)</span></span>
+<span>    <span class="va">obj_hill</span><span class="op">@</span><span class="va">sensing_scores</span><span class="op">[</span><span class="va">common_met</span>, <span class="op">]</span>,</span>
+<span>    xlab <span class="op">=</span> <span class="st">"Linear Sensing Score"</span>,</span>
+<span>    ylab <span class="op">=</span> <span class="st">"Hill-transformed Score"</span>,</span>
+<span>    main <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"Effect of Hill Function on"</span>, <span class="va">common_met</span><span class="op">)</span>,</span>
+<span>    pch <span class="op">=</span> <span class="fl">19</span>, col <span class="op">=</span> <span class="st">"#1976D2"</span></span>
+<span>  <span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/abline.html" class="external-link">abline</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, lty <span class="op">=</span> <span class="fl">2</span>, col <span class="op">=</span> <span class="st">"gray"</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span></span>
 <span><span class="co"># Hill parameter comparison</span></span>
 <span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">0.01</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">x</span>, type <span class="op">=</span> <span class="st">"l"</span>, lty <span class="op">=</span> <span class="fl">2</span>, col <span class="op">=</span> <span class="st">"gray"</span>,</span>
-<span>     xlab <span class="op">=</span> <span class="st">"Expression"</span>, ylab <span class="op">=</span> <span class="st">"Sensing Score"</span>,</span>
-<span>     main <span class="op">=</span> <span class="st">"Hill Function Parameters"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">x</span>,</span>
+<span>  type <span class="op">=</span> <span class="st">"l"</span>, lty <span class="op">=</span> <span class="fl">2</span>, col <span class="op">=</span> <span class="st">"gray"</span>,</span>
+<span>  xlab <span class="op">=</span> <span class="st">"Expression"</span>, ylab <span class="op">=</span> <span class="st">"Sensing Score"</span>,</span>
+<span>  main <span class="op">=</span> <span class="st">"Hill Function Parameters"</span></span>
+<span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">x</span><span class="op">^</span><span class="fl">1</span> <span class="op">/</span> <span class="op">(</span><span class="fl">0.3</span><span class="op">^</span><span class="fl">1</span> <span class="op">+</span> <span class="va">x</span><span class="op">^</span><span class="fl">1</span><span class="op">)</span>, col <span class="op">=</span> <span class="st">"blue"</span>, lwd <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">x</span><span class="op">^</span><span class="fl">1</span> <span class="op">/</span> <span class="op">(</span><span class="fl">0.5</span><span class="op">^</span><span class="fl">1</span> <span class="op">+</span> <span class="va">x</span><span class="op">^</span><span class="fl">1</span><span class="op">)</span>, col <span class="op">=</span> <span class="st">"red"</span>, lwd <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">x</span><span class="op">^</span><span class="fl">1</span> <span class="op">/</span> <span class="op">(</span><span class="fl">0.7</span><span class="op">^</span><span class="fl">1</span> <span class="op">+</span> <span class="va">x</span><span class="op">^</span><span class="fl">1</span><span class="op">)</span>, col <span class="op">=</span> <span class="st">"green"</span>, lwd <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/legend.html" class="external-link">legend</a></span><span class="op">(</span><span class="st">"bottomright"</span>, </span>
-<span>       legend <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Linear"</span>, <span class="st">"Kh=0.3"</span>, <span class="st">"Kh=0.5"</span>, <span class="st">"Kh=0.7"</span><span class="op">)</span>,</span>
-<span>       col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"gray"</span>, <span class="st">"blue"</span>, <span class="st">"red"</span>, <span class="st">"green"</span><span class="op">)</span>,</span>
-<span>       lty <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span>, lwd <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/legend.html" class="external-link">legend</a></span><span class="op">(</span><span class="st">"bottomright"</span>,</span>
+<span>  legend <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Linear"</span>, <span class="st">"Kh=0.3"</span>, <span class="st">"Kh=0.5"</span>, <span class="st">"Kh=0.7"</span><span class="op">)</span>,</span>
+<span>  col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"gray"</span>, <span class="st">"blue"</span>, <span class="st">"red"</span>, <span class="st">"green"</span><span class="op">)</span>,</span>
+<span>  lty <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span>, lwd <span class="op">=</span> <span class="fl">2</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
 <img src="03-production-sensing_files/figure-html/hill_effect-1.png" class="r-plt" alt="**Figure 3: Hill Function Effect on Sensing Scores.** Left: Comparison of linear vs Hill-transformed sensing scores for a metabolite. Points below the diagonal indicate saturation at high expression levels. Right: Different Kh values affect when saturation begins - lower Kh means earlier saturation." width="100%"><p class="caption">
 <strong>Figure 3: Hill Function Effect on Sensing Scores.</strong> Left:
@@ -623,27 +635,32 @@ Biological realism is important</p>
 </h3>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Get common metabolites</span></span>
-<span><span class="va">common_mets</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sets.html" class="external-link">intersect</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">obj</span><span class="op">@</span><span class="va">production_scores</span><span class="op">)</span>, </span>
-<span>                         <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">obj</span><span class="op">@</span><span class="va">sensing_scores</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">common_mets</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sets.html" class="external-link">intersect</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">obj</span><span class="op">@</span><span class="va">production_scores</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">obj</span><span class="op">@</span><span class="va">sensing_scores</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
 <span></span>
 <span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">common_mets</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="co"># Average production and sensing per cell type</span></span>
 <span>  <span class="va">avg_prod</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/Matrix/man/colSums-methods.html" class="external-link">colMeans</a></span><span class="op">(</span><span class="va">obj</span><span class="op">@</span><span class="va">production_scores</span><span class="op">[</span><span class="va">common_mets</span>, <span class="op">]</span><span class="op">)</span></span>
 <span>  <span class="va">avg_sens</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/Matrix/man/colSums-methods.html" class="external-link">colMeans</a></span><span class="op">(</span><span class="va">obj</span><span class="op">@</span><span class="va">sensing_scores</span><span class="op">[</span><span class="va">common_mets</span>, <span class="op">]</span><span class="op">)</span></span>
-<span>  </span>
+<span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">avg_prod</span>, <span class="va">avg_sens</span>,</span>
-<span>       xlab <span class="op">=</span> <span class="st">"Average Production Potential"</span>,</span>
-<span>       ylab <span class="op">=</span> <span class="st">"Average Sensing Capability"</span>,</span>
-<span>       main <span class="op">=</span> <span class="st">"Cell Type Metabolic Roles"</span>,</span>
-<span>       pch <span class="op">=</span> <span class="fl">19</span>, cex <span class="op">=</span> <span class="fl">1.5</span>, col <span class="op">=</span> <span class="st">"#1976D2"</span><span class="op">)</span></span>
+<span>    xlab <span class="op">=</span> <span class="st">"Average Production Potential"</span>,</span>
+<span>    ylab <span class="op">=</span> <span class="st">"Average Sensing Capability"</span>,</span>
+<span>    main <span class="op">=</span> <span class="st">"Cell Type Metabolic Roles"</span>,</span>
+<span>    pch <span class="op">=</span> <span class="fl">19</span>, cex <span class="op">=</span> <span class="fl">1.5</span>, col <span class="op">=</span> <span class="st">"#1976D2"</span></span>
+<span>  <span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/text.html" class="external-link">text</a></span><span class="op">(</span><span class="va">avg_prod</span>, <span class="va">avg_sens</span>, <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">avg_prod</span><span class="op">)</span>, pos <span class="op">=</span> <span class="fl">3</span>, cex <span class="op">=</span> <span class="fl">0.7</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/abline.html" class="external-link">abline</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, lty <span class="op">=</span> <span class="fl">2</span>, col <span class="op">=</span> <span class="st">"gray"</span><span class="op">)</span></span>
-<span>  </span>
+<span></span>
 <span>  <span class="co"># Annotate quadrants</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/graphics/text.html" class="external-link">text</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">avg_prod</span><span class="op">)</span> <span class="op">*</span> <span class="fl">0.9</span>, <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">avg_sens</span><span class="op">)</span> <span class="op">*</span> <span class="fl">0.1</span>, <span class="st">"High Production\nLow Sensing"</span>, </span>
-<span>       cex <span class="op">=</span> <span class="fl">0.8</span>, col <span class="op">=</span> <span class="st">"gray40"</span><span class="op">)</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/graphics/text.html" class="external-link">text</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">avg_prod</span><span class="op">)</span> <span class="op">*</span> <span class="fl">0.1</span>, <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">avg_sens</span><span class="op">)</span> <span class="op">*</span> <span class="fl">0.9</span>, <span class="st">"Low Production\nHigh Sensing"</span>, </span>
-<span>       cex <span class="op">=</span> <span class="fl">0.8</span>, col <span class="op">=</span> <span class="st">"gray40"</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/graphics/text.html" class="external-link">text</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">avg_prod</span><span class="op">)</span> <span class="op">*</span> <span class="fl">0.9</span>, <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">avg_sens</span><span class="op">)</span> <span class="op">*</span> <span class="fl">0.1</span>, <span class="st">"High Production\nLow Sensing"</span>,</span>
+<span>    cex <span class="op">=</span> <span class="fl">0.8</span>, col <span class="op">=</span> <span class="st">"gray40"</span></span>
+<span>  <span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/graphics/text.html" class="external-link">text</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">avg_prod</span><span class="op">)</span> <span class="op">*</span> <span class="fl">0.1</span>, <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">avg_sens</span><span class="op">)</span> <span class="op">*</span> <span class="fl">0.9</span>, <span class="st">"Low Production\nHigh Sensing"</span>,</span>
+<span>    cex <span class="op">=</span> <span class="fl">0.8</span>, col <span class="op">=</span> <span class="st">"gray40"</span></span>
+<span>  <span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
 <img src="03-production-sensing_files/figure-html/prod_vs_sens-1.png" class="r-plt" alt="**Figure 4: Cell Type Metabolic Roles.** Scatter plot comparing average production potential (x-axis) vs sensing capability (y-axis) for each cell type. Cell types above the diagonal are net sensors; those below are net producers." width="100%"><p class="caption">
@@ -662,19 +679,22 @@ sensors; those below are net producers.
 <span><span class="va">met_name</span> <span class="op">&lt;-</span> <span class="st">"L-Lactic acid"</span></span>
 <span><span class="va">met_id</span> <span class="op">&lt;-</span> <span class="st">"HMDB0000190"</span></span>
 <span></span>
-<span><span class="kw">if</span> <span class="op">(</span><span class="va">met_id</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">obj</span><span class="op">@</span><span class="va">production_scores</span><span class="op">)</span> <span class="op">&amp;&amp;</span> </span>
-<span>    <span class="va">met_id</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">obj</span><span class="op">@</span><span class="va">sensing_scores</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  </span>
+<span><span class="kw">if</span> <span class="op">(</span><span class="va">met_id</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">obj</span><span class="op">@</span><span class="va">production_scores</span><span class="op">)</span> <span class="op">&amp;&amp;</span></span>
+<span>  <span class="va">met_id</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">obj</span><span class="op">@</span><span class="va">sensing_scores</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">prod</span> <span class="op">&lt;-</span> <span class="va">obj</span><span class="op">@</span><span class="va">production_scores</span><span class="op">[</span><span class="va">met_id</span>, <span class="op">]</span></span>
 <span>  <span class="va">sens</span> <span class="op">&lt;-</span> <span class="va">obj</span><span class="op">@</span><span class="va">sensing_scores</span><span class="op">[</span><span class="va">met_id</span>, <span class="op">]</span></span>
-<span>  </span>
+<span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mfrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/graphics/barplot.html" class="external-link">barplot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sort.html" class="external-link">sort</a></span><span class="op">(</span><span class="va">prod</span>, decreasing <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, las <span class="op">=</span> <span class="fl">2</span>,</span>
-<span>          main <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">met_name</span>, <span class="st">"- Production"</span><span class="op">)</span>,</span>
-<span>          col <span class="op">=</span> <span class="st">"#FF7043"</span>, cex.names <span class="op">=</span> <span class="fl">0.7</span><span class="op">)</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/graphics/barplot.html" class="external-link">barplot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sort.html" class="external-link">sort</a></span><span class="op">(</span><span class="va">sens</span>, decreasing <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, las <span class="op">=</span> <span class="fl">2</span>,</span>
-<span>          main <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">met_name</span>, <span class="st">"- Sensing"</span><span class="op">)</span>,</span>
-<span>          col <span class="op">=</span> <span class="st">"#42A5F5"</span>, cex.names <span class="op">=</span> <span class="fl">0.7</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/graphics/barplot.html" class="external-link">barplot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sort.html" class="external-link">sort</a></span><span class="op">(</span><span class="va">prod</span>, decreasing <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
+<span>    las <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>    main <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">met_name</span>, <span class="st">"- Production"</span><span class="op">)</span>,</span>
+<span>    col <span class="op">=</span> <span class="st">"#FF7043"</span>, cex.names <span class="op">=</span> <span class="fl">0.7</span></span>
+<span>  <span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/graphics/barplot.html" class="external-link">barplot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sort.html" class="external-link">sort</a></span><span class="op">(</span><span class="va">sens</span>, decreasing <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
+<span>    las <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>    main <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">met_name</span>, <span class="st">"- Sensing"</span><span class="op">)</span>,</span>
+<span>    col <span class="op">=</span> <span class="st">"#42A5F5"</span>, cex.names <span class="op">=</span> <span class="fl">0.7</span></span>
+<span>  <span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mfrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
