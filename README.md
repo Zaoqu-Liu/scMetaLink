@@ -13,6 +13,12 @@
 
 Metabolites serve as critical signaling molecules in the cellular microenvironment. While tools like CellChat and CellPhoneDB have advanced our understanding of ligand-receptor interactions, the metabolic dimension of intercellular communication remains underexplored. scMetaLink addresses this gap by integrating enzyme expression, transporter activity, and receptor-metabolite interactions to reconstruct metabolite-mediated communication networks.
 
+## Workflow
+
+<p align="center">
+  <img src="man/figures/flowchart.png" width="90%" />
+</p>
+
 ## Features
 
 - **Metabolite Production Inference**: Estimate metabolite production potential based on biosynthetic enzyme expression

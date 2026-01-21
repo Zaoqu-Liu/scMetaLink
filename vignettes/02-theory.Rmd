@@ -25,20 +25,8 @@ knitr::opts_chunk$set(
 
 scMetaLink models metabolite-mediated cell communication as a two-step process:
 
-```
-┌─────────────────┐                         ┌─────────────────┐
-│   Sender Cell   │                         │  Receiver Cell  │
-│                 │                         │                 │
-│  ┌───────────┐  │      Metabolite         │  ┌───────────┐  │
-│  │ Synthesis │──┼─────────────────----->──┼──│ Receptor  │  │
-│  │  Enzymes  │  │                         │  │ Binding   │  │
-│  └───────────┘  │                         │  └───────────┘  │
-│       ↓         │                         │       or        │
-│  ┌───────────┐  │                         │  ┌───────────┐  │
-│  │ Secretion │  │                         │  │  Uptake   │  │
-│  │Transporter│  │                         │  │Transporter│  │
-│  └───────────┘  │                         │  └───────────┘  │
-└─────────────────┘                         └─────────────────┘
+```{r flowchart, echo=FALSE, out.width="100%", fig.cap="**Figure 1: scMetaLink Workflow.** Schematic overview of the analysis pipeline for inferring metabolite-mediated cell-cell communication."}
+knitr::include_graphics("flowchart.png")
 ```
 
 ## The MetalinksDB Knowledge Base

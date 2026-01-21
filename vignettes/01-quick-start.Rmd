@@ -25,6 +25,10 @@ knitr::opts_chunk$set(
 
 **scMetaLink** infers metabolite-mediated cell-cell communication from single-cell RNA-seq data. Unlike traditional ligand-receptor analysis, scMetaLink focuses on metabolites as signaling mediators, capturing a crucial but often overlooked layer of intercellular communication.
 
+```{r flowchart, echo=FALSE, out.width="100%", fig.cap="**Figure 1: scMetaLink Workflow.** Overview of the scMetaLink analysis pipeline."}
+knitr::include_graphics("flowchart.png")
+```
+
 ### What You'll Learn
 
 1. How to set up a scMetaLink analysis
