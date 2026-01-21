@@ -1,10 +1,12 @@
 # scMetaLink <img src="man/figures/logo.png" align="right" height="139" />
 <!-- badges: start -->
-[![R-CMD-check](https://github.com/liuzaoqu/scMetaLink/workflows/R-CMD-check/badge.svg)](https://github.com/liuzaoqu/scMetaLink/actions)
+[![R-CMD-check](https://github.com/Zaoqu-Liu/scMetaLink/workflows/R-CMD-check/badge.svg)](https://github.com/Zaoqu-Liu/scMetaLink/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 <!-- badges: end -->
 
 ## Single-Cell Metabolite-Mediated Cell Communication Analysis
+
+📖 **Documentation**: [https://Zaoqu-Liu.github.io/scMetaLink/](https://Zaoqu-Liu.github.io/scMetaLink/)
 
 **scMetaLink** is a comprehensive R package for inferring metabolite-mediated cell-cell communication from single-cell transcriptomic data. While existing tools like CellChat and CellPhoneDB focus on ligand-receptor interactions, scMetaLink fills a critical gap by enabling the study of metabolite signaling in the cellular microenvironment.
 
@@ -32,7 +34,7 @@ scMetaLink leverages **MetalinksDB**, a comprehensive database containing:
 
 ```r
 # Install from GitHub
-devtools::install_github("liuzaoqu/scMetaLink")
+devtools::install_github("Zaoqu-Liu/scMetaLink")
 
 # Or install from local
 install.packages("scMetaLink", repos = NULL, type = "source")
@@ -164,4 +166,5 @@ MIT License
 
 - **Author**: Zaoqu Liu
 - **Email**: liuzaoqu@163.com
-- **GitHub**: [https://github.com/liuzaoqu/scMetaLink](https://github.com/liuzaoqu/scMetaLink)
+- **GitHub**: [https://github.com/Zaoqu-Liu/scMetaLink](https://github.com/Zaoqu-Liu/scMetaLink)
+- **Documentation**: [https://Zaoqu-Liu.github.io/scMetaLink/](https://Zaoqu-Liu.github.io/scMetaLink/)
