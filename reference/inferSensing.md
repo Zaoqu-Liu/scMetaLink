@@ -1,0 +1,92 @@
+# Infer Metabolite Sensing Capability
+
+Infer metabolite sensing capability for each cell type based on receptor
+and transporter expression. Sensing capability reflects a cell type's
+capacity to detect and respond to extracellular metabolites.
+
+## Usage
+
+``` r
+inferSensing(
+  object,
+  method = "combined",
+  mean_method = "arithmetic",
+  min_expression = 0,
+  min_pct = 0.1,
+  weight_by_affinity = TRUE,
+  include_transporters = TRUE,
+  use_hill = FALSE,
+  hill_n = 1,
+  hill_Kh = 0.5,
+  normalize = TRUE,
+  verbose = TRUE
+)
+```
+
+## Arguments
+
+- object:
+
+  A scMetaLink object
+
+- method:
+
+  Character. Scoring method: "mean", "proportion", or "combined"
+
+- mean_method:
+
+  Character. Method for calculating mean expression: "arithmetic"
+  (standard mean) or "trimean" (more robust to outliers and dropout).
+
+- min_expression:
+
+  Numeric. Minimum expression threshold
+
+- min_pct:
+
+  Numeric. Minimum percentage of expressing cells (0-1)
+
+- weight_by_affinity:
+
+  Logical. Weight by receptor-metabolite affinity score
+
+- include_transporters:
+
+  Logical. Include uptake transporters in sensing
+
+- use_hill:
+
+  Logical. Apply Hill function transformation to model receptor binding
+  saturation kinetics. When TRUE, high expression levels show
+  diminishing returns, reflecting biological receptor saturation.
+
+- hill_n:
+
+  Numeric. Hill coefficient (cooperativity). Default 1 (no
+  cooperativity). Values \> 1 indicate positive cooperativity.
+
+- hill_Kh:
+
+  Numeric. Half-maximal response threshold (0-1 scale after
+  normalization). Default 0.5. Lower values mean saturation occurs at
+  lower expression levels.
+
+- normalize:
+
+  Logical. Normalize scores across cell types
+
+- verbose:
+
+  Logical. Print progress messages
+
+## Value
+
+Updated scMetaLink object with sensing_scores slot filled
+
+## Details
+
+The Hill function transformation models receptor-ligand binding
+dynamics: \$\$P = \frac{E^n}{K_h^n + E^n}\$\$ where E is expression, n
+is the Hill coefficient, and Kh is the half-maximal threshold. This
+reflects the biological reality that receptor signaling saturates at
+high ligand/receptor concentrations.

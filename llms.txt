@@ -1,0 +1,344 @@
+# scMetaLink ![](reference/figures/logo.png)
+
+## Single-Cell Metabolite-Mediated Cell Communication Analysis
+
+**scMetaLink** is a comprehensive R package for inferring
+metabolite-mediated cell-cell communication from single-cell
+transcriptomic data. While existing tools like CellChat and CellPhoneDB
+focus on ligand-receptor interactions, scMetaLink fills a critical gap
+by enabling the study of metabolite signaling in the cellular
+microenvironment.
+
+### Key Features
+
+🧬 **Metabolite Production Inference**: Infer metabolite production
+potential from enzyme expression patterns
+
+🎯 **Metabolite Sensing Analysis**: Quantify metabolite sensing
+capability via receptor/transporter expression
+
+📊 **Statistical Framework**: Permutation-based significance testing
+with multiple hypothesis correction
+
+🔬 **Pathway Integration**: Aggregate results at the pathway level for
+biological interpretation
+
+📈 **Publication-Ready Visualization**: Heatmaps, chord diagrams, and
+network plots
+
+### Database
+
+scMetaLink leverages **MetalinksDB**, a comprehensive database
+containing: - **41,894** metabolite-protein interactions - **1,128**
+metabolites - **4,374** proteins/genes - **157,741** pathway
+associations
+
+## Installation
+
+``` r
+# Install from GitHub
+devtools::install_github("liuzaoqu/scMetaLink")
+
+# Or install from local
+install.packages("scMetaLink", repos = NULL, type = "source")
+```
+
+## Quick Start
+
+### One-Step Analysis
+
+``` r
+library(scMetaLink)
+
+# Run complete analysis pipeline
+result <- runScMetaLink(
+  expression_data = expr_matrix,     # genes x cells matrix
+  cell_meta = cell_metadata,         # data.frame with cell annotations
+  cell_type_column = "cell_type",    # column name for cell type
+  n_permutations = 1000              # for significance testing
+)
+
+# View significant interactions
+sig <- getSignificantInteractions(result)
+head(sig)
+```
+
+### From Seurat Object
+
+``` r
+# Direct analysis from Seurat
+result <- runScMetaLinkSeurat(
+  seurat_obj,
+  cell_type_column = "seurat_clusters"
+)
+```
+
+### Step-by-Step Analysis
+
+``` r
+# Create object
+obj <- createScMetaLink(expr_matrix, cell_meta, "cell_type")
+
+# Infer metabolite production
+obj <- inferProduction(obj)
+
+# Infer metabolite sensing
+obj <- inferSensing(obj)
+
+# Compute communication
+obj <- computeCommunication(obj, n_permutations = 1000)
+
+# Filter significant
+obj <- filterSignificantInteractions(obj, pvalue_threshold = 0.05)
+
+# Pathway analysis
+obj <- aggregateByPathway(obj)
+```
+
+## Visualization
+
+``` r
+# Communication heatmap
+plotCommunicationHeatmap(result)
+
+# Chord diagram
+plotCommunicationCircle(result)
+
+# Network plot
+plotCommunicationNetwork(result)
+
+# Top interactions
+plotTopInteractions(result)
+
+# Pathway analysis
+plotPathwayCommunication(result)
+```
+
+## Methodology
+
+### Metabolite Production Potential (MPP)
+
+$$MPP(m,c) = \frac{\sum\limits_{e \in E_{m}^{+}}w_{e} \cdot expr(e,c)}{\left| E_{m}^{+} \right|} \cdot S(m)$$
+
+Where: - $E_{m}^{+}$: Enzymes producing metabolite $m$ - $w_{e}$:
+Confidence weight for enzyme - $S(m)$: Secretion potential
+
+### Metabolite Sensing Capability (MSC)
+
+$$MSC(m,c) = \sum\limits_{r \in R_{m}}w_{r} \cdot \tau(r) \cdot expr(r,c)$$
+
+Where: - $R_{m}$: Receptors for metabolite $m$ - $\tau(r)$: Receptor
+type weight
+
+### Communication Score
+
+$$C\left( s\rightarrow r,m \right) = \sqrt{MPP(m,s) \times MSC(m,r)}$$
+
+## Comparison with Existing Tools
+
+| Feature                   | CellChat | CellPhoneDB | **scMetaLink** |
+|---------------------------|----------|-------------|----------------|
+| Ligand-Receptor           | ✓        | ✓           | ✓              |
+| **Metabolite Ligands**    | ✗        | ✗           | **✓**          |
+| **Metabolite Production** | ✗        | ✗           | **✓**          |
+| **Secretion Potential**   | ✗        | ✗           | **✓**          |
+| Pathway Integration       | Limited  | Limited     | **Extensive**  |
+
+## Applications
+
+- **Tumor Microenvironment**: Study metabolic crosstalk between cancer
+  and immune cells
+- **Immune Metabolism**: Understand metabolite-mediated immune
+  regulation
+- **Development**: Track metabolic communication during differentiation
+- **Disease**: Identify dysregulated metabolic signaling
+
+## Citation
+
+    Liu Z, et al. (2026). scMetaLink: Inferring metabolite-mediated cell-cell
+    communication from single-cell transcriptomic data. [Journal Name].
+
+## License
+
+MIT License
+
+## Contact
+
+- **Author**: Zaoqu Liu
+- **Email**: <liuzaoqu@163.com>
+- **GitHub**: <https://github.com/liuzaoqu/scMetaLink>
+
+# Package index
+
+## Main Workflow
+
+High-level functions for running scMetaLink analysis
+
+- [`createScMetaLink()`](https://Zaoqu-Liu.github.io/scMetaLink/reference/createScMetaLink.md)
+  : Create scMetaLink Object
+- [`createScMetaLinkFromSeurat()`](https://Zaoqu-Liu.github.io/scMetaLink/reference/createScMetaLinkFromSeurat.md)
+  : Create scMetaLink from Seurat Object
+- [`runScMetaLink()`](https://Zaoqu-Liu.github.io/scMetaLink/reference/runScMetaLink.md)
+  : Run Complete scMetaLink Analysis
+- [`runScMetaLinkSeurat()`](https://Zaoqu-Liu.github.io/scMetaLink/reference/runScMetaLinkSeurat.md)
+  : Run scMetaLink from Seurat Object
+
+## Production Analysis
+
+Infer metabolite production potential
+
+- [`inferProduction()`](https://Zaoqu-Liu.github.io/scMetaLink/reference/inferProduction.md)
+  : Infer Metabolite Production Potential
+- [`getTopProducers()`](https://Zaoqu-Liu.github.io/scMetaLink/reference/getTopProducers.md)
+  : Get Top Producing Cell Types for a Metabolite
+
+## Sensing Analysis
+
+Infer metabolite sensing capability
+
+- [`inferSensing()`](https://Zaoqu-Liu.github.io/scMetaLink/reference/inferSensing.md)
+  : Infer Metabolite Sensing Capability
+- [`getTopSensors()`](https://Zaoqu-Liu.github.io/scMetaLink/reference/getTopSensors.md)
+  : Get Top Sensing Cell Types for a Metabolite
+- [`getMetaboliteReceptors()`](https://Zaoqu-Liu.github.io/scMetaLink/reference/getMetaboliteReceptors.md)
+  : Get Receptors for a Metabolite
+
+## Communication Analysis
+
+Compute cell-cell communication scores
+
+- [`computeCommunication()`](https://Zaoqu-Liu.github.io/scMetaLink/reference/computeCommunication.md)
+  : Compute Metabolite-Mediated Cell Communication
+- [`filterSignificantInteractions()`](https://Zaoqu-Liu.github.io/scMetaLink/reference/filterSignificantInteractions.md)
+  : Filter Significant Interactions
+- [`summarizeCommunicationPairs()`](https://Zaoqu-Liu.github.io/scMetaLink/reference/summarizeCommunicationPairs.md)
+  : Summarize Communication by Cell Type Pairs
+- [`getCommunicationMatrix()`](https://Zaoqu-Liu.github.io/scMetaLink/reference/getCommunicationMatrix.md)
+  : Get Communication Summary Matrix
+- [`compareCommunication()`](https://Zaoqu-Liu.github.io/scMetaLink/reference/compareCommunication.md)
+  : Compare Two Conditions
+- [`identifyCellTypeSpecificMetabolites()`](https://Zaoqu-Liu.github.io/scMetaLink/reference/identifyCellTypeSpecificMetabolites.md)
+  : Identify Cell Type Specific Metabolites
+
+## Pathway Analysis
+
+Pathway-level aggregation and enrichment
+
+- [`aggregateByPathway()`](https://Zaoqu-Liu.github.io/scMetaLink/reference/aggregateByPathway.md)
+  : Aggregate Communication by Pathway
+- [`enrichPathways()`](https://Zaoqu-Liu.github.io/scMetaLink/reference/enrichPathways.md)
+  : Pathway Enrichment Analysis
+- [`getPathwayCommunicationMatrix()`](https://Zaoqu-Liu.github.io/scMetaLink/reference/getPathwayCommunicationMatrix.md)
+  : Get Pathway Communication Matrix
+- [`getPathwayMetabolites()`](https://Zaoqu-Liu.github.io/scMetaLink/reference/getPathwayMetabolites.md)
+  : Get Metabolites in Pathway
+- [`getPathwayMetaboliteNetwork()`](https://Zaoqu-Liu.github.io/scMetaLink/reference/getPathwayMetaboliteNetwork.md)
+  : Get Pathway-Metabolite Network
+- [`summarizePathwayActivity()`](https://Zaoqu-Liu.github.io/scMetaLink/reference/summarizePathwayActivity.md)
+  : Summarize Pathway Activity
+- [`listTopPathways()`](https://Zaoqu-Liu.github.io/scMetaLink/reference/listTopPathways.md)
+  : List Top Pathways
+
+## Visualization
+
+Plotting functions
+
+- [`plotCommunicationHeatmap()`](https://Zaoqu-Liu.github.io/scMetaLink/reference/plotCommunicationHeatmap.md)
+  : Plot Communication Heatmap
+- [`plotCommunicationCircle()`](https://Zaoqu-Liu.github.io/scMetaLink/reference/plotCommunicationCircle.md)
+  : Plot Communication Circle
+- [`plotCommunicationNetwork()`](https://Zaoqu-Liu.github.io/scMetaLink/reference/plotCommunicationNetwork.md)
+  : Plot Communication Network
+- [`plotMetaboliteProfile()`](https://Zaoqu-Liu.github.io/scMetaLink/reference/plotMetaboliteProfile.md)
+  : Plot Metabolite Profile
+- [`plotTopInteractions()`](https://Zaoqu-Liu.github.io/scMetaLink/reference/plotTopInteractions.md)
+  : Plot Top Interactions
+- [`plotPathwayCommunication()`](https://Zaoqu-Liu.github.io/scMetaLink/reference/plotPathwayCommunication.md)
+  : Plot Pathway Communication
+- [`plotDifferentialCommunication()`](https://Zaoqu-Liu.github.io/scMetaLink/reference/plotDifferentialCommunication.md)
+  : Plot Differential Communication
+- [`plotEnrichedPathways()`](https://Zaoqu-Liu.github.io/scMetaLink/reference/plotEnrichedPathways.md)
+  : Plot Enriched Pathways
+
+## Database Utilities
+
+Functions to query MetalinksDB
+
+- [`listMetabolites()`](https://Zaoqu-Liu.github.io/scMetaLink/reference/listMetabolites.md)
+  : List Available Metabolites
+- [`listGenes()`](https://Zaoqu-Liu.github.io/scMetaLink/reference/listGenes.md)
+  : List Available Genes
+- [`searchMetabolite()`](https://Zaoqu-Liu.github.io/scMetaLink/reference/searchMetabolite.md)
+  : Search Metabolite in Database
+- [`searchGene()`](https://Zaoqu-Liu.github.io/scMetaLink/reference/searchGene.md)
+  : Search Gene in Database
+- [`getDatabaseInfo()`](https://Zaoqu-Liu.github.io/scMetaLink/reference/getDatabaseInfo.md)
+  : Get Database Information
+
+## Export & Utilities
+
+Export results and helper functions
+
+- [`exportResults()`](https://Zaoqu-Liu.github.io/scMetaLink/reference/exportResults.md)
+  : Export Results to CSV
+- [`saveScMetaLink()`](https://Zaoqu-Liu.github.io/scMetaLink/reference/saveScMetaLink.md)
+  : Save scMetaLink Object
+- [`loadScMetaLink()`](https://Zaoqu-Liu.github.io/scMetaLink/reference/loadScMetaLink.md)
+  : Load scMetaLink Object
+- [`getSummaryStats()`](https://Zaoqu-Liu.github.io/scMetaLink/reference/getSummaryStats.md)
+  : Get Summary Statistics
+- [`citationScMetaLink()`](https://Zaoqu-Liu.github.io/scMetaLink/reference/citationScMetaLink.md)
+  : Show Package Citation
+
+## Data Accessors
+
+S4 methods and class definition
+
+- [`scMetaLink-class`](https://Zaoqu-Liu.github.io/scMetaLink/reference/scMetaLink-class.md)
+  : scMetaLink Class Definition
+- [`getProductionScores()`](https://Zaoqu-Liu.github.io/scMetaLink/reference/accessors.md)
+  [`getSensingScores()`](https://Zaoqu-Liu.github.io/scMetaLink/reference/accessors.md)
+  [`getCommunicationScores()`](https://Zaoqu-Liu.github.io/scMetaLink/reference/accessors.md)
+  [`getSignificantInteractions()`](https://Zaoqu-Liu.github.io/scMetaLink/reference/accessors.md)
+  [`getPathwayAggregated()`](https://Zaoqu-Liu.github.io/scMetaLink/reference/accessors.md)
+  [`getParameters()`](https://Zaoqu-Liu.github.io/scMetaLink/reference/accessors.md)
+  : Accessor Functions
+- [`show(`*`<scMetaLink>`*`)`](https://Zaoqu-Liu.github.io/scMetaLink/reference/show-scMetaLink-method.md)
+  : Show Method for scMetaLink
+
+## Example Data
+
+Built-in datasets for tutorials
+
+- [`crc_expr`](https://Zaoqu-Liu.github.io/scMetaLink/reference/crc_expr.md)
+  : CRC Example Expression Data
+- [`crc_meta`](https://Zaoqu-Liu.github.io/scMetaLink/reference/crc_meta.md)
+  : CRC Example Cell Metadata
+- [`metalinksdb`](https://Zaoqu-Liu.github.io/scMetaLink/reference/metalinksdb.md)
+  : MetalinksDB Database
+
+# Articles
+
+### Getting Started
+
+- [Quick Start
+  Guide](https://Zaoqu-Liu.github.io/scMetaLink/articles/01-quick-start.md):
+
+### Methodology
+
+- [Theory &
+  Methods](https://Zaoqu-Liu.github.io/scMetaLink/articles/02-theory.md):
+
+### Detailed Tutorials
+
+- [Production & Sensing
+  Analysis](https://Zaoqu-Liu.github.io/scMetaLink/articles/03-production-sensing.md):
+- [Communication
+  Analysis](https://Zaoqu-Liu.github.io/scMetaLink/articles/04-communication.md):
+- [Visualization
+  Gallery](https://Zaoqu-Liu.github.io/scMetaLink/articles/05-visualization.md):
+
+### Applications
+
+- [Application
+  Examples](https://Zaoqu-Liu.github.io/scMetaLink/articles/06-applications.md):
