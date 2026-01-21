@@ -1,0 +1,365 @@
+---
+title: "Theory & Methods"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Theory & Methods}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 8,
+  fig.height = 6,
+  fig.align = "center",
+  out.width = "100%",
+  dpi = 150,
+  warning = FALSE,
+  message = FALSE
+)
+```
+
+## Overview
+
+scMetaLink models metabolite-mediated cell communication as a two-step process:
+
+```
+┌─────────────────┐                         ┌─────────────────┐
+│   Sender Cell   │                         │  Receiver Cell  │
+│                 │                         │                 │
+│  ┌───────────┐  │      Metabolite         │  ┌───────────┐  │
+│  │ Synthesis │──┼─────────────────----->──┼──│ Receptor  │  │
+│  │  Enzymes  │  │                         │  │ Binding   │  │
+│  └───────────┘  │                         │  └───────────┘  │
+│       ↓         │                         │       or        │
+│  ┌───────────┐  │                         │  ┌───────────┐  │
+│  │ Secretion │  │                         │  │  Uptake   │  │
+│  │Transporter│  │                         │  │Transporter│  │
+│  └───────────┘  │                         │  └───────────┘  │
+└─────────────────┘                         └─────────────────┘
+```
+
+## The MetalinksDB Knowledge Base
+
+scMetaLink uses **MetalinksDB**, a comprehensive database of metabolite-protein interactions.
+
+```{r db_overview}
+library(scMetaLink)
+
+# Load and explore the database
+db <- scMetaLink:::.load_metalinksdb()
+
+cat("=== MetalinksDB Statistics ===\n")
+cat("Metabolites:", nrow(db$metabolites), "\n")
+cat("Proteins:", nrow(db$proteins), "\n")
+cat("Interactions:", nrow(db$edges), "\n")
+cat("Pathways:", length(unique(db$pathway$pathway)), "\n")
+```
+
+### Interaction Types
+
+```{r interaction_types}
+# Two main interaction types
+cat("=== Interaction Types ===\n")
+print(table(db$edges$type))
+
+cat("\n- lr (ligand-receptor): Direct metabolite-receptor binding\n")
+cat("- pd (produce-degrade): Enzymatic production/degradation\n")
+```
+
+### Mode of Regulation (MOR)
+
+For `pd` type interactions, MOR indicates the direction:
+
+```{r mor}
+pd_edges <- db$edges[db$edges$type == "pd", ]
+cat("=== Mode of Regulation for pd interactions ===\n")
+print(table(pd_edges$mor))
+
+cat("\n- mor = 1: Enzyme produces/secretes the metabolite\n")
+cat("- mor = -1: Enzyme degrades/consumes the metabolite\n")
+cat("- mor = 0: Enzyme binds without direction change\n")
+```
+
+### Protein Types
+
+```{r protein_types}
+cat("=== Protein Classifications ===\n")
+print(table(db$proteins$protein_type, useNA = "ifany"))
+
+cat("\n")
+cat("Receptors: gpcr, lgic, nhr, vgic, catalytic_receptor, other_ic\n")
+cat("Enzymes: enzyme (or NA in protein_type)\n")
+cat("Transporters: transporter\n")
+```
+
+## Mathematical Framework
+
+### 1. Metabolite Production Potential (MPP)
+
+The production potential for metabolite $m$ in cell type $c$ is:
+
+$$\text{MPP}_{m,c} = \frac{1}{|E_m|} \sum_{e \in E_m} \text{Score}(e, c) - \alpha \cdot \frac{1}{|D_m|} \sum_{d \in D_m} \text{Score}(d, c)$$
+
+Where:
+- $E_m$: Set of enzymes that produce metabolite $m$
+- $D_m$: Set of enzymes that degrade metabolite $m$
+- $\alpha = 0.5$: Degradation weight factor
+- $\text{Score}(g, c)$: Gene expression score for gene $g$ in cell type $c$
+
+#### Gene Expression Scoring
+
+Three methods are available:
+
+| Method | Formula | Use Case |
+|--------|---------|----------|
+| `mean` | $\bar{x}_g$ | Simple average expression |
+| `proportion` | $P(x_g > 0)$ | Proportion of expressing cells |
+| `combined` | $\bar{x}_g \times P(x_g > 0)$ | Balanced (recommended) |
+
+```{r scoring_methods, echo=FALSE, fig.height=4}
+# Illustrate scoring methods
+set.seed(42)
+expr <- c(rep(0, 70), rnorm(30, 2, 0.5))  # 70% dropout
+
+methods <- data.frame(
+  Method = c("mean", "proportion", "combined"),
+  Formula = c("mean(expr)", "mean(expr > 0)", "mean x proportion"),
+  Value = c(
+    mean(expr),
+    mean(expr > 0),
+    mean(expr) * mean(expr > 0)
+  )
+)
+knitr::kable(methods, digits = 3)
+```
+
+#### Trimean Option
+
+For single-cell data with high dropout, **trimean** provides a robust alternative:
+
+$$\text{Trimean} = \frac{Q_1 + 2Q_2 + Q_3}{4}$$
+
+```{r trimean_example}
+# Example: Trimean vs Arithmetic Mean
+expr_with_outlier <- c(0, 0, 0, 1, 2, 3, 100)  # Outlier = 100
+
+cat("Data:", paste(expr_with_outlier, collapse = ", "), "\n")
+cat("Arithmetic mean:", round(mean(expr_with_outlier), 2), "\n")
+cat("Median:", median(expr_with_outlier), "\n")
+
+# Trimean calculation
+q <- quantile(expr_with_outlier, c(0.25, 0.5, 0.75))
+trimean <- (q[1] + 2*q[2] + q[3]) / 4
+cat("Trimean:", round(trimean, 2), "\n")
+cat("\nTrimean is robust to the outlier!\n")
+```
+
+### 2. Metabolite Sensing Capability (MSC)
+
+The sensing capability for metabolite $m$ in cell type $c$ is:
+
+$$\text{MSC}_{m,c} = \frac{1}{|R_m|} \sum_{r \in R_m} w_r \cdot \text{Score}(r, c)$$
+
+Where:
+- $R_m$: Set of receptors/transporters for metabolite $m$
+- $w_r$: Affinity weight based on interaction confidence score
+
+#### Affinity Weighting
+
+Receptor-metabolite binding affinities from MetalinksDB are used as weights:
+
+```{r affinity}
+lr_edges <- db$edges[db$edges$type == "lr", ]
+cat("Affinity score distribution (0-1000):\n")
+summary(lr_edges$combined_score)
+```
+
+#### Hill Function (Optional)
+
+To model receptor saturation kinetics, an optional Hill transformation can be applied:
+
+$$P = \frac{E^n}{K_h^n + E^n}$$
+
+Where:
+- $E$: Expression level (normalized)
+- $n$: Hill coefficient (cooperativity)
+- $K_h$: Half-maximal threshold
+
+```{r hill_demo, fig.height=4, fig.width=7, fig.cap="**Figure 1: Hill Function Transformation.** Different Hill coefficients (n) produce different response curves. n=1 gives standard Michaelis-Menten kinetics. n>1 indicates positive cooperativity (steeper curve). The half-maximal response occurs at x=Kh."}
+# Hill function visualization
+x <- seq(0, 1, 0.01)
+hill <- function(x, n, Kh) x^n / (Kh^n + x^n)
+
+plot(x, x, type = "l", lty = 2, col = "gray",
+     xlab = "Expression (normalized)", ylab = "Response",
+     main = "Hill Function Transformation")
+lines(x, hill(x, n = 1, Kh = 0.5), col = "blue", lwd = 2)
+lines(x, hill(x, n = 2, Kh = 0.5), col = "red", lwd = 2)
+lines(x, hill(x, n = 0.5, Kh = 0.5), col = "green", lwd = 2)
+legend("bottomright", 
+       legend = c("Linear", "n=1 (Michaelis-Menten)", "n=2 (Cooperative)", "n=0.5"),
+       col = c("gray", "blue", "red", "green"), 
+       lty = c(2, 1, 1, 1), lwd = 2)
+abline(h = 0.5, v = 0.5, lty = 3, col = "gray")
+```
+
+### 3. Communication Score
+
+The communication score from sender $s$ to receiver $r$ via metabolite $m$:
+
+$$\text{Comm}_{s \to r}^m = f(\text{MPP}_{m,s}, \text{MSC}_{m,r})$$
+
+Three aggregation methods are available:
+
+| Method | Formula | Properties |
+|--------|---------|------------|
+| `geometric` | $\sqrt{\text{MPP} \times \text{MSC}}$ | Balanced, penalizes imbalance |
+| `product` | $\text{MPP} \times \text{MSC}$ | Emphasizes strong bilateral signals |
+| `harmonic` | $\frac{2 \times \text{MPP} \times \text{MSC}}{\text{MPP} + \text{MSC}}$ | Strongly penalizes imbalance |
+
+```{r comm_methods, fig.height=5, fig.width=10, echo=FALSE, fig.cap="**Figure 2: Communication Score Methods.** Heat maps showing how different methods combine production (x-axis) and sensing (y-axis) scores. Geometric mean (left) provides balanced weighting. Product (center) emphasizes strong bilateral signals. Harmonic mean (right) penalizes imbalanced communication."}
+# Visualize communication methods
+par(mfrow = c(1, 3))
+
+# Create grid
+p <- s <- seq(0, 1, 0.05)
+grid <- expand.grid(p = p, s = s)
+
+# Geometric
+z_geom <- matrix(sqrt(grid$p * grid$s), nrow = length(p))
+image(p, s, z_geom, main = "Geometric: sqrt(P x S)", 
+      xlab = "Production", ylab = "Sensing", col = hcl.colors(50, "YlOrRd"))
+
+# Product
+z_prod <- matrix(grid$p * grid$s, nrow = length(p))
+image(p, s, z_prod, main = "Product: P x S", 
+      xlab = "Production", ylab = "Sensing", col = hcl.colors(50, "YlOrRd"))
+
+# Harmonic
+z_harm <- matrix(2 * grid$p * grid$s / (grid$p + grid$s + 1e-10), nrow = length(p))
+image(p, s, z_harm, main = "Harmonic: 2PS/(P+S)", 
+      xlab = "Production", ylab = "Sensing", col = hcl.colors(50, "YlOrRd"))
+
+par(mfrow = c(1, 1))
+```
+
+### 4. Population Size Correction (Optional)
+
+When `population.size = TRUE`, communication is weighted by cell type abundance:
+
+$$\text{Comm}_{s \to r}^{\text{weighted}} = \text{Comm}_{s \to r} \times \sqrt{\frac{n_s}{N} \times \frac{n_r}{N}}$$
+
+Where $n_s, n_r$ are cell counts and $N$ is total cells.
+
+**Rationale**: Larger cell populations contribute more to tissue-level signaling.
+
+## Statistical Framework
+
+### Permutation Test
+
+To assess significance, cell type labels are randomly shuffled:
+
+1. Shuffle cell type labels $B$ times (default: 100-1000)
+2. Recalculate production, sensing, and communication for each permutation
+3. Compute empirical p-value:
+
+$$p = \frac{1 + \sum_{b=1}^{B} \mathbb{1}[\text{Comm}_b \geq \text{Comm}_{\text{obs}}]}{B + 1}$$
+
+### Multiple Testing Correction
+
+Three strategies for handling multiple comparisons:
+
+| Method | Description |
+|--------|-------------|
+| `metabolite_stratified` | BH correction within each metabolite (recommended) |
+| `BH` | Global Benjamini-Hochberg |
+| `bonferroni` | Global Bonferroni (very conservative) |
+
+**Why `metabolite_stratified`?**
+
+- Metabolites are independent biological signals
+- Global correction is overly conservative
+- Per-metabolite correction preserves biological interpretability
+
+## Data Processing Pipeline
+
+```{r pipeline, echo=FALSE, fig.height=6, fig.width=10}
+# Create flowchart-style diagram using base R
+par(mar = c(1, 1, 1, 1))
+plot(0, 0, type = "n", xlim = c(0, 10), ylim = c(0, 8),
+     xlab = "", ylab = "", axes = FALSE)
+
+# Boxes
+rect(0.5, 6.5, 2.5, 7.5, col = "#E3F2FD", border = "#1976D2", lwd = 2)
+text(1.5, 7, "Expression\nMatrix", cex = 0.8)
+
+rect(0.5, 4.5, 2.5, 5.5, col = "#E3F2FD", border = "#1976D2", lwd = 2)
+text(1.5, 5, "Cell Type\nAnnotation", cex = 0.8)
+
+rect(3.5, 5, 5.5, 6.5, col = "#FFF3E0", border = "#E65100", lwd = 2)
+text(4.5, 5.75, "Cell Type\nExpression", cex = 0.8)
+
+rect(6.5, 6.5, 8.5, 7.5, col = "#E8F5E9", border = "#388E3C", lwd = 2)
+text(7.5, 7, "Production\nScores", cex = 0.8)
+
+rect(6.5, 4, 8.5, 5, col = "#E8F5E9", border = "#388E3C", lwd = 2)
+text(7.5, 4.5, "Sensing\nScores", cex = 0.8)
+
+rect(6.5, 1.5, 8.5, 2.5, col = "#FCE4EC", border = "#C2185B", lwd = 2)
+text(7.5, 2, "Communication\nScores", cex = 0.8)
+
+rect(3.5, 0, 5.5, 1, col = "#F3E5F5", border = "#7B1FA2", lwd = 2)
+text(4.5, 0.5, "Significant\nInteractions", cex = 0.8)
+
+# Arrows
+arrows(2.5, 7, 3.5, 5.75, length = 0.1, lwd = 2)
+arrows(2.5, 5, 3.5, 5.75, length = 0.1, lwd = 2)
+arrows(5.5, 6, 6.5, 7, length = 0.1, lwd = 2)
+arrows(5.5, 5.5, 6.5, 4.5, length = 0.1, lwd = 2)
+arrows(7.5, 6.5, 7.5, 5, length = 0.1, lwd = 2)
+arrows(7.5, 4, 7.5, 2.5, length = 0.1, lwd = 2)
+arrows(6.5, 2, 5.5, 0.5, length = 0.1, lwd = 2)
+
+# Labels
+text(3, 6.5, "Aggregate", cex = 0.7, col = "gray40")
+text(6, 6.5, "MPP", cex = 0.7, col = "gray40")
+text(6, 5, "MSC", cex = 0.7, col = "gray40")
+text(8.2, 5.75, "Combine", cex = 0.7, col = "gray40")
+text(6, 1.5, "Filter &\nCorrect", cex = 0.7, col = "gray40")
+
+# MetalinksDB
+rect(3.5, 7, 5.5, 8, col = "#FFFDE7", border = "#F57F17", lwd = 2)
+text(4.5, 7.5, "MetalinksDB", cex = 0.8, font = 2)
+arrows(4.5, 7, 4.5, 6.5, length = 0.1, lwd = 2, lty = 2)
+```
+
+## Key Assumptions
+
+1. **Gene expression correlates with protein activity**: Enzyme/receptor expression levels reflect functional activity
+2. **Metabolites can diffuse between cells**: Produced metabolites are available for sensing by neighboring cells
+3. **Cell type labels are accurate**: Incorrect annotations will affect results
+4. **Adequate cell sampling**: Each cell type needs sufficient cells for robust estimation
+
+## Comparison with Ligand-Receptor Methods
+
+| Aspect | Ligand-Receptor (e.g., CellChat) | Metabolite-Mediated (scMetaLink) |
+|--------|----------------------------------|----------------------------------|
+| **Signal type** | Proteins | Small molecules |
+| **Diffusion range** | Short (juxtacrine/paracrine) | Variable (paracrine/endocrine) |
+| **Database** | CellChatDB, CellPhoneDB | MetalinksDB |
+| **Key genes** | Ligands, receptors | Enzymes, transporters, receptors |
+| **Signal complexity** | Direct binding | Synthesis -> Secretion -> Sensing |
+
+## References
+
+1. Schafer, S., et al. (2023). MetalinksDB: a knowledgebase of metabolite-centric signaling. *Nature Communications*.
+
+2. Xiao, Z., et al. (2022). Metabolite-mediated intercellular communication in tumor microenvironment. *Frontiers in Cell and Developmental Biology*.
+
+## Next
+
+- **[Production & Sensing Analysis](03-production-sensing.html)**: Detailed parameter tuning
+- **[Communication Analysis](04-communication.html)**: Advanced communication analysis
