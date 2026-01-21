@@ -129,9 +129,11 @@
 #' Clean protein_type field (remove extra quotes)
 #' @keywords internal
 .clean_protein_type <- function(type_str) {
-  if (is.na(type_str) || is.null(type_str)) return(NA_character_)
+  if (is.na(type_str) || is.null(type_str)) {
+    return(NA_character_)
+  }
   # Remove surrounding quotes if present
-  gsub('^"|"$', '', type_str)
+  gsub('^"|"$', "", type_str)
 }
 
 #' Get Production Enzymes for Metabolites
@@ -155,7 +157,6 @@
 #' @return data.frame of production relationships
 #' @keywords internal
 .get_production_enzymes <- function(db) {
-
   # Filter for production relationships (mor = 1, type = pd)
   prod_edges <- db$edges[db$edges$type == "pd" & db$edges$mor == 1, ]
 
@@ -167,16 +168,18 @@
   # Keep: enzymes (NA direction) and secretion transporters (direction = "out")
   prod_edges <- prod_edges[
     is.na(prod_edges$transport_direction) |
-    prod_edges$transport_direction == "out"
-  , ]
+      prod_edges$transport_direction == "out",
+  ]
 
   # Merge with gene symbols
   prod_edges <- merge(prod_edges, db$proteins[, c("uniprot", "gene_symbol")],
-                      by = "uniprot", all.x = TRUE)
+    by = "uniprot", all.x = TRUE
+  )
 
   # Merge with metabolite names
   prod_edges <- merge(prod_edges, db$metabolites[, c("hmdb", "metabolite")],
-                      by = "hmdb", all.x = TRUE)
+    by = "hmdb", all.x = TRUE
+  )
 
   prod_edges
 }
@@ -192,11 +195,13 @@
 
   # Merge with gene symbols
   deg_edges <- merge(deg_edges, db$proteins[, c("uniprot", "gene_symbol")],
-                     by = "uniprot", all.x = TRUE)
+    by = "uniprot", all.x = TRUE
+  )
 
   # Merge with metabolite names
   deg_edges <- merge(deg_edges, db$metabolites[, c("hmdb", "metabolite")],
-                     by = "hmdb", all.x = TRUE)
+    by = "hmdb", all.x = TRUE
+  )
 
   deg_edges
 }
@@ -212,11 +217,13 @@
 
   # Merge with protein info
   lr_edges <- merge(lr_edges, db$proteins[, c("uniprot", "gene_symbol", "protein_type")],
-                    by = "uniprot", all.x = TRUE)
+    by = "uniprot", all.x = TRUE
+  )
 
   # Merge with metabolite names
   lr_edges <- merge(lr_edges, db$metabolites[, c("hmdb", "metabolite")],
-                    by = "hmdb", all.x = TRUE)
+    by = "hmdb", all.x = TRUE
+  )
 
   lr_edges
 }
@@ -231,18 +238,20 @@
   if (!direction %in% c("in", "out")) {
     stop("direction must be 'in' or 'out'")
   }
-  
+
   # Filter for transporter proteins with specific direction
   trans_edges <- db$edges[!is.na(db$edges$transport_direction) &
-                          db$edges$transport_direction == direction, ]
+    db$edges$transport_direction == direction, ]
 
   # Merge with protein info
   trans_edges <- merge(trans_edges, db$proteins[, c("uniprot", "gene_symbol", "protein_type")],
-                       by = "uniprot", all.x = TRUE)
+    by = "uniprot", all.x = TRUE
+  )
 
   # Merge with metabolite names
   trans_edges <- merge(trans_edges, db$metabolites[, c("hmdb", "metabolite")],
-                       by = "hmdb", all.x = TRUE)
+    by = "hmdb", all.x = TRUE
+  )
 
   trans_edges
 }
@@ -292,7 +301,7 @@ listMetabolites <- function(type = "all") {
   if (!type %in% c("all", "signaling", "metabolic")) {
     stop("type must be 'all', 'signaling', or 'metabolic'")
   }
-  
+
   db <- .load_metalinksdb()
 
   if (type == "all") {
@@ -327,11 +336,11 @@ listGenes <- function(role = "all") {
   if (!role %in% c("all", "enzyme", "receptor", "transporter")) {
     stop("role must be 'all', 'enzyme', 'receptor', or 'transporter'")
   }
-  
+
   db <- .load_metalinksdb()
 
   proteins <- db$proteins
-  
+
   # Clean protein_type (remove quotes if present)
   proteins$protein_type_clean <- sapply(proteins$protein_type, .clean_protein_type)
 

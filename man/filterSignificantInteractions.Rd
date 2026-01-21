@@ -16,7 +16,7 @@ filterSignificantInteractions(
 
 \item{pvalue_threshold}{Numeric. P-value threshold (default: 0.05)}
 
-\item{adjust_method}{Character. Multiple testing correction method: "BH", "bonferroni", 
+\item{adjust_method}{Character. Multiple testing correction method: "BH", "bonferroni",
 "holm", "none", or "metabolite_stratified" (recommended, performs BH within each metabolite)}
 
 \item{min_score}{Numeric. Minimum communication score (default: 0)}

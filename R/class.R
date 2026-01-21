@@ -73,7 +73,6 @@ createScMetaLink <- function(expression_data,
                              cell_type_column = "cell_type",
                              min_cells = 10,
                              min_genes = 200) {
-
   # Input validation
   if (!is.matrix(expression_data) && !inherits(expression_data, "dgCMatrix")) {
     stop("expression_data must be a matrix or sparse dgCMatrix")
@@ -86,19 +85,19 @@ createScMetaLink <- function(expression_data,
   if (!cell_type_column %in% colnames(cell_meta)) {
     stop(paste("Column", cell_type_column, "not found in cell_meta"))
   }
-  
+
   if (is.null(rownames(expression_data))) {
     stop("expression_data must have row names (gene symbols)")
   }
-  
+
   if (is.null(colnames(expression_data))) {
     stop("expression_data must have column names (cell IDs)")
   }
-  
+
   if (is.null(rownames(cell_meta))) {
     stop("cell_meta must have row names (cell IDs)")
   }
-  
+
   if (min_cells < 1) {
     stop("min_cells must be at least 1")
   }
@@ -125,23 +124,26 @@ createScMetaLink <- function(expression_data,
   expression_data <- expression_data[, keep_cells, drop = FALSE]
   cell_meta <- cell_meta[keep_cells, , drop = FALSE]
 
-  message(sprintf("Created scMetaLink object with %d genes, %d cells, %d cell types",
-                  nrow(expression_data), ncol(expression_data), length(valid_types)))
+  message(sprintf(
+    "Created scMetaLink object with %d genes, %d cells, %d cell types",
+    nrow(expression_data), ncol(expression_data), length(valid_types)
+  ))
 
   # Load database
   db <- .load_metalinksdb()
 
   # Create object
   new("scMetaLink",
-      expression_data = expression_data,
-      cell_meta = cell_meta,
-      cell_type_column = cell_type_column,
-      parameters = list(
-        min_cells = min_cells,
-        min_genes = min_genes,
-        created_at = Sys.time()
-      ),
-      database = db)
+    expression_data = expression_data,
+    cell_meta = cell_meta,
+    cell_type_column = cell_type_column,
+    parameters = list(
+      min_cells = min_cells,
+      min_genes = min_genes,
+      created_at = Sys.time()
+    ),
+    database = db
+  )
 }
 
 #' @title Create scMetaLink from Seurat Object
@@ -160,11 +162,10 @@ createScMetaLinkFromSeurat <- function(seurat_obj,
                                        assay = "RNA",
                                        slot = "data",
                                        min_cells = 10) {
-
   if (!requireNamespace("Seurat", quietly = TRUE)) {
     stop("Package 'Seurat' is required. Please install it.")
   }
-  
+
   if (!slot %in% c("data", "counts")) {
     stop("slot must be 'data' or 'counts'")
   }
@@ -198,10 +199,12 @@ setMethod("show", "scMetaLink", function(object) {
   cat(sprintf("Cells: %d\n", ncol(object@expression_data)))
 
   cell_types <- unique(object@cell_meta[[object@cell_type_column]])
-  cat(sprintf("Cell types: %d (%s%s)\n", 
-              length(cell_types),
-              paste(head(cell_types, 3), collapse = ", "),
-              if (length(cell_types) > 3) ", ..." else ""))
+  cat(sprintf(
+    "Cell types: %d (%s%s)\n",
+    length(cell_types),
+    paste(head(cell_types, 3), collapse = ", "),
+    if (length(cell_types) > 3) ", ..." else ""
+  ))
 
   if (!is.null(object@production_scores)) {
     cat(sprintf("Metabolites with production scores: %d\n", nrow(object@production_scores)))
@@ -210,8 +213,10 @@ setMethod("show", "scMetaLink", function(object) {
     cat(sprintf("Metabolites with sensing scores: %d\n", nrow(object@sensing_scores)))
   }
   if (!is.null(object@communication_scores)) {
-    cat(sprintf("Communication array: %s\n", 
-                paste(dim(object@communication_scores), collapse = " x ")))
+    cat(sprintf(
+      "Communication array: %s\n",
+      paste(dim(object@communication_scores), collapse = " x ")
+    ))
   }
   if (nrow(object@significant_interactions) > 0) {
     cat(sprintf("Significant interactions: %d\n", nrow(object@significant_interactions)))

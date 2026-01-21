@@ -12,8 +12,10 @@
   missing <- packages[!sapply(packages, requireNamespace, quietly = TRUE)]
 
   if (length(missing) > 0) {
-    msg <- sprintf("Missing packages: %s. Please install them.",
-                   paste(missing, collapse = ", "))
+    msg <- sprintf(
+      "Missing packages: %s. Please install them.",
+      paste(missing, collapse = ", ")
+    )
     if (type == "error") {
       stop(msg, call. = FALSE)
     } else {
@@ -43,13 +45,17 @@
   if (by_row) {
     t(apply(mat, 1, function(x) {
       rng <- range(x, na.rm = TRUE)
-      if (rng[1] == rng[2]) return(rep(0.5, length(x)))
+      if (rng[1] == rng[2]) {
+        return(rep(0.5, length(x)))
+      }
       (x - rng[1]) / (rng[2] - rng[1])
     }))
   } else {
     apply(mat, 2, function(x) {
       rng <- range(x, na.rm = TRUE)
-      if (rng[1] == rng[2]) return(rep(0.5, length(x)))
+      if (rng[1] == rng[2]) {
+        return(rep(0.5, length(x)))
+      }
       (x - rng[1]) / (rng[2] - rng[1])
     })
   }
@@ -64,13 +70,17 @@
   if (by_row) {
     t(apply(mat, 1, function(x) {
       s <- sd(x, na.rm = TRUE)
-      if (s == 0) return(rep(0, length(x)))
+      if (s == 0) {
+        return(rep(0, length(x)))
+      }
       (x - mean(x, na.rm = TRUE)) / s
     }))
   } else {
     apply(mat, 2, function(x) {
       s <- sd(x, na.rm = TRUE)
-      if (s == 0) return(rep(0, length(x)))
+      if (s == 0) {
+        return(rep(0, length(x)))
+      }
       (x - mean(x, na.rm = TRUE)) / s
     })
   }
@@ -94,8 +104,10 @@
     if (n <= 12) {
       RColorBrewer::brewer.pal(max(3, n), "Paired")[1:n]
     } else {
-      c(RColorBrewer::brewer.pal(12, "Paired"),
-        viridis::viridis(n - 12))
+      c(
+        RColorBrewer::brewer.pal(12, "Paired"),
+        viridis::viridis(n - 12)
+      )
     }
   } else {
     viridis::viridis(n, option = palette)
@@ -165,7 +177,6 @@
 #' @return Invisibly returns file paths
 #' @export
 exportResults <- function(object, output_dir = ".", prefix = "scMetaLink") {
-
   if (!inherits(object, "scMetaLink")) {
     stop("object must be a scMetaLink object")
   }
@@ -293,15 +304,15 @@ searchMetabolite <- function(query, exact = FALSE) {
   if (missing(query) || is.null(query) || query == "") {
     stop("query must be provided")
   }
-  
+
   db <- .load_metalinksdb()
 
   if (exact) {
     matches <- db$metabolites[db$metabolites$hmdb == query |
-                              db$metabolites$metabolite == query, ]
+      db$metabolites$metabolite == query, ]
   } else {
     matches <- db$metabolites[grepl(query, db$metabolites$hmdb, ignore.case = TRUE) |
-                              grepl(query, db$metabolites$metabolite, ignore.case = TRUE), ]
+      grepl(query, db$metabolites$metabolite, ignore.case = TRUE), ]
   }
 
   if (nrow(matches) == 0) {
@@ -330,7 +341,7 @@ searchGene <- function(query) {
   if (missing(query) || is.null(query) || query == "") {
     stop("query must be provided")
   }
-  
+
   db <- .load_metalinksdb()
 
   # Find gene
@@ -344,9 +355,11 @@ searchGene <- function(query) {
   # Get associated metabolites
   gene_edges <- db$edges[db$edges$uniprot %in% gene_info$uniprot, ]
   gene_edges <- merge(gene_edges, gene_info[, c("uniprot", "gene_symbol", "protein_type")],
-                      by = "uniprot")
+    by = "uniprot"
+  )
   gene_edges <- merge(gene_edges, db$metabolites[, c("hmdb", "metabolite")],
-                      by = "hmdb")
+    by = "hmdb"
+  )
 
   cols_to_return <- c("gene_symbol", "protein_type", "metabolite", "hmdb", "type", "mor", "combined_score")
   cols_to_return <- cols_to_return[cols_to_return %in% names(gene_edges)]

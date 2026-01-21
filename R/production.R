@@ -26,7 +26,6 @@ inferProduction <- function(object,
                             consider_secretion = TRUE,
                             normalize = TRUE,
                             verbose = TRUE) {
-
   # Input validation
   if (!inherits(object, "scMetaLink")) {
     stop("object must be a scMetaLink object")
@@ -73,20 +72,20 @@ inferProduction <- function(object,
 
   # Step 2: Build metabolite-gene mapping matrix
   if (verbose) message("  Building metabolite-gene mapping...")
-  
+
   prod_enzymes <- .get_production_enzymes(db)
   prod_enzymes <- prod_enzymes[!is.na(prod_enzymes$gene_symbol), ]
   prod_enzymes <- prod_enzymes[prod_enzymes$gene_symbol %in% rownames(gene_scores), ]
-  
+
   if (nrow(prod_enzymes) == 0) {
     stop("No production enzymes found in the expression data")
   }
-  
+
   if (verbose) message(sprintf("  Found %d production enzyme-metabolite pairs", nrow(prod_enzymes)))
-  
+
   metabolites <- unique(prod_enzymes$hmdb)
   genes <- rownames(gene_scores)
-  
+
   # Create sparse mapping matrix (metabolites x genes)
   met_gene_map <- Matrix::sparseMatrix(
     i = match(prod_enzymes$hmdb, metabolites),
@@ -95,25 +94,25 @@ inferProduction <- function(object,
     dims = c(length(metabolites), length(genes)),
     dimnames = list(metabolites, genes)
   )
-  
+
   # Count enzymes per metabolite for averaging
   enzyme_counts <- Matrix::rowSums(met_gene_map)
-  enzyme_counts[enzyme_counts == 0] <- 1  # Avoid division by zero
-  
+  enzyme_counts[enzyme_counts == 0] <- 1 # Avoid division by zero
+
   # Step 3: Matrix multiplication for production scores
   if (verbose) message("  Computing production scores (matrix multiplication)...")
-  
+
   production_scores <- as.matrix(met_gene_map %*% gene_scores) / enzyme_counts
-  
+
   # Step 4: Subtract degradation (if requested)
   if (consider_degradation) {
     if (verbose) message("  Adjusting for degradation...")
-    
+
     deg_enzymes <- .get_degradation_enzymes(db)
     deg_enzymes <- deg_enzymes[!is.na(deg_enzymes$gene_symbol), ]
     deg_enzymes <- deg_enzymes[deg_enzymes$gene_symbol %in% genes, ]
     deg_enzymes <- deg_enzymes[deg_enzymes$hmdb %in% metabolites, ]
-    
+
     if (nrow(deg_enzymes) > 0) {
       deg_map <- Matrix::sparseMatrix(
         i = match(deg_enzymes$hmdb, metabolites),
@@ -124,34 +123,34 @@ inferProduction <- function(object,
       )
       deg_counts <- Matrix::rowSums(deg_map)
       deg_counts[deg_counts == 0] <- 1
-      
+
       deg_scores <- as.matrix(deg_map %*% gene_scores) / deg_counts
       production_scores <- production_scores - 0.5 * deg_scores
       production_scores[production_scores < 0] <- 0
     }
   }
-  
+
   # Step 5: Weight by secretion potential
   if (consider_secretion) {
     if (verbose) message("  Applying secretion potential weights...")
-    
+
     extra_mets <- .get_extracellular_metabolites(db)
-    
+
     # Secretion weight: 1.0 for extracellular, 0.5 for others
     secretion_weights <- ifelse(metabolites %in% extra_mets, 1.0, 0.5)
     production_scores <- production_scores * secretion_weights
   }
-  
+
   # Step 6: Normalize
   if (normalize && nrow(production_scores) > 0) {
     if (verbose) message("  Normalizing scores...")
-    
+
     # Z-score per metabolite
     row_means <- rowMeans(production_scores, na.rm = TRUE)
     row_sds <- apply(production_scores, 1, sd, na.rm = TRUE)
     row_sds[row_sds == 0] <- 1
     production_scores <- (production_scores - row_means) / row_sds
-    
+
     # Scale to 0-1
     min_val <- min(production_scores, na.rm = TRUE)
     max_val <- max(production_scores, na.rm = TRUE)
@@ -159,7 +158,7 @@ inferProduction <- function(object,
       production_scores <- (production_scores - min_val) / (max_val - min_val)
     }
   }
-  
+
   object@production_scores <- production_scores
   object@parameters$production <- list(
     method = method,
@@ -170,7 +169,7 @@ inferProduction <- function(object,
     consider_secretion = consider_secretion,
     normalize = normalize
   )
-  
+
   if (verbose) message(sprintf("  Computed production scores for %d metabolites", nrow(production_scores)))
   if (verbose) message("Done!")
   object
@@ -196,15 +195,16 @@ inferProduction <- function(object,
 #' @return List with mean_expr and pct_expr matrices
 #' @keywords internal
 .calculate_celltype_expression_fast <- function(expr_data, cell_meta, cell_type_col,
-                                                 min_expression = 0,
-                                                 mean_method = "arithmetic") {
-
+                                                min_expression = 0,
+                                                mean_method = "arithmetic") {
   cell_types <- unique(cell_meta[[cell_type_col]])
   n_genes <- nrow(expr_data)
   n_types <- length(cell_types)
 
-  mean_expr <- matrix(0, nrow = n_genes, ncol = n_types,
-                      dimnames = list(rownames(expr_data), cell_types))
+  mean_expr <- matrix(0,
+    nrow = n_genes, ncol = n_types,
+    dimnames = list(rownames(expr_data), cell_types)
+  )
   pct_expr <- mean_expr
 
   for (ct in cell_types) {
@@ -244,7 +244,6 @@ inferProduction <- function(object,
 #' @return Numeric vector of trimean values for each row
 #' @keywords internal
 .row_trimean <- function(mat) {
-
   if (inherits(mat, "dgCMatrix")) {
     mat <- as.matrix(mat)
   }
@@ -276,7 +275,7 @@ getTopProducers <- function(object, metabolite, top_n = 5) {
   if (top_n < 1) {
     stop("top_n must be at least 1")
   }
-  
+
   if (metabolite %in% rownames(object@production_scores)) {
     met_id <- metabolite
   } else {
@@ -288,12 +287,12 @@ getTopProducers <- function(object, metabolite, top_n = 5) {
       stop("Metabolite not found in production scores")
     }
   }
-  
+
   scores <- object@production_scores[met_id, ]
   scores <- sort(scores, decreasing = TRUE)
-  
+
   n_return <- min(top_n, length(scores))
-  
+
   data.frame(
     cell_type = names(scores)[1:n_return],
     production_score = as.numeric(scores[1:n_return]),

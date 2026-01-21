@@ -52,7 +52,6 @@ runScMetaLink <- function(expression_data,
                           pvalue_threshold = 0.05,
                           n_cores = 1,
                           verbose = TRUE) {
-
   # Parameter validation
   if (!method %in% c("mean", "proportion", "combined")) {
     stop("method must be one of: 'mean', 'proportion', 'combined'")
@@ -136,7 +135,6 @@ runScMetaLinkSeurat <- function(seurat_obj,
                                 assay = "RNA",
                                 slot = "data",
                                 ...) {
-
   if (!requireNamespace("Seurat", quietly = TRUE)) {
     stop("Package 'Seurat' is required")
   }
@@ -173,13 +171,13 @@ runScMetaLinkSeurat <- function(seurat_obj,
 #' \donttest{
 #' # Compare tumor vs normal
 #' diff <- compareCommunication(tumor_obj, normal_obj,
-#'                              condition_names = c("Tumor", "Normal"))
+#'   condition_names = c("Tumor", "Normal")
+#' )
 #' }
 compareCommunication <- function(object1,
                                  object2,
                                  condition_names = c("Condition1", "Condition2"),
                                  method = "log2fc") {
-
   # Parameter validation
   if (!inherits(object1, "scMetaLink") || !inherits(object2, "scMetaLink")) {
     stop("Both objects must be scMetaLink objects")
@@ -193,14 +191,14 @@ compareCommunication <- function(object1,
 
   sig1 <- object1@significant_interactions
   sig2 <- object2@significant_interactions
-  
+
   if (nrow(sig1) == 0 && nrow(sig2) == 0) {
     stop("Both objects have no significant interactions")
   }
 
   # Use a separator that is unlikely to appear in cell type names
   sep <- ":::"
-  
+
   # Create keys using safe separator
   sig1$key <- paste(sig1$sender, sig1$receiver, sig1$metabolite_id, sep = sep)
   sig2$key <- paste(sig2$sender, sig2$receiver, sig2$metabolite_id, sep = sep)
@@ -240,7 +238,8 @@ compareCommunication <- function(object1,
   # Add metabolite names
   db <- .load_metalinksdb()
   comparison <- merge(comparison, db$metabolites[, c("hmdb", "metabolite")],
-                      by.x = "metabolite_id", by.y = "hmdb", all.x = TRUE)
+    by.x = "metabolite_id", by.y = "hmdb", all.x = TRUE
+  )
 
   # Rename columns
   names(comparison)[names(comparison) == "score1"] <- paste0("score_", condition_names[1])
@@ -248,8 +247,10 @@ compareCommunication <- function(object1,
 
   # Sort by absolute change
   comparison <- comparison[order(-abs(comparison$change)), ]
-  comparison <- comparison[, c("sender", "receiver", "metabolite_id", "metabolite",
-                               paste0("score_", condition_names), "change")]
+  comparison <- comparison[, c(
+    "sender", "receiver", "metabolite_id", "metabolite",
+    paste0("score_", condition_names), "change"
+  )]
   rownames(comparison) <- NULL
 
   comparison
@@ -267,7 +268,6 @@ compareCommunication <- function(object1,
 identifyCellTypeSpecificMetabolites <- function(object,
                                                 type = "production",
                                                 specificity_threshold = 1.5) {
-
   if (!type %in% c("production", "sensing")) {
     stop("type must be 'production' or 'sensing'")
   }
@@ -288,7 +288,9 @@ identifyCellTypeSpecificMetabolites <- function(object,
   # Calculate z-scores
   z_scores <- t(apply(scores, 1, function(x) {
     s <- sd(x, na.rm = TRUE)
-    if (s == 0) return(rep(0, length(x)))
+    if (s == 0) {
+      return(rep(0, length(x)))
+    }
     (x - mean(x, na.rm = TRUE)) / s
   }))
 
@@ -319,7 +321,8 @@ identifyCellTypeSpecificMetabolites <- function(object,
   # Add metabolite names
   db <- object@database
   results <- merge(results, db$metabolites[, c("hmdb", "metabolite", "metabolite_subclass")],
-                   by.x = "metabolite_id", by.y = "hmdb", all.x = TRUE)
+    by.x = "metabolite_id", by.y = "hmdb", all.x = TRUE
+  )
 
   results <- results[order(-results$z_score), ]
   rownames(results) <- NULL
@@ -335,7 +338,6 @@ identifyCellTypeSpecificMetabolites <- function(object,
 #' @return list with summary statistics
 #' @export
 getSummaryStats <- function(object) {
-
   if (!inherits(object, "scMetaLink")) {
     stop("object must be a scMetaLink object")
   }
@@ -374,7 +376,9 @@ getSummaryStats <- function(object) {
 
     # Top cell type pairs
     pair_counts <- table(paste(object@significant_interactions$sender,
-                               object@significant_interactions$receiver, sep = " -> "))
+      object@significant_interactions$receiver,
+      sep = " -> "
+    ))
     stats$top_pairs <- names(sort(pair_counts, decreasing = TRUE))[1:min(10, length(pair_counts))]
   }
 

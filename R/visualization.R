@@ -27,7 +27,6 @@ plotCommunicationHeatmap <- function(object,
                                      show_values = FALSE,
                                      colors = NULL,
                                      title = NULL) {
-
   if (!requireNamespace("ComplexHeatmap", quietly = TRUE)) {
     stop("Package 'ComplexHeatmap' is required")
   }
@@ -90,9 +89,12 @@ plotCommunicationHeatmap <- function(object,
     cell_fun = if (show_values) {
       function(j, i, x, y, width, height, fill) {
         grid::grid.text(sprintf("%.2f", mat[i, j]), x, y,
-                        gp = grid::gpar(fontsize = 8))
+          gp = grid::gpar(fontsize = 8)
+        )
       }
-    } else NULL,
+    } else {
+      NULL
+    },
     heatmap_legend_param = list(
       title = "Communication\nScore",
       title_position = "topcenter"
@@ -120,7 +122,6 @@ plotCommunicationCircle <- function(object,
                                     colors = NULL,
                                     transparency = 0.5,
                                     title = NULL) {
-
   if (!requireNamespace("circlize", quietly = TRUE)) {
     stop("Package 'circlize' is required")
   }
@@ -162,8 +163,10 @@ plotCommunicationCircle <- function(object,
       )
     } else {
       colors <- setNames(
-        c(RColorBrewer::brewer.pal(12, "Set3"),
-          viridis::viridis(n_types - 12)),
+        c(
+          RColorBrewer::brewer.pal(12, "Set3"),
+          viridis::viridis(n_types - 12)
+        ),
         cell_types
       )
     }
@@ -214,7 +217,6 @@ plotCommunicationNetwork <- function(object,
                                      node_size_by = "degree",
                                      edge_width_scale = 2,
                                      colors = NULL) {
-
   if (!requireNamespace("ggraph", quietly = TRUE)) {
     stop("Package 'ggraph' is required")
   }
@@ -318,7 +320,6 @@ plotCommunicationNetwork <- function(object,
 #' @return A ggplot object
 #' @export
 plotMetaboliteProfile <- function(object, metabolite, show_genes = FALSE) {
-
   if (!inherits(object, "scMetaLink")) {
     stop("object must be a scMetaLink object")
   }
@@ -327,7 +328,8 @@ plotMetaboliteProfile <- function(object, metabolite, show_genes = FALSE) {
   db <- object@database
   if (!metabolite %in% db$metabolites$hmdb) {
     met_match <- db$metabolites$hmdb[grepl(metabolite, db$metabolites$metabolite,
-                                           ignore.case = TRUE)]
+      ignore.case = TRUE
+    )]
     if (length(met_match) == 0) stop("Metabolite not found")
     metabolite <- met_match[1]
   }
@@ -399,7 +401,6 @@ plotMetaboliteProfile <- function(object, metabolite, show_genes = FALSE) {
 #' @return A ggplot object
 #' @export
 plotTopInteractions <- function(object, top_n = 30, group_by = "metabolite") {
-
   if (!inherits(object, "scMetaLink")) {
     stop("object must be a scMetaLink object")
   }
@@ -436,8 +437,10 @@ plotTopInteractions <- function(object, top_n = 30, group_by = "metabolite") {
   }
 
   p <- ggplot2::ggplot(sig, ggplot2::aes(x = .data[[x_var]], y = .data[[y_var]])) +
-    ggplot2::geom_point(ggplot2::aes(size = communication_score,
-                                     color = -log10(pvalue_adjusted + 1e-10))) +
+    ggplot2::geom_point(ggplot2::aes(
+      size = communication_score,
+      color = -log10(pvalue_adjusted + 1e-10)
+    )) +
     ggplot2::scale_color_viridis_c(option = "plasma") +
     ggplot2::scale_size_continuous(range = c(2, 8)) +
     ggplot2::labs(
@@ -465,7 +468,6 @@ plotTopInteractions <- function(object, top_n = 30, group_by = "metabolite") {
 #' @return A ggplot or ComplexHeatmap object
 #' @export
 plotPathwayCommunication <- function(object, top_pathways = 20, type = "bar") {
-
   if (!inherits(object, "scMetaLink")) {
     stop("object must be a scMetaLink object")
   }
@@ -480,10 +482,14 @@ plotPathwayCommunication <- function(object, top_pathways = 20, type = "bar") {
   pw_summary <- head(pw_summary, top_pathways)
 
   if (type == "bar") {
-    p <- ggplot2::ggplot(pw_summary,
-                         ggplot2::aes(x = stats::reorder(pathway, communication_score),
-                                      y = communication_score,
-                                      fill = n_metabolites)) +
+    p <- ggplot2::ggplot(
+      pw_summary,
+      ggplot2::aes(
+        x = stats::reorder(pathway, communication_score),
+        y = communication_score,
+        fill = n_metabolites
+      )
+    ) +
       ggplot2::geom_bar(stat = "identity") +
       ggplot2::scale_fill_viridis_c() +
       ggplot2::coord_flip() +
@@ -504,15 +510,17 @@ plotPathwayCommunication <- function(object, top_pathways = 20, type = "bar") {
     if (!requireNamespace("ComplexHeatmap", quietly = TRUE)) {
       stop("Package 'ComplexHeatmap' is required for heatmap")
     }
-    
+
     # Create pathway x cell type matrix
     pw_agg <- object@pathway_aggregated
     pw_agg <- pw_agg[pw_agg$pathway %in% pw_summary$pathway, ]
 
     # Sender activity
-    sender_mat <- tapply(pw_agg$communication_score,
-                         list(pw_agg$pathway, pw_agg$sender),
-                         sum)
+    sender_mat <- tapply(
+      pw_agg$communication_score,
+      list(pw_agg$pathway, pw_agg$sender),
+      sum
+    )
     sender_mat[is.na(sender_mat)] <- 0
 
     return(ComplexHeatmap::Heatmap(
@@ -537,7 +545,6 @@ plotPathwayCommunication <- function(object, top_pathways = 20, type = "bar") {
 #' @return A ggplot object
 #' @export
 plotDifferentialCommunication <- function(diff_results, top_n = 30, type = "bar") {
-
   if (!is.data.frame(diff_results)) {
     stop("diff_results must be a data.frame from compareCommunication()")
   }
@@ -551,20 +558,28 @@ plotDifferentialCommunication <- function(diff_results, top_n = 30, type = "bar"
   if (type == "bar") {
     # Get top positive and negative changes
     diff_sorted <- diff_results[order(diff_results$change), ]
-    top_neg <- head(diff_sorted, ceiling(top_n/2))
-    top_pos <- tail(diff_sorted, floor(top_n/2))
+    top_neg <- head(diff_sorted, ceiling(top_n / 2))
+    top_pos <- tail(diff_sorted, floor(top_n / 2))
     plot_data <- rbind(top_neg, top_pos)
 
-    plot_data$label <- paste(plot_data$sender, "->", plot_data$receiver,
-                             "\n(", plot_data$metabolite, ")")
+    plot_data$label <- paste(
+      plot_data$sender, "->", plot_data$receiver,
+      "\n(", plot_data$metabolite, ")"
+    )
 
-    p <- ggplot2::ggplot(plot_data,
-                         ggplot2::aes(x = stats::reorder(label, change),
-                                      y = change,
-                                      fill = change > 0)) +
+    p <- ggplot2::ggplot(
+      plot_data,
+      ggplot2::aes(
+        x = stats::reorder(label, change),
+        y = change,
+        fill = change > 0
+      )
+    ) +
       ggplot2::geom_bar(stat = "identity") +
-      ggplot2::scale_fill_manual(values = c("TRUE" = "#E64B35", "FALSE" = "#4DBBD5"),
-                                 guide = "none") +
+      ggplot2::scale_fill_manual(
+        values = c("TRUE" = "#E64B35", "FALSE" = "#4DBBD5"),
+        guide = "none"
+      ) +
       ggplot2::coord_flip() +
       ggplot2::labs(
         x = NULL,
@@ -575,32 +590,36 @@ plotDifferentialCommunication <- function(diff_results, top_n = 30, type = "bar"
 
     return(p)
   }
-  
+
   if (type == "volcano") {
     # Need score columns for volcano plot
     score_cols <- grep("^score_", names(diff_results), value = TRUE)
     if (length(score_cols) < 2) {
       stop("Volcano plot requires score columns from compareCommunication()")
     }
-    
+
     # Calculate mean score for point size
     diff_results$mean_score <- (diff_results[[score_cols[1]]] + diff_results[[score_cols[2]]]) / 2
-    
+
     # Significance threshold
     diff_results$significant <- abs(diff_results$change) > 1
-    
-    p <- ggplot2::ggplot(diff_results, 
-                         ggplot2::aes(x = change, y = mean_score, color = significant)) +
+
+    p <- ggplot2::ggplot(
+      diff_results,
+      ggplot2::aes(x = change, y = mean_score, color = significant)
+    ) +
       ggplot2::geom_point(alpha = 0.6) +
-      ggplot2::scale_color_manual(values = c("TRUE" = "#E64B35", "FALSE" = "grey60"),
-                                  guide = "none") +
+      ggplot2::scale_color_manual(
+        values = c("TRUE" = "#E64B35", "FALSE" = "grey60"),
+        guide = "none"
+      ) +
       ggplot2::geom_vline(xintercept = c(-1, 1), linetype = "dashed", color = "grey40") +
       ggplot2::labs(
         x = "Log2 Fold Change",
         y = "Mean Communication Score"
       ) +
       ggplot2::theme_minimal()
-    
+
     return(p)
   }
 }
@@ -615,23 +634,28 @@ plotDifferentialCommunication <- function(diff_results, top_n = 30, type = "bar"
 #' @return A ggplot object
 #' @export
 plotEnrichedPathways <- function(enrichment_results, top_n = 20, show_overlap = TRUE) {
-  
   if (!is.data.frame(enrichment_results)) {
     stop("enrichment_results must be a data.frame from enrichPathways()")
   }
   if (nrow(enrichment_results) == 0) {
     stop("No enriched pathways to plot")
   }
-  
+
   plot_data <- head(enrichment_results, top_n)
-  
-  p <- ggplot2::ggplot(plot_data, 
-                       ggplot2::aes(x = stats::reorder(pathway, fold_enrichment),
-                                    y = fold_enrichment)) +
+
+  p <- ggplot2::ggplot(
+    plot_data,
+    ggplot2::aes(
+      x = stats::reorder(pathway, fold_enrichment),
+      y = fold_enrichment
+    )
+  ) +
     ggplot2::geom_segment(ggplot2::aes(xend = pathway, y = 0, yend = fold_enrichment),
-                          color = "grey60") +
+      color = "grey60"
+    ) +
     ggplot2::geom_point(ggplot2::aes(size = n_overlap, color = -log10(pvalue_adjusted)),
-                        alpha = 0.8) +
+      alpha = 0.8
+    ) +
     ggplot2::scale_color_viridis_c(option = "plasma") +
     ggplot2::scale_size_continuous(range = c(3, 10)) +
     ggplot2::coord_flip() +
@@ -645,6 +669,6 @@ plotEnrichedPathways <- function(enrichment_results, top_n = 20, show_overlap = 
     ggplot2::theme(
       axis.text.y = ggplot2::element_text(size = 9)
     )
-  
+
   p
 }

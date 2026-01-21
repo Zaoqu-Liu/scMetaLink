@@ -30,6 +30,7 @@ Compare metabolite-mediated communication between two conditions
 \donttest{
 # Compare tumor vs normal
 diff <- compareCommunication(tumor_obj, normal_obj,
-                             condition_names = c("Tumor", "Normal"))
+  condition_names = c("Tumor", "Normal")
+)
 }
 }

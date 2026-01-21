@@ -122,7 +122,7 @@ Three methods are available:
 ```{r scoring_methods, echo=FALSE, fig.height=4}
 # Illustrate scoring methods
 set.seed(42)
-expr <- c(rep(0, 70), rnorm(30, 2, 0.5))  # 70% dropout
+expr <- c(rep(0, 70), rnorm(30, 2, 0.5)) # 70% dropout
 
 methods <- data.frame(
   Method = c("mean", "proportion", "combined"),
@@ -144,7 +144,7 @@ $$\text{Trimean} = \frac{Q_1 + 2Q_2 + Q_3}{4}$$
 
 ```{r trimean_example}
 # Example: Trimean vs Arithmetic Mean
-expr_with_outlier <- c(0, 0, 0, 1, 2, 3, 100)  # Outlier = 100
+expr_with_outlier <- c(0, 0, 0, 1, 2, 3, 100) # Outlier = 100
 
 cat("Data:", paste(expr_with_outlier, collapse = ", "), "\n")
 cat("Arithmetic mean:", round(mean(expr_with_outlier), 2), "\n")
@@ -152,7 +152,7 @@ cat("Median:", median(expr_with_outlier), "\n")
 
 # Trimean calculation
 q <- quantile(expr_with_outlier, c(0.25, 0.5, 0.75))
-trimean <- (q[1] + 2*q[2] + q[3]) / 4
+trimean <- (q[1] + 2 * q[2] + q[3]) / 4
 cat("Trimean:", round(trimean, 2), "\n")
 cat("\nTrimean is robust to the outlier!\n")
 ```
@@ -193,16 +193,19 @@ Where:
 x <- seq(0, 1, 0.01)
 hill <- function(x, n, Kh) x^n / (Kh^n + x^n)
 
-plot(x, x, type = "l", lty = 2, col = "gray",
-     xlab = "Expression (normalized)", ylab = "Response",
-     main = "Hill Function Transformation")
+plot(x, x,
+  type = "l", lty = 2, col = "gray",
+  xlab = "Expression (normalized)", ylab = "Response",
+  main = "Hill Function Transformation"
+)
 lines(x, hill(x, n = 1, Kh = 0.5), col = "blue", lwd = 2)
 lines(x, hill(x, n = 2, Kh = 0.5), col = "red", lwd = 2)
 lines(x, hill(x, n = 0.5, Kh = 0.5), col = "green", lwd = 2)
-legend("bottomright", 
-       legend = c("Linear", "n=1 (Michaelis-Menten)", "n=2 (Cooperative)", "n=0.5"),
-       col = c("gray", "blue", "red", "green"), 
-       lty = c(2, 1, 1, 1), lwd = 2)
+legend("bottomright",
+  legend = c("Linear", "n=1 (Michaelis-Menten)", "n=2 (Cooperative)", "n=0.5"),
+  col = c("gray", "blue", "red", "green"),
+  lty = c(2, 1, 1, 1), lwd = 2
+)
 abline(h = 0.5, v = 0.5, lty = 3, col = "gray")
 ```
 
@@ -230,18 +233,24 @@ grid <- expand.grid(p = p, s = s)
 
 # Geometric
 z_geom <- matrix(sqrt(grid$p * grid$s), nrow = length(p))
-image(p, s, z_geom, main = "Geometric: sqrt(P x S)", 
-      xlab = "Production", ylab = "Sensing", col = hcl.colors(50, "YlOrRd"))
+image(p, s, z_geom,
+  main = "Geometric: sqrt(P x S)",
+  xlab = "Production", ylab = "Sensing", col = hcl.colors(50, "YlOrRd")
+)
 
 # Product
 z_prod <- matrix(grid$p * grid$s, nrow = length(p))
-image(p, s, z_prod, main = "Product: P x S", 
-      xlab = "Production", ylab = "Sensing", col = hcl.colors(50, "YlOrRd"))
+image(p, s, z_prod,
+  main = "Product: P x S",
+  xlab = "Production", ylab = "Sensing", col = hcl.colors(50, "YlOrRd")
+)
 
 # Harmonic
 z_harm <- matrix(2 * grid$p * grid$s / (grid$p + grid$s + 1e-10), nrow = length(p))
-image(p, s, z_harm, main = "Harmonic: 2PS/(P+S)", 
-      xlab = "Production", ylab = "Sensing", col = hcl.colors(50, "YlOrRd"))
+image(p, s, z_harm,
+  main = "Harmonic: 2PS/(P+S)",
+  xlab = "Production", ylab = "Sensing", col = hcl.colors(50, "YlOrRd")
+)
 
 par(mfrow = c(1, 1))
 ```
@@ -289,8 +298,10 @@ Three strategies for handling multiple comparisons:
 ```{r pipeline, echo=FALSE, fig.height=6, fig.width=10}
 # Create flowchart-style diagram using base R
 par(mar = c(1, 1, 1, 1))
-plot(0, 0, type = "n", xlim = c(0, 10), ylim = c(0, 8),
-     xlab = "", ylab = "", axes = FALSE)
+plot(0, 0,
+  type = "n", xlim = c(0, 10), ylim = c(0, 8),
+  xlab = "", ylab = "", axes = FALSE
+)
 
 # Boxes
 rect(0.5, 6.5, 2.5, 7.5, col = "#E3F2FD", border = "#1976D2", lwd = 2)

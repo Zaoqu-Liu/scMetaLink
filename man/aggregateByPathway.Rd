@@ -18,6 +18,6 @@ Updated scMetaLink object with pathway_aggregated slot filled
 }
 \description{
 Aggregate metabolite-mediated communication at the pathway level.
-  Due to the large number of pathway associations, this function uses a 
+  Due to the large number of pathway associations, this function uses a
   simplified approach focusing on top pathways.
 }

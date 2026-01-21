@@ -39,7 +39,6 @@ computeCommunication <- function(object,
                                  n_cores = 1,
                                  seed = 42,
                                  verbose = TRUE) {
-
   if (!inherits(object, "scMetaLink")) stop("object must be a scMetaLink object")
   if (is.null(object@production_scores)) stop("Run inferProduction() first")
   if (is.null(object@sensing_scores)) stop("Run inferSensing() first")
@@ -193,7 +192,6 @@ computeCommunication <- function(object,
                                              n_permutations, n_cores, method,
                                              min_production, min_sensing,
                                              population.size = FALSE, verbose) {
-
   expr_data <- object@expression_data
   cell_meta <- object@cell_meta
   cell_type_col <- object@cell_type_column
@@ -424,7 +422,6 @@ computeCommunication <- function(object,
     )
 
     count_matrix <- Reduce(`+`, results)
-
   } else {
     # Sequential execution with progress bar
     count_matrix <- array(0, dim = dim(comm_scores))
@@ -448,21 +445,23 @@ computeCommunication <- function(object,
 #' Normalize Scores for Permutation (same logic as inferProduction/inferSensing)
 #' @keywords internal
 .normalize_scores_permutation <- function(scores) {
-  if (nrow(scores) == 0) return(scores)
-  
+  if (nrow(scores) == 0) {
+    return(scores)
+  }
+
   # Z-score per metabolite (row)
   row_means <- rowMeans(scores, na.rm = TRUE)
   row_sds <- apply(scores, 1, sd, na.rm = TRUE)
   row_sds[row_sds == 0] <- 1
   scores <- (scores - row_means) / row_sds
-  
+
   # Scale to 0-1
   min_val <- min(scores, na.rm = TRUE)
   max_val <- max(scores, na.rm = TRUE)
   if (max_val > min_val) {
     scores <- (scores - min_val) / (max_val - min_val)
   }
-  
+
   scores
 }
 
@@ -473,12 +472,12 @@ computeCommunication <- function(object,
 #' Filter Significant Interactions
 #' @param object scMetaLink object
 #' @param pvalue_threshold Numeric. P-value threshold (default: 0.05)
-#' @param adjust_method Character. Multiple testing correction method: "BH", "bonferroni", 
+#' @param adjust_method Character. Multiple testing correction method: "BH", "bonferroni",
 #'   "holm", "none", or "metabolite_stratified" (recommended, performs BH within each metabolite)
 #' @param min_score Numeric. Minimum communication score (default: 0)
 #' @return Updated scMetaLink object
 #' @export
-#' 
+#'
 #' @details
 #' The \code{adjust_method} parameter controls how p-values are corrected for multiple testing:
 #' \itemize{
@@ -493,16 +492,15 @@ filterSignificantInteractions <- function(object,
                                           pvalue_threshold = 0.05,
                                           adjust_method = "metabolite_stratified",
                                           min_score = 0) {
-
   if (is.null(object@communication_scores)) {
     stop("Communication scores not calculated. Run computeCommunication() first.")
   }
-  
+
   # Parameter validation
   if (pvalue_threshold <= 0 || pvalue_threshold > 1) {
     stop("pvalue_threshold must be between 0 and 1")
   }
-  
+
   valid_methods <- c(p.adjust.methods, "metabolite_stratified")
   if (!adjust_method %in% valid_methods) {
     stop("Invalid adjust_method. Use 'metabolite_stratified', 'BH', 'bonferroni', 'holm', or 'none'.")
@@ -513,17 +511,17 @@ filterSignificantInteractions <- function(object,
 
   cell_types <- dimnames(comm_scores)[[1]]
   metabolites <- dimnames(comm_scores)[[3]]
-  
+
   # If no permutation test was done, just filter by score
   if (is.null(pvalues)) {
     idx <- which(comm_scores > min_score, arr.ind = TRUE)
-    
+
     if (nrow(idx) == 0) {
       message("No interactions passed the minimum score threshold")
       object@significant_interactions <- data.frame()
       return(object)
     }
-    
+
     results <- data.frame(
       sender = cell_types[idx[, 1]],
       receiver = cell_types[idx[, 2]],
@@ -531,33 +529,32 @@ filterSignificantInteractions <- function(object,
       communication_score = comm_scores[idx],
       stringsAsFactors = FALSE
     )
-    
   } else if (adjust_method == "metabolite_stratified") {
     # Stratified BH correction: correct within each metabolite
     results_list <- list()
-    
+
     for (met in metabolites) {
       met_idx <- which(metabolites == met)
       met_pvals <- pvalues[, , met_idx]
       met_scores <- comm_scores[, , met_idx]
-      
+
       # Find interactions above min_score for this metabolite
       valid_idx <- which(met_scores > min_score)
-      
+
       if (length(valid_idx) > 0) {
         valid_pvals <- met_pvals[valid_idx]
         valid_scores <- met_scores[valid_idx]
-        
+
         # BH correction within this metabolite
         adj_pvals <- p.adjust(valid_pvals, method = "BH")
-        
+
         # Find significant interactions
         sig_mask <- adj_pvals < pvalue_threshold
-        
+
         if (any(sig_mask)) {
           sig_idx <- valid_idx[sig_mask]
           idx_2d <- arrayInd(sig_idx, dim(met_pvals))
-          
+
           results_list[[met]] <- data.frame(
             sender = cell_types[idx_2d[, 1]],
             receiver = cell_types[idx_2d[, 2]],
@@ -570,24 +567,23 @@ filterSignificantInteractions <- function(object,
         }
       }
     }
-    
+
     if (length(results_list) > 0) {
       results <- do.call(rbind, results_list)
       rownames(results) <- NULL
     } else {
       results <- data.frame()
     }
-    
   } else {
     # Standard global correction
     idx <- which(comm_scores > min_score, arr.ind = TRUE)
-    
+
     if (nrow(idx) == 0) {
       message("No interactions passed the minimum score threshold")
       object@significant_interactions <- data.frame()
       return(object)
     }
-    
+
     results <- data.frame(
       sender = cell_types[idx[, 1]],
       receiver = cell_types[idx[, 2]],
@@ -595,18 +591,18 @@ filterSignificantInteractions <- function(object,
       communication_score = comm_scores[idx],
       stringsAsFactors = FALSE
     )
-    
+
     results$pvalue <- pvalues[idx]
-    
+
     if (adjust_method == "none") {
       results$pvalue_adjusted <- results$pvalue
     } else {
       results$pvalue_adjusted <- p.adjust(results$pvalue, method = adjust_method)
     }
-    
+
     results <- results[results$pvalue_adjusted < pvalue_threshold, ]
   }
-  
+
   if (nrow(results) == 0) {
     message("No significant interactions found")
     object@significant_interactions <- data.frame()
@@ -616,7 +612,8 @@ filterSignificantInteractions <- function(object,
   # Add metabolite names
   db <- object@database
   results <- merge(results, db$metabolites[, c("hmdb", "metabolite")],
-                   by.x = "metabolite", by.y = "hmdb", all.x = TRUE)
+    by.x = "metabolite", by.y = "hmdb", all.x = TRUE
+  )
   names(results)[names(results) == "metabolite.y"] <- "metabolite_name"
   names(results)[names(results) == "metabolite"] <- "metabolite_id"
 
@@ -638,7 +635,7 @@ summarizeCommunicationPairs <- function(object, aggregate_method = "sum") {
   if (nrow(object@significant_interactions) == 0) {
     stop("No significant interactions. Run filterSignificantInteractions() first.")
   }
-  
+
   if (!aggregate_method %in% c("sum", "mean", "count")) {
     stop("aggregate_method must be one of: 'sum', 'mean', 'count'")
   }
@@ -666,8 +663,10 @@ getCommunicationMatrix <- function(object, aggregate_method = "sum") {
   summary_df <- summarizeCommunicationPairs(object, aggregate_method)
 
   cell_types <- unique(c(summary_df$sender, summary_df$receiver))
-  mat <- matrix(0, nrow = length(cell_types), ncol = length(cell_types),
-                dimnames = list(cell_types, cell_types))
+  mat <- matrix(0,
+    nrow = length(cell_types), ncol = length(cell_types),
+    dimnames = list(cell_types, cell_types)
+  )
 
   for (i in seq_len(nrow(summary_df))) {
     mat[summary_df$sender[i], summary_df$receiver[i]] <- summary_df[[3]][i]

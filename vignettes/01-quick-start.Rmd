@@ -79,9 +79,9 @@ Production potential reflects how capable each cell type is at **synthesizing an
 ```{r production}
 obj <- inferProduction(
   obj,
-  method = "combined",           # Use mean expression x proportion expressing
-  consider_degradation = TRUE,   # Subtract degradation enzyme expression
-  consider_secretion = TRUE,     # Weight by secretion potential
+  method = "combined", # Use mean expression x proportion expressing
+  consider_degradation = TRUE, # Subtract degradation enzyme expression
+  consider_secretion = TRUE, # Weight by secretion potential
   verbose = TRUE
 )
 
@@ -97,8 +97,8 @@ Sensing capability reflects how capable each cell type is at **detecting and res
 obj <- inferSensing(
   obj,
   method = "combined",
-  weight_by_affinity = TRUE,     # Weight by receptor-metabolite affinity
-  include_transporters = TRUE,   # Include uptake transporters
+  weight_by_affinity = TRUE, # Weight by receptor-metabolite affinity
+  include_transporters = TRUE, # Include uptake transporters
   verbose = TRUE
 )
 
@@ -113,10 +113,10 @@ Communication scores quantify the potential signal flow from sender (producer) t
 ```{r communication}
 obj <- computeCommunication(
   obj,
-  method = "geometric",      # sqrt(production x sensing)
-  min_production = 0.1,      # Filter weak producers
-  min_sensing = 0.1,         # Filter weak sensors
-  n_permutations = 100,      # Permutation test for significance
+  method = "geometric", # sqrt(production x sensing)
+  min_production = 0.1, # Filter weak producers
+  min_sensing = 0.1, # Filter weak sensors
+  n_permutations = 100, # Permutation test for significance
   verbose = TRUE
 )
 ```
@@ -129,7 +129,7 @@ obj <- computeCommunication(
 obj <- filterSignificantInteractions(
   obj,
   pvalue_threshold = 0.05,
-  adjust_method = "none"  # Use "BH" for real analysis
+  adjust_method = "none" # Use "BH" for real analysis
 )
 
 # View top significant interactions

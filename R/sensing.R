@@ -42,7 +42,6 @@ inferSensing <- function(object,
                          hill_Kh = 0.5,
                          normalize = TRUE,
                          verbose = TRUE) {
-
   # Input validation
   if (!inherits(object, "scMetaLink")) {
     stop("object must be a scMetaLink object")
@@ -95,10 +94,10 @@ inferSensing <- function(object,
 
   # Step 2: Get sensing proteins
   if (verbose) message("  Building metabolite-receptor mapping...")
-  
+
   sensing_proteins <- .get_sensing_proteins(db)
   sensing_proteins <- sensing_proteins[!is.na(sensing_proteins$gene_symbol), ]
-  
+
   if (include_transporters) {
     in_trans <- .get_transporters(db, direction = "in")
     in_trans <- in_trans[!is.na(in_trans$gene_symbol), ]
@@ -106,33 +105,33 @@ inferSensing <- function(object,
       sensing_proteins <- rbind(sensing_proteins, in_trans)
     }
   }
-  
+
   # Filter to available genes
   genes <- rownames(gene_scores)
   sensing_proteins <- sensing_proteins[sensing_proteins$gene_symbol %in% genes, ]
-  
+
   if (nrow(sensing_proteins) == 0) {
     stop("No sensing proteins found in the expression data")
   }
-  
+
   if (verbose) message(sprintf("  Found %d receptor-metabolite pairs", nrow(sensing_proteins)))
-  
+
   # Remove duplicates, keep highest score
   sensing_proteins <- sensing_proteins[order(-sensing_proteins$combined_score), ]
   sensing_proteins <- sensing_proteins[!duplicated(paste(sensing_proteins$hmdb, sensing_proteins$gene_symbol)), ]
-  
+
   metabolites <- unique(sensing_proteins$hmdb)
-  
+
   # Step 3: Create sparse mapping matrix with affinity weights
   if (weight_by_affinity) {
     # Normalize scores to 0-1
     weights <- sensing_proteins$combined_score
-    weights[is.na(weights)] <- 500  # Default for missing scores
+    weights[is.na(weights)] <- 500 # Default for missing scores
     weights <- weights / 1000
   } else {
     weights <- rep(1, nrow(sensing_proteins))
   }
-  
+
   met_gene_map <- Matrix::sparseMatrix(
     i = match(sensing_proteins$hmdb, metabolites),
     j = match(sensing_proteins$gene_symbol, genes),
@@ -140,11 +139,11 @@ inferSensing <- function(object,
     dims = c(length(metabolites), length(genes)),
     dimnames = list(metabolites, genes)
   )
-  
+
   # Count receptors per metabolite
   receptor_counts <- Matrix::rowSums(met_gene_map > 0)
   receptor_counts[receptor_counts == 0] <- 1
-  
+
   # Step 4: Matrix multiplication for sensing scores
   if (verbose) message("  Computing sensing scores (matrix multiplication)...")
 
@@ -197,7 +196,7 @@ inferSensing <- function(object,
     hill_Kh = hill_Kh,
     normalize = normalize
   )
-  
+
   if (verbose) message(sprintf("  Computed sensing scores for %d metabolites", nrow(sensing_scores)))
   if (verbose) message("Done!")
   object
@@ -219,7 +218,7 @@ getTopSensors <- function(object, metabolite, top_n = 5) {
   if (top_n < 1) {
     stop("top_n must be at least 1")
   }
-  
+
   if (metabolite %in% rownames(object@sensing_scores)) {
     met_id <- metabolite
   } else {
@@ -231,12 +230,12 @@ getTopSensors <- function(object, metabolite, top_n = 5) {
       stop("Metabolite not found in sensing scores")
     }
   }
-  
+
   scores <- object@sensing_scores[met_id, ]
   scores <- sort(scores, decreasing = TRUE)
-  
+
   n_return <- min(top_n, length(scores))
-  
+
   data.frame(
     cell_type = names(scores)[1:n_return],
     sensing_score = as.numeric(scores[1:n_return]),
@@ -280,30 +279,30 @@ getTopSensors <- function(object, metabolite, top_n = 5) {
 #' @export
 getMetaboliteReceptors <- function(metabolite, include_transporters = TRUE) {
   db <- .load_metalinksdb()
-  
+
   if (!metabolite %in% db$metabolites$hmdb) {
     met_match <- db$metabolites$hmdb[grepl(metabolite, db$metabolites$metabolite, ignore.case = TRUE)]
     if (length(met_match) == 0) stop("Metabolite not found")
     metabolite <- met_match[1]
   }
-  
+
   sensing <- .get_sensing_proteins(db)
   receptors <- sensing[sensing$hmdb == metabolite, ]
-  
+
   if (include_transporters) {
     trans_in <- .get_transporters(db, direction = "in")
     trans <- trans_in[trans_in$hmdb == metabolite, ]
     if (nrow(trans) > 0) receptors <- rbind(receptors, trans)
   }
-  
+
   if (nrow(receptors) == 0) {
     message("No receptors found for this metabolite")
     return(data.frame())
   }
-  
+
   receptors <- receptors[!duplicated(receptors$gene_symbol), ]
   receptors <- receptors[order(-receptors$combined_score), ]
-  
+
   # Select columns to return
   cols <- c("gene_symbol", "protein_type", "combined_score", "metabolite")
   cols <- cols[cols %in% names(receptors)]
