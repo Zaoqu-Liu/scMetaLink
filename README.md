@@ -1,8 +1,10 @@
 # scMetaLink
 
 <!-- badges: start -->
-[![R-CMD-check](https://github.com/Zaoqu-Liu/scMetaLink/workflows/R-CMD-check/badge.svg)](https://github.com/Zaoqu-Liu/scMetaLink/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+[![R version](https://img.shields.io/badge/R-%3E%3D4.0-blue.svg)](https://www.r-project.org/)
+[![Platform](https://img.shields.io/badge/platform-linux%20%7C%20macOS%20%7C%20windows-lightgrey.svg)](https://github.com/Zaoqu-Liu/scMetaLink)
+[![GitHub stars](https://img.shields.io/github/stars/Zaoqu-Liu/scMetaLink?style=social)](https://github.com/Zaoqu-Liu/scMetaLink/stargazers)
 <!-- badges: end -->
 
 **scMetaLink** is an R package for inferring metabolite-mediated cell-cell communication from single-cell RNA sequencing data.
