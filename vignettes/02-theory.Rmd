@@ -85,6 +85,10 @@ cat("Transporters: transporter\n")
 
 ## Mathematical Framework
 
+```{r calflow, echo=FALSE, out.width="100%", fig.cap="**Figure 2: Computational Algorithm.** Schematic illustration of the mathematical framework for computing metabolite production, sensing, and communication scores."}
+knitr::include_graphics("calflow.png")
+```
+
 ### 1. Metabolite Production Potential (MPP)
 
 The production potential for metabolite $m$ in cell type $c$ is:
