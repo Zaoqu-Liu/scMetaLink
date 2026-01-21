@@ -100,6 +100,14 @@ cat("Transporters: transporter\n")
 
 ## Mathematical Framework
 
+![\*\*Figure 2: Computational Algorithm.\*\* Schematic illustration of
+the mathematical framework for computing metabolite production, sensing,
+and communication scores.](calflow.png)
+
+**Figure 2: Computational Algorithm.** Schematic illustration of the
+mathematical framework for computing metabolite production, sensing, and
+communication scores.
+
 ### 1. Metabolite Production Potential (MPP)
 
 The production potential for metabolite $m$ in cell type $c$ is:
