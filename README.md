@@ -4,6 +4,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![R version](https://img.shields.io/badge/R-%3E%3D4.0-blue.svg)](https://www.r-project.org/)
 [![Platform](https://img.shields.io/badge/platform-linux%20%7C%20macOS%20%7C%20windows-lightgrey.svg)](https://github.com/Zaoqu-Liu/scMetaLink)
+[![r-universe](https://zaoqu-liu.r-universe.dev/badges/scMetaLink)](https://zaoqu-liu.r-universe.dev/scMetaLink)
 [![GitHub stars](https://img.shields.io/github/stars/Zaoqu-Liu/scMetaLink?style=social)](https://github.com/Zaoqu-Liu/scMetaLink/stargazers)
 <!-- badges: end -->
 
@@ -41,8 +42,18 @@ scMetaLink utilizes MetalinksDB, containing:
 
 ## Installation
 
+### From r-universe (Recommended)
+
 ```r
-# Install from GitHub
+install.packages("scMetaLink", repos = "https://zaoqu-liu.r-universe.dev")
+```
+
+### From GitHub
+
+```r
+# Install devtools if needed
+if (!require("devtools")) install.packages("devtools")
+
 devtools::install_github("Zaoqu-Liu/scMetaLink")
 ```
 

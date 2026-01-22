@@ -22,3 +22,4 @@
 ^vignettes/.*_files$
 ^\.Rproj\.user$
 ^cran-comments\.md$
+^universe-config$

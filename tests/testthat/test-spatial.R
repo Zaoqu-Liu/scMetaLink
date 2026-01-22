@@ -3,7 +3,10 @@
 test_that("createScMetaLinkFromSpatial works", {
   skip_on_cran()
   
-  data("st_colon", package = "scMetaLink")
+  # Load spatial example data
+  data("st_expr", package = "scMetaLink")
+  data("st_meta", package = "scMetaLink")
+  data("st_scalefactors", package = "scMetaLink")
   
   obj <- createScMetaLinkFromSpatial(
     expression_data = st_expr,
@@ -50,7 +53,10 @@ test_that("createScMetaLinkFromSpatial validates input", {
 test_that("computeSpatialCommunication works with knn method", {
   skip_on_cran()
   
-  data("st_colon", package = "scMetaLink")
+  # Load spatial example data
+  data("st_expr", package = "scMetaLink")
+  data("st_meta", package = "scMetaLink")
+  data("st_scalefactors", package = "scMetaLink")
   
   obj <- createScMetaLinkFromSpatial(
     expression_data = st_expr,
@@ -79,7 +85,10 @@ test_that("computeSpatialCommunication works with knn method", {
 test_that("computeSpatialCommunication works with different methods", {
   skip_on_cran()
   
-  data("st_colon", package = "scMetaLink")
+  # Load spatial example data
+  data("st_expr", package = "scMetaLink")
+  data("st_meta", package = "scMetaLink")
+  data("st_scalefactors", package = "scMetaLink")
   
   obj <- createScMetaLinkFromSpatial(
     expression_data = st_expr,
@@ -110,7 +119,10 @@ test_that("computeSpatialCommunication works with different methods", {
 test_that("getSpatialDistanceStats works", {
   skip_on_cran()
   
-  data("st_colon", package = "scMetaLink")
+  # Load spatial example data
+  data("st_expr", package = "scMetaLink")
+  data("st_meta", package = "scMetaLink")
+  data("st_scalefactors", package = "scMetaLink")
   
   obj <- createScMetaLinkFromSpatial(
     expression_data = st_expr,

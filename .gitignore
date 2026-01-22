@@ -5,6 +5,19 @@
 *.Rproj
 inst/doc
 .DS_Store
+.cursorrules
+
+# Local development folders
+benchmark/
+data-raw/
+
+# Temporary output files
+omnipathr-log/
+scMetaLink_*.csv
+
+# Local pkgdown build artifacts
+docs/
+*_files/
 
 # Local development folders
 benchmark/
