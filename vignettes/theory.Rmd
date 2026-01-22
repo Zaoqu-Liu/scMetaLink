@@ -366,3 +366,4 @@ arrows(4.5, 7, 4.5, 6.5, length = 0.1, lwd = 2, lty = 2)
 
 - **[Production & Sensing Analysis](production-sensing.html)**: Detailed parameter tuning
 - **[Communication Analysis](communication.html)**: Advanced communication analysis
+- **[Spatial Analysis](spatial-analysis.html)**: Spatial transcriptomics support

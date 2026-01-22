@@ -382,5 +382,6 @@ par(mfrow = c(1, 1))
 
 ## Next Steps
 
+- **[Spatial Analysis](spatial-analysis.html)**: Spatial transcriptomics visualization
 - **[Applications](applications.html)**: Real-world analysis examples
 - Explore parameter tuning for optimal visualizations

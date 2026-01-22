@@ -412,5 +412,6 @@ diff_comm <- comm_tumor - comm_normal
 
 ## Next Steps
 
+- **[Spatial Analysis](spatial-analysis.html)**: Spatial transcriptomics support
 - **[Visualization](visualization.html)**: Create publication-ready figures
 - **[Applications](applications.html)**: Real-world analysis examples
