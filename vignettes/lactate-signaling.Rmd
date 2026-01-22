@@ -1,0 +1,334 @@
+---
+title: "Lactate Signaling Analysis"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Lactate Signaling Analysis}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 8,
+  fig.height = 6,
+  fig.align = "center",
+  out.width = "100%",
+  dpi = 150,
+  warning = FALSE,
+  message = FALSE
+)
+```
+
+## Overview
+
+scMetaLink provides a specialized module for analyzing **lactate-mediated cell communication**. Lactate is not merely a metabolic waste product but a critical signaling molecule in the tumor microenvironment (TME). This module captures both direct and indirect lactate signaling pathways based on rigorous scientific literature review.
+
+## Scientific Background
+
+### The Dual Role of Lactate
+
+Lactate exerts its signaling effects through two distinct mechanisms:
+
+1. **Direct Signaling**: Lactate directly binds to HCAR1 (GPR81), the only confirmed lactate GPCR
+2. **Indirect Signaling**: Lactate dissociation (pKa=3.86) produces H+ ions that activate proton-sensing GPCRs
+
+```{r concept, echo=FALSE, fig.cap="**Figure 1: Lactate Signaling Pathways.** Lactate produced by glycolytic cells (e.g., tumor cells) can signal through direct binding to HCAR1 or indirectly through H+ activation of proton-sensing GPCRs."}
+# Create conceptual diagram
+par(mar = c(1, 1, 2, 1))
+plot(NULL, xlim = c(0, 10), ylim = c(0, 8), xlab = "", ylab = "", axes = FALSE,
+     main = "Lactate Signaling: Direct and Indirect Pathways")
+
+# Sender cell (tumor)
+rect(0.5, 3, 3, 6, col = "#FFCDD2", border = "#C62828", lwd = 2)
+text(1.75, 4.5, "Glycolytic\nCell\n(Tumor)", cex = 0.8)
+text(1.75, 5.5, "LDHA high", cex = 0.6, col = "#C62828")
+
+# Lactate production
+arrows(3, 4.5, 4.5, 4.5, lwd = 2, col = "#E65100")
+text(3.75, 5, "Lactate", cex = 0.7, col = "#E65100")
+
+# Extracellular space
+rect(4.5, 2, 6.5, 7, col = "#FFF8E1", border = "#F57F17", lwd = 1, lty = 2)
+text(5.5, 6.5, "Extracellular", cex = 0.6)
+text(5.5, 4.5, "Lactate\n+\nH+", cex = 0.7)
+
+# Direct pathway
+arrows(6.5, 5.5, 7.5, 5.5, lwd = 2, col = "#1565C0")
+text(7, 6, "Direct", cex = 0.6, col = "#1565C0")
+
+# Indirect pathway
+arrows(6.5, 3.5, 7.5, 3.5, lwd = 2, col = "#2E7D32")
+text(7, 4, "Indirect\n(H+)", cex = 0.6, col = "#2E7D32")
+
+# Receiver cell - direct
+rect(7.5, 5, 9.5, 7, col = "#BBDEFB", border = "#1565C0", lwd = 2)
+text(8.5, 6, "HCAR1+\nCell", cex = 0.7)
+
+# Receiver cell - indirect
+rect(7.5, 2, 9.5, 4, col = "#C8E6C9", border = "#2E7D32", lwd = 2)
+text(8.5, 3, "GPR65+\nImmune", cex = 0.7)
+```
+
+### Key Biological Facts
+
+| Aspect | Details | Evidence |
+|--------|---------|----------|
+| Lactate pKa | 3.86 (nearly 100% dissociated at pH 7.4) | Chemical property |
+| Direct receptor | HCAR1 (GPR81) - **only confirmed lactate GPCR** | PLOS Biology 2024 |
+| Proton sensors | GPR4, GPR65, GPR68, GPR132 | Reactome R-HSA-444731 |
+| Primary exporter | MCT4 (SLC16A3) - low affinity, glycolytic cells | iScience 2019 |
+| Primary importer | MCT1 (SLC16A1) - high affinity, oxidative cells | iScience 2019 |
+| MCT chaperone | BSG/CD147 - essential for membrane localization | Nature 2025 |
+
+## Quick Start
+
+```{r quickstart, eval=FALSE}
+library(scMetaLink)
+
+# Load example data
+data(crc_example)
+
+# Create scMetaLink object
+obj <- createScMetaLink(crc_expr, crc_meta, "cell_type")
+
+# Run lactate signaling analysis
+obj <- inferLactateSignaling(obj)
+
+# View results
+getLactateSignalingSummary(obj)
+```
+
+## Gene Sets
+
+The lactate module uses scientifically curated gene sets:
+
+```{r genesets}
+library(scMetaLink)
+
+# Get all gene sets
+genes <- getLactateGenes()
+
+cat("=== PRODUCTION ===\n")
+cat("Synthesis enzymes:\n")
+print(genes$production$synthesis)
+cat("\nExport transporters:\n")
+print(genes$production$export)
+
+cat("\n=== DEGRADATION ===\n")
+print(genes$degradation$enzymes)
+
+cat("\n=== DIRECT SENSING ===\n")
+print(genes$direct_sensing$receptor)
+
+cat("\n=== INDIRECT SENSING (Proton GPCRs) ===\n")
+print(genes$indirect_sensing$proton_receptors)
+cat("Weights (reflecting pH sensitivity):\n")
+print(genes$indirect_sensing$weights)
+
+cat("\n=== UPTAKE ===\n")
+print(genes$uptake$import)
+```
+
+### Why These Genes?
+
+**Production (Synthesis)**:
+- **LDHA** is the primary enzyme catalyzing pyruvate → lactate (Warburg effect)
+- **LDHB is excluded** because it preferentially catalyzes the reverse reaction
+
+**Production (Export)**:
+- **MCT4 (SLC16A3)** is the primary exporter with low affinity (Km ~22-28 mM)
+- **BSG/CD147** is an essential chaperone required for MCT membrane localization
+
+**Direct Sensing**:
+- **HCAR1** is the only confirmed lactate GPCR (validated by cryo-EM structure in 2024)
+
+**Indirect Sensing**:
+- Classic proton-sensing GPCRs that detect pH via histidine protonation
+- **GPR132 has reduced weight (0.5)** because it primarily senses oxidized fatty acids
+
+### Excluded Genes
+
+| Gene Family | Reason |
+|-------------|--------|
+| ALDH family | Catalyze aldehyde→acid, not involved in lactate metabolism |
+| HTR2B, HTR2C | Serotonin receptors, not pH sensors |
+| TLR7, TLR9 | Nucleic acid sensors; pH is activation condition, not signal |
+
+## Running Analysis
+
+### Basic Analysis
+
+```{r basic_analysis, eval=FALSE}
+# Full analysis with both pathways
+obj <- inferLactateSignaling(
+  obj,
+  include_direct = TRUE,
+  include_indirect = TRUE,
+  method = "combined",
+  normalize = TRUE,
+  n_permutations = 100,
+  verbose = TRUE
+)
+```
+
+### Pathway-Specific Analysis
+
+```{r pathway_specific, eval=FALSE}
+# Direct pathway only (lactate → HCAR1)
+obj <- inferLactateSignaling(obj, include_direct = TRUE, include_indirect = FALSE)
+
+# Indirect pathway only (lactate → H+ → GPCRs)
+obj <- inferLactateSignaling(obj, include_direct = FALSE, include_indirect = TRUE)
+```
+
+### Check Gene Availability
+
+Before running analysis, check which lactate genes are available:
+
+```{r check_genes, eval=FALSE}
+checkLactateGenes(obj)
+```
+
+## Interpreting Results
+
+### Production Scores
+
+```{r production, eval=FALSE}
+# Get top lactate producers
+getTopLactateProducers(obj, top_n = 5)
+```
+
+High production indicates:
+- High expression of LDHA (synthesis)
+- High expression of MCT4/BSG (export)
+- Low expression of LDHB (degradation)
+
+### Sensing Scores
+
+```{r sensing, eval=FALSE}
+# Get top sensors for indirect pathway
+getTopLactateSensors(obj, pathway = "indirect", top_n = 5)
+
+# Get top sensors for direct pathway
+getTopLactateSensors(obj, pathway = "direct", top_n = 5)
+```
+
+### Communication Summary
+
+```{r summary, eval=FALSE}
+# Get top cell-cell communications
+getLactateSignalingSummary(obj, pathway = "combined", top_n = 10)
+```
+
+## Visualization
+
+### Heatmap
+
+```{r heatmap, eval=FALSE}
+# Plot communication heatmap
+plotLactateSignaling(obj, pathway = "indirect")
+```
+
+### Pathway Comparison
+
+```{r comparison, eval=FALSE}
+# Compare production and sensing across cell types
+plotLactatePathwayComparison(obj, show_production = TRUE)
+```
+
+## Spatial Analysis
+
+For spatial transcriptomics data:
+
+```{r spatial, eval=FALSE}
+# Create spatial object
+obj <- createScMetaLinkFromSpatial(
+  expression_data = st_expr,
+  spatial_coords = st_meta[, c("x", "y")],
+  cell_meta = st_meta,
+  cell_type_column = "cell_type",
+  scale_factors = st_scalefactors
+)
+
+# Run spatial lactate analysis
+obj <- inferSpatialLactateSignaling(
+  obj,
+  max_distance = 200,      # Maximum communication distance (um)
+  distance_decay = "gaussian",
+  sigma = 50               # Characteristic decay distance (um)
+)
+
+# Visualize
+plotSpatialLactate(obj, type = "production")
+
+# Get hotspots
+getSpatialLactateHotspots(obj, type = "all", top_n = 20)
+```
+
+## Algorithm Details
+
+### Production Score
+
+$$\text{Production}(c) = \overline{\text{Synthesis}} \times \overline{\text{Export}} - \alpha \times \overline{\text{Degradation}}$$
+
+Where:
+- Synthesis = {LDHA, LDHC, LDHAL6A, LDHAL6B}
+- Export = {SLC16A3, SLC16A1, SLC16A7, SLC16A8, AQP9, BSG}
+- Degradation = {LDHB, LDHD}
+- α = 0.3 (degradation weight)
+
+### Direct Sensing Score
+
+$$\text{DirectSensing}(c) = \text{HCAR1} + \beta \times \overline{\text{Uptake}}$$
+
+Where:
+- β = 0.5 (uptake contribution)
+- Uptake = {SLC16A1, SLC16A7, BSG}
+
+### Indirect Sensing Score
+
+$$\text{IndirectSensing}(c) = \frac{\sum_{r \in R} w_r \times \text{Expr}(r)}{\sum_{r \in R} w_r}$$
+
+Where:
+- R = {GPR4, GPR65, GPR68, GPR132}
+- Weights: GPR4=1.0, GPR65=1.0, GPR68=1.0, GPR132=0.5
+
+### Communication Score
+
+$$\text{Comm}(s \to r) = \sqrt{\text{Production}(s) \times \text{Sensing}(r)}$$
+
+## Biological Applications
+
+### Tumor-Immune Interactions
+
+The indirect pathway is particularly relevant for tumor immunology:
+
+1. **Tumor cells** produce high lactate (Warburg effect)
+2. **Lactate dissociation** acidifies the microenvironment
+3. **Immune cells** expressing GPR65/GPR68 sense the acidification
+4. This leads to **immunosuppression** in the TME
+
+### Expected Results
+
+| Cell Type | Production | Direct Sensing | Indirect Sensing |
+|-----------|------------|----------------|------------------|
+| Tumor | High (LDHA+) | Variable | Low |
+| TAM | Medium | Variable | High (GPR65+) |
+| T cells | Low | Variable | Medium |
+| Endothelial | Low | Medium | High (GPR4+) |
+
+## References
+
+1. **HCAR1/GPR81 Structure**: PLOS Biology (2024). Cryo-EM structures of HCAR1.
+2. **GPR81 Function**: Nature Metabolism (2024). Lactate drives cachexia via GPR81.
+3. **MCT Transport**: iScience (2019). Role of MCT4 in lactate shuttle.
+4. **BSG/CD147**: Nature Cell Discovery (2025). Basigin modulates MCTs.
+5. **Proton GPCRs**: Reactome R-HSA-444731.
+
+## See Also
+
+- **[Quick Start](quick-start.html)**: Getting started with scMetaLink
+- **[Theory & Methods](theory.html)**: Mathematical framework
+- **[Spatial Analysis](spatial-analysis.html)**: Spatial transcriptomics support
