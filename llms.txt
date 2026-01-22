@@ -182,15 +182,16 @@ correction.
 
 ## Tutorials
 
-| Tutorial                                                                                        | Description             |
-|:------------------------------------------------------------------------------------------------|:------------------------|
-| [Quick Start](https://Zaoqu-Liu.github.io/scMetaLink/articles/quick-start.html)                 | Basic workflow          |
-| [Theory](https://Zaoqu-Liu.github.io/scMetaLink/articles/theory.html)                           | Mathematical framework  |
-| [Production & Sensing](https://Zaoqu-Liu.github.io/scMetaLink/articles/production-sensing.html) | Inference details       |
-| [Communication](https://Zaoqu-Liu.github.io/scMetaLink/articles/communication.html)             | Statistical analysis    |
-| [Spatial Analysis](https://Zaoqu-Liu.github.io/scMetaLink/articles/spatial-analysis.html)       | Spatial transcriptomics |
-| [Visualization](https://Zaoqu-Liu.github.io/scMetaLink/articles/visualization.html)             | Plotting functions      |
-| [Applications](https://Zaoqu-Liu.github.io/scMetaLink/articles/applications.html)               | Case studies            |
+| Tutorial                                                                                        | Description                    |
+|:------------------------------------------------------------------------------------------------|:-------------------------------|
+| [Quick Start](https://Zaoqu-Liu.github.io/scMetaLink/articles/quick-start.html)                 | Basic workflow                 |
+| [Theory](https://Zaoqu-Liu.github.io/scMetaLink/articles/theory.html)                           | Mathematical framework         |
+| [Production & Sensing](https://Zaoqu-Liu.github.io/scMetaLink/articles/production-sensing.html) | Inference details              |
+| [Communication](https://Zaoqu-Liu.github.io/scMetaLink/articles/communication.html)             | Statistical analysis           |
+| [Spatial Analysis](https://Zaoqu-Liu.github.io/scMetaLink/articles/spatial-analysis.html)       | Spatial transcriptomics        |
+| [Lactate Signaling](https://Zaoqu-Liu.github.io/scMetaLink/articles/lactate-signaling.html)     | Lactate-mediated communication |
+| [Visualization](https://Zaoqu-Liu.github.io/scMetaLink/articles/visualization.html)             | Plotting functions             |
+| [Applications](https://Zaoqu-Liu.github.io/scMetaLink/articles/applications.html)               | Case studies                   |
 
 ## Citation
 
@@ -288,6 +289,33 @@ Spatial plotting functions
   : Plot Spatial Hotspots
 - [`plotSpatialComparison()`](https://Zaoqu-Liu.github.io/scMetaLink/reference/plotSpatialComparison.md)
   : Plot Spatial Communication Comparison
+
+## Lactate Signaling
+
+Specialized lactate-mediated communication analysis
+
+- [`inferLactateSignaling()`](https://Zaoqu-Liu.github.io/scMetaLink/reference/inferLactateSignaling.md)
+  : Infer Lactate-Mediated Cell Communication
+- [`inferSpatialLactateSignaling()`](https://Zaoqu-Liu.github.io/scMetaLink/reference/inferSpatialLactateSignaling.md)
+  : Infer Spatial Lactate Signaling
+- [`getLactateGenes()`](https://Zaoqu-Liu.github.io/scMetaLink/reference/getLactateGenes.md)
+  : Get Lactate Signaling Gene Sets
+- [`getTopLactateProducers()`](https://Zaoqu-Liu.github.io/scMetaLink/reference/getTopLactateProducers.md)
+  : Get Top Lactate Producers
+- [`getTopLactateSensors()`](https://Zaoqu-Liu.github.io/scMetaLink/reference/getTopLactateSensors.md)
+  : Get Top Lactate Sensors
+- [`getLactateSignalingSummary()`](https://Zaoqu-Liu.github.io/scMetaLink/reference/getLactateSignalingSummary.md)
+  : Get Lactate Signaling Summary
+- [`getSpatialLactateHotspots()`](https://Zaoqu-Liu.github.io/scMetaLink/reference/getSpatialLactateHotspots.md)
+  : Get Spatial Lactate Hotspots
+- [`checkLactateGenes()`](https://Zaoqu-Liu.github.io/scMetaLink/reference/checkLactateGenes.md)
+  : Check Lactate Gene Availability
+- [`plotLactateSignaling()`](https://Zaoqu-Liu.github.io/scMetaLink/reference/plotLactateSignaling.md)
+  : Plot Lactate Signaling Heatmap
+- [`plotLactatePathwayComparison()`](https://Zaoqu-Liu.github.io/scMetaLink/reference/plotLactatePathwayComparison.md)
+  : Plot Lactate Pathway Comparison
+- [`plotSpatialLactate()`](https://Zaoqu-Liu.github.io/scMetaLink/reference/plotSpatialLactate.md)
+  : Plot Spatial Lactate Signaling
 
 ## Pathway Analysis
 
@@ -419,6 +447,8 @@ Package documentation
   Analysis](https://Zaoqu-Liu.github.io/scMetaLink/articles/communication.md):
 - [Spatial Transcriptomics
   Analysis](https://Zaoqu-Liu.github.io/scMetaLink/articles/spatial-analysis.md):
+- [Lactate Signaling
+  Analysis](https://Zaoqu-Liu.github.io/scMetaLink/articles/lactate-signaling.md):
 - [Visualization
   Gallery](https://Zaoqu-Liu.github.io/scMetaLink/articles/visualization.md):
 

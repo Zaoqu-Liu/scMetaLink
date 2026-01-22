@@ -182,15 +182,16 @@ correction.
 
 ## Tutorials
 
-| Tutorial                                                                                        | Description             |
-|:------------------------------------------------------------------------------------------------|:------------------------|
-| [Quick Start](https://Zaoqu-Liu.github.io/scMetaLink/articles/quick-start.html)                 | Basic workflow          |
-| [Theory](https://Zaoqu-Liu.github.io/scMetaLink/articles/theory.html)                           | Mathematical framework  |
-| [Production & Sensing](https://Zaoqu-Liu.github.io/scMetaLink/articles/production-sensing.html) | Inference details       |
-| [Communication](https://Zaoqu-Liu.github.io/scMetaLink/articles/communication.html)             | Statistical analysis    |
-| [Spatial Analysis](https://Zaoqu-Liu.github.io/scMetaLink/articles/spatial-analysis.html)       | Spatial transcriptomics |
-| [Visualization](https://Zaoqu-Liu.github.io/scMetaLink/articles/visualization.html)             | Plotting functions      |
-| [Applications](https://Zaoqu-Liu.github.io/scMetaLink/articles/applications.html)               | Case studies            |
+| Tutorial                                                                                        | Description                    |
+|:------------------------------------------------------------------------------------------------|:-------------------------------|
+| [Quick Start](https://Zaoqu-Liu.github.io/scMetaLink/articles/quick-start.html)                 | Basic workflow                 |
+| [Theory](https://Zaoqu-Liu.github.io/scMetaLink/articles/theory.html)                           | Mathematical framework         |
+| [Production & Sensing](https://Zaoqu-Liu.github.io/scMetaLink/articles/production-sensing.html) | Inference details              |
+| [Communication](https://Zaoqu-Liu.github.io/scMetaLink/articles/communication.html)             | Statistical analysis           |
+| [Spatial Analysis](https://Zaoqu-Liu.github.io/scMetaLink/articles/spatial-analysis.html)       | Spatial transcriptomics        |
+| [Lactate Signaling](https://Zaoqu-Liu.github.io/scMetaLink/articles/lactate-signaling.html)     | Lactate-mediated communication |
+| [Visualization](https://Zaoqu-Liu.github.io/scMetaLink/articles/visualization.html)             | Plotting functions             |
+| [Applications](https://Zaoqu-Liu.github.io/scMetaLink/articles/applications.html)               | Case studies                   |
 
 ## Citation
 

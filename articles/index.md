@@ -18,6 +18,8 @@
   Analysis](https://Zaoqu-Liu.github.io/scMetaLink/articles/communication.md):
 - [Spatial Transcriptomics
   Analysis](https://Zaoqu-Liu.github.io/scMetaLink/articles/spatial-analysis.md):
+- [Lactate Signaling
+  Analysis](https://Zaoqu-Liu.github.io/scMetaLink/articles/lactate-signaling.md):
 - [Visualization
   Gallery](https://Zaoqu-Liu.github.io/scMetaLink/articles/visualization.md):
 

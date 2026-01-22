@@ -82,6 +82,33 @@ Spatial plotting functions
 - [`plotSpatialComparison()`](https://Zaoqu-Liu.github.io/scMetaLink/reference/plotSpatialComparison.md)
   : Plot Spatial Communication Comparison
 
+## Lactate Signaling
+
+Specialized lactate-mediated communication analysis
+
+- [`inferLactateSignaling()`](https://Zaoqu-Liu.github.io/scMetaLink/reference/inferLactateSignaling.md)
+  : Infer Lactate-Mediated Cell Communication
+- [`inferSpatialLactateSignaling()`](https://Zaoqu-Liu.github.io/scMetaLink/reference/inferSpatialLactateSignaling.md)
+  : Infer Spatial Lactate Signaling
+- [`getLactateGenes()`](https://Zaoqu-Liu.github.io/scMetaLink/reference/getLactateGenes.md)
+  : Get Lactate Signaling Gene Sets
+- [`getTopLactateProducers()`](https://Zaoqu-Liu.github.io/scMetaLink/reference/getTopLactateProducers.md)
+  : Get Top Lactate Producers
+- [`getTopLactateSensors()`](https://Zaoqu-Liu.github.io/scMetaLink/reference/getTopLactateSensors.md)
+  : Get Top Lactate Sensors
+- [`getLactateSignalingSummary()`](https://Zaoqu-Liu.github.io/scMetaLink/reference/getLactateSignalingSummary.md)
+  : Get Lactate Signaling Summary
+- [`getSpatialLactateHotspots()`](https://Zaoqu-Liu.github.io/scMetaLink/reference/getSpatialLactateHotspots.md)
+  : Get Spatial Lactate Hotspots
+- [`checkLactateGenes()`](https://Zaoqu-Liu.github.io/scMetaLink/reference/checkLactateGenes.md)
+  : Check Lactate Gene Availability
+- [`plotLactateSignaling()`](https://Zaoqu-Liu.github.io/scMetaLink/reference/plotLactateSignaling.md)
+  : Plot Lactate Signaling Heatmap
+- [`plotLactatePathwayComparison()`](https://Zaoqu-Liu.github.io/scMetaLink/reference/plotLactatePathwayComparison.md)
+  : Plot Lactate Pathway Comparison
+- [`plotSpatialLactate()`](https://Zaoqu-Liu.github.io/scMetaLink/reference/plotSpatialLactate.md)
+  : Plot Spatial Lactate Signaling
+
 ## Pathway Analysis
 
 Pathway-level aggregation and enrichment
