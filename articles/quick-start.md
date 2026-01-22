@@ -336,7 +336,7 @@ sessionInfo()
 #> [1] stats     graphics  grDevices utils     datasets  methods   base     
 #> 
 #> other attached packages:
-#> [1] Matrix_1.7-4     scMetaLink_1.0.0
+#> [1] Matrix_1.7-4      scMetaLink_0.99.0
 #> 
 #> loaded via a namespace (and not attached):
 #>  [1] viridis_0.6.5         sass_0.4.10           generics_0.1.4       

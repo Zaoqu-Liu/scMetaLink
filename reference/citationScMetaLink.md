@@ -21,7 +21,7 @@ citationScMetaLink()
 #> 
 #>   Liu Z (2026). scMetaLink: Inferring metabolite-mediated cell-cell
 #>   communication from single-cell transcriptomic data.
-#>   R package version 1.0.0.
+#>   R package version 0.99.0.
 #>   https://github.com/Zaoqu-Liu/scMetaLink
 #> 
 #> A BibTeX entry for LaTeX users is:
@@ -30,7 +30,7 @@ citationScMetaLink()
 #>     title = {scMetaLink: Single-Cell Metabolite-Mediated Cell Communication Analysis},
 #>     author = {Zaoqu Liu},
 #>     year = {2026},
-#>     note = {R package version 1.0.0},
+#>     note = {R package version 0.99.0},
 #>     url = {https://github.com/Zaoqu-Liu/scMetaLink},
 #>   }
 #> 
