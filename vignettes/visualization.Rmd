@@ -382,5 +382,5 @@ par(mfrow = c(1, 1))
 
 ## Next Steps
 
-- **[Applications](06-applications.html)**: Real-world analysis examples
+- **[Applications](applications.html)**: Real-world analysis examples
 - Explore parameter tuning for optimal visualizations

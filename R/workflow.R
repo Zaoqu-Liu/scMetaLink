@@ -106,14 +106,20 @@ runScMetaLink <- function(expression_data,
     pvalue_threshold = pvalue_threshold
   )
 
-  # Step 6: Aggregate by pathway
-  if (verbose) message("\n=== Step 6/6: Aggregating by pathway ===")
-  object <- aggregateByPathway(object)
+  # Step 6: Aggregate by pathway (only if significant interactions exist)
+  if (nrow(object@significant_interactions) > 0) {
+    if (verbose) message("\n=== Step 6/6: Aggregating by pathway ===")
+    object <- aggregateByPathway(object)
+  } else {
+    if (verbose) message("\n=== Step 6/6: Skipping pathway aggregation (no significant interactions) ===")
+  }
 
   if (verbose) {
     message("\n=== Analysis Complete ===")
     message(sprintf("Significant interactions: %d", nrow(object@significant_interactions)))
-    message(sprintf("Pathways involved: %d", length(unique(object@pathway_aggregated$pathway))))
+    if (nrow(object@pathway_aggregated) > 0) {
+      message(sprintf("Pathways involved: %d", length(unique(object@pathway_aggregated$pathway))))
+    }
   }
 
   object

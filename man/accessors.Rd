@@ -2,18 +2,19 @@
 % Please edit documentation in R/class.R
 \name{accessors}
 \alias{accessors}
-\alias{getProductionScores,scMetaLink-method}
+\alias{getProductionScores}
 \alias{getSensingScores}
-\alias{getSensingScores,scMetaLink-method}
 \alias{getCommunicationScores}
-\alias{getCommunicationScores,scMetaLink-method}
 \alias{getSignificantInteractions}
-\alias{getSignificantInteractions,scMetaLink-method}
 \alias{getPathwayAggregated}
-\alias{getPathwayAggregated,scMetaLink-method}
 \alias{getParameters}
+\alias{getProductionScores,scMetaLink-method}
+\alias{getSensingScores,scMetaLink-method}
+\alias{getCommunicationScores,scMetaLink-method}
+\alias{getSignificantInteractions,scMetaLink-method}
+\alias{getPathwayAggregated,scMetaLink-method}
 \alias{getParameters,scMetaLink-method}
-\title{Accessor Functions}
+\title{Accessor Functions for scMetaLink Objects}
 \usage{
 getProductionScores(object)
 
@@ -40,8 +41,27 @@ getParameters(object)
 \S4method{getParameters}{scMetaLink}(object)
 }
 \arguments{
-\item{object}{scMetaLink object}
+\item{object}{A scMetaLink object}
+}
+\value{
+The requested data from the scMetaLink object:
+\itemize{
+  \item \code{getProductionScores}: Matrix of metabolite production scores
+  \item \code{getSensingScores}: Matrix of metabolite sensing scores
+  \item \code{getCommunicationScores}: 3D array of communication scores
+  \item \code{getSignificantInteractions}: data.frame of significant interactions
+  \item \code{getPathwayAggregated}: data.frame of pathway-aggregated results
+  \item \code{getParameters}: list of analysis parameters
+}
 }
 \description{
-Accessor Functions
+Functions to extract data from scMetaLink objects.
+}
+\examples{
+\donttest{
+data(crc_example)
+obj <- createScMetaLink(crc_expr, crc_meta, "cell_type")
+obj <- inferProduction(obj)
+prod_scores <- getProductionScores(obj)
+}
 }

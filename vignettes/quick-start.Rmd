@@ -205,11 +205,11 @@ exportResults(obj, output_dir = "scMetaLink_results")
 
 ## Next Steps
 
-- **[Theory & Methods](02-theory.html)**: Understand the mathematical framework
-- **[Production & Sensing](03-production-sensing.html)**: Deep dive into inference
-- **[Communication Analysis](04-communication.html)**: Advanced communication analysis
-- **[Visualization](05-visualization.html)**: Complete visualization guide
-- **[Applications](06-applications.html)**: Real-world analysis examples
+- **[Theory & Methods](theory.html)**: Understand the mathematical framework
+- **[Production & Sensing](production-sensing.html)**: Deep dive into inference
+- **[Communication Analysis](communication.html)**: Advanced communication analysis
+- **[Visualization](visualization.html)**: Complete visualization guide
+- **[Applications](applications.html)**: Real-world analysis examples
 
 ## Session Info
 

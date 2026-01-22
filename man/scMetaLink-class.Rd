@@ -3,7 +3,14 @@
 \docType{class}
 \name{scMetaLink-class}
 \alias{scMetaLink-class}
+\alias{show,scMetaLink-method}
 \title{scMetaLink Class Definition}
+\usage{
+\S4method{show}{scMetaLink}(object)
+}
+\arguments{
+\item{object}{scMetaLink object}
+}
 \description{
 S4 class for storing metabolite-mediated cell communication analysis results
 }

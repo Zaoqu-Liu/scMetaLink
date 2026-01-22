@@ -364,5 +364,5 @@ arrows(4.5, 7, 4.5, 6.5, length = 0.1, lwd = 2, lty = 2)
 
 ## Next
 
-- **[Production & Sensing Analysis](03-production-sensing.html)**: Detailed parameter tuning
-- **[Communication Analysis](04-communication.html)**: Advanced communication analysis
+- **[Production & Sensing Analysis](production-sensing.html)**: Detailed parameter tuning
+- **[Communication Analysis](communication.html)**: Advanced communication analysis

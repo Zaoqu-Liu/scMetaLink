@@ -28,8 +28,9 @@ Imports:
     methods,
     stats,
     utils,
+    grDevices,
+    graphics,
     Matrix,
-    data.table,
     ggplot2,
     ggraph,
     igraph,
@@ -40,8 +41,7 @@ Imports:
     viridis,
     RColorBrewer,
     future,
-    future.apply,
-    progressr
+    future.apply
 Suggests:
     Seurat (>= 4.0.0),
     SingleCellExperiment,

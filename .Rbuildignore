@@ -9,3 +9,16 @@
 ^\.lintr$
 ^codecov\.yml$
 ^cran-comments\.md$
+^\.DS_Store$
+^\.Rhistory$
+^\.RData$
+^\.gitignore$
+^\.git$
+^benchmark$
+^data-raw$
+^\.\.Rcheck$
+^.*\.Rcheck$
+^vignettes/.*_cache$
+^vignettes/.*_files$
+^\.Rproj\.user$
+^cran-comments\.md$

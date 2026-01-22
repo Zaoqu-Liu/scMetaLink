@@ -191,7 +191,9 @@ createScMetaLinkFromSeurat <- function(seurat_obj,
 
 #' @title Show Method for scMetaLink
 #' @param object scMetaLink object
-#' @export
+#' @rdname scMetaLink-class
+#' @aliases show,scMetaLink-method
+#' @exportMethod show
 setMethod("show", "scMetaLink", function(object) {
   cat("scMetaLink Object\n")
   cat("=================\n")
@@ -226,15 +228,34 @@ setMethod("show", "scMetaLink", function(object) {
   }
 })
 
-#' @title Accessor Functions
+#' @title Accessor Functions for scMetaLink Objects
+#' @description Functions to extract data from scMetaLink objects.
 #' @name accessors
 #' @rdname accessors
-#' @param object scMetaLink object
+#' @aliases getProductionScores getSensingScores getCommunicationScores
+#' @aliases getSignificantInteractions getPathwayAggregated getParameters
+#' @param object A scMetaLink object
+#' @return The requested data from the scMetaLink object:
+#' \itemize{
+#'   \item \code{getProductionScores}: Matrix of metabolite production scores
+#'   \item \code{getSensingScores}: Matrix of metabolite sensing scores
+#'   \item \code{getCommunicationScores}: 3D array of communication scores
+#'   \item \code{getSignificantInteractions}: data.frame of significant interactions
+#'   \item \code{getPathwayAggregated}: data.frame of pathway-aggregated results
+#'   \item \code{getParameters}: list of analysis parameters
+#' }
+#' @examples
+#' \donttest{
+#' data(crc_example)
+#' obj <- createScMetaLink(crc_expr, crc_meta, "cell_type")
+#' obj <- inferProduction(obj)
+#' prod_scores <- getProductionScores(obj)
+#' }
 #' @export
 setGeneric("getProductionScores", function(object) standardGeneric("getProductionScores"))
 
 #' @rdname accessors
-#' @export
+#' @exportMethod getProductionScores
 setMethod("getProductionScores", "scMetaLink", function(object) {
   object@production_scores
 })
@@ -244,7 +265,7 @@ setMethod("getProductionScores", "scMetaLink", function(object) {
 setGeneric("getSensingScores", function(object) standardGeneric("getSensingScores"))
 
 #' @rdname accessors
-#' @export
+#' @exportMethod getSensingScores
 setMethod("getSensingScores", "scMetaLink", function(object) {
   object@sensing_scores
 })
@@ -254,7 +275,7 @@ setMethod("getSensingScores", "scMetaLink", function(object) {
 setGeneric("getCommunicationScores", function(object) standardGeneric("getCommunicationScores"))
 
 #' @rdname accessors
-#' @export
+#' @exportMethod getCommunicationScores
 setMethod("getCommunicationScores", "scMetaLink", function(object) {
   object@communication_scores
 })
@@ -264,7 +285,7 @@ setMethod("getCommunicationScores", "scMetaLink", function(object) {
 setGeneric("getSignificantInteractions", function(object) standardGeneric("getSignificantInteractions"))
 
 #' @rdname accessors
-#' @export
+#' @exportMethod getSignificantInteractions
 setMethod("getSignificantInteractions", "scMetaLink", function(object) {
   object@significant_interactions
 })
@@ -274,7 +295,7 @@ setMethod("getSignificantInteractions", "scMetaLink", function(object) {
 setGeneric("getPathwayAggregated", function(object) standardGeneric("getPathwayAggregated"))
 
 #' @rdname accessors
-#' @export
+#' @exportMethod getPathwayAggregated
 setMethod("getPathwayAggregated", "scMetaLink", function(object) {
   object@pathway_aggregated
 })
@@ -284,7 +305,7 @@ setMethod("getPathwayAggregated", "scMetaLink", function(object) {
 setGeneric("getParameters", function(object) standardGeneric("getParameters"))
 
 #' @rdname accessors
-#' @export
+#' @exportMethod getParameters
 setMethod("getParameters", "scMetaLink", function(object) {
   object@parameters
 })

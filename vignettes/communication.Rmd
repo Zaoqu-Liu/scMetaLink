@@ -412,5 +412,5 @@ diff_comm <- comm_tumor - comm_normal
 
 ## Next Steps
 
-- **[Visualization](05-visualization.html)**: Create publication-ready figures
-- **[Applications](06-applications.html)**: Real-world analysis examples
+- **[Visualization](visualization.html)**: Create publication-ready figures
+- **[Applications](applications.html)**: Real-world analysis examples

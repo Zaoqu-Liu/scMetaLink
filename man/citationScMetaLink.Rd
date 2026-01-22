@@ -6,6 +6,12 @@
 \usage{
 citationScMetaLink()
 }
+\value{
+Invisibly returns NULL, prints citation information
+}
 \description{
-Show Package Citation
+Display the recommended citation for scMetaLink
+}
+\examples{
+citationScMetaLink()
 }

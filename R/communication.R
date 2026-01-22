@@ -465,8 +465,8 @@ computeCommunication <- function(object,
   scores
 }
 
-#' Null-coalescing operator
-#' @keywords internal
+# Null-coalescing operator (internal, not exported)
+# @noRd
 `%||%` <- function(a, b) if (is.null(a)) b else a
 
 #' Filter Significant Interactions

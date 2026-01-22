@@ -449,5 +449,5 @@ if (met_id %in% rownames(obj@production_scores) &&
 
 ## Next Steps
 
-- **[Communication Analysis](04-communication.html)**: How to combine production and sensing
-- **[Visualization](05-visualization.html)**: Advanced plotting options
+- **[Communication Analysis](communication.html)**: How to combine production and sensing
+- **[Visualization](visualization.html)**: Advanced plotting options
