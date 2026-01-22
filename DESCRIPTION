@@ -1,7 +1,7 @@
 Package: scMetaLink
 Type: Package
 Title: Single-Cell Metabolite-Mediated Cell Communication Analysis
-Version: 1.0.0
+Version: 0.99.0
 Date: 2026-01-21
 Authors@R: person("Zaoqu", "Liu", email = "liuzaoqu@163.com", role = c("aut", "cre"), 
                   comment = c(ORCID = "0000-0002-0452-742X"))
@@ -53,6 +53,16 @@ Suggests:
     reshape2,
     pkgdown
 VignetteBuilder: knitr
+biocViews: 
+    Software,
+    SingleCell,
+    Transcriptomics,
+    CellBiology,
+    Metabolomics,
+    Network,
+    Visualization,
+    GeneExpression,
+    Spatial
 RoxygenNote: 7.3.3
 Config/testthat/edition: 3
 URL: https://github.com/Zaoqu-Liu/scMetaLink, https://Zaoqu-Liu.github.io/scMetaLink/

@@ -1,0 +1,17 @@
+citHeader("To cite scMetaLink in publications use:")
+
+citEntry(
+  entry    = "Article",
+  title    = "scMetaLink: Inferring metabolite-mediated cell-cell communication from single-cell and spatial transcriptomics data",
+  author   = personList(as.person("Zaoqu Liu")),
+  journal  = "Bioinformatics",
+  year     = "2026",
+  note     = "R package version 0.99.0",
+  url      = "https://github.com/Zaoqu-Liu/scMetaLink",
+  textVersion = paste(
+    "Liu Z (2026).",
+    "scMetaLink: Inferring metabolite-mediated cell-cell communication from single-cell and spatial transcriptomics data.",
+    "R package version 0.99.0.",
+    "https://github.com/Zaoqu-Liu/scMetaLink"
+  )
+)
