@@ -1,8 +1,7 @@
 bibentry(
-  bibtype  = "Article",
-  title    = "scMetaLink: Inferring metabolite-mediated cell-cell communication from single-cell and spatial transcriptomics data",
+  bibtype  = "Manual",
+  title    = "scMetaLink: Single-Cell Metabolite-Mediated Cell Communication Analysis",
   author   = c(person("Zaoqu", "Liu")),
-  journal  = "Bioinformatics",
   year     = "2026",
   note     = "R package version 1.0.0",
   url      = "https://github.com/Zaoqu-Liu/scMetaLink",
