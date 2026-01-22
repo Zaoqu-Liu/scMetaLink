@@ -37,15 +37,16 @@
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><a class="dropdown-item" href="articles/01-quick-start.html">Quick Start Guide</a></li>
+<li><a class="dropdown-item" href="articles/quick-start.html">Quick Start Guide</a></li>
     <li><hr class="dropdown-divider"></li>
-    <li><a class="dropdown-item" href="articles/02-theory.html">Theory &amp; Methods</a></li>
+    <li><a class="dropdown-item" href="articles/theory.html">Theory &amp; Methods</a></li>
     <li><hr class="dropdown-divider"></li>
-    <li><a class="dropdown-item" href="articles/03-production-sensing.html">Production &amp; Sensing Analysis</a></li>
-    <li><a class="dropdown-item" href="articles/04-communication.html">Communication Analysis</a></li>
-    <li><a class="dropdown-item" href="articles/05-visualization.html">Visualization Gallery</a></li>
+    <li><a class="dropdown-item" href="articles/production-sensing.html">Production &amp; Sensing Analysis</a></li>
+    <li><a class="dropdown-item" href="articles/communication.html">Communication Analysis</a></li>
+    <li><a class="dropdown-item" href="articles/spatial-analysis.html">Spatial Transcriptomics</a></li>
+    <li><a class="dropdown-item" href="articles/visualization.html">Visualization Gallery</a></li>
     <li><hr class="dropdown-divider"></li>
-    <li><a class="dropdown-item" href="articles/06-applications.html">Application Examples</a></li>
+    <li><a class="dropdown-item" href="articles/applications.html">Application Examples</a></li>
   </ul>
 </li>
       </ul>
@@ -66,7 +67,7 @@
 </h1></div>
 <!-- badges: start -->
 
-<p><strong>scMetaLink</strong> is an R package for inferring metabolite-mediated cell-cell communication from single-cell RNA sequencing data.</p>
+<p><strong>scMetaLink</strong> is an R package for inferring metabolite-mediated cell-cell communication from single-cell and spatial transcriptomics data.</p>
 <p>📖 <strong>Documentation</strong>: <a href="https://Zaoqu-Liu.github.io/scMetaLink/" class="uri">https://Zaoqu-Liu.github.io/scMetaLink/</a></p>
 <div class="section level2">
 <h2 id="background">Background<a class="anchor" aria-label="anchor" href="#background"></a>
@@ -92,7 +93,9 @@
 <li>
 <strong>Pathway Integration</strong>: Aggregate communication patterns at the pathway level</li>
 <li>
-<strong>Visualization</strong>: Heatmaps, chord diagrams, and network plots</li>
+<strong>Spatial Transcriptomics</strong>: Distance-weighted communication analysis for spatial data</li>
+<li>
+<strong>Visualization</strong>: Heatmaps, chord diagrams, network plots, and spatial maps</li>
 </ul>
 </div>
 <div class="section level2">
@@ -116,6 +119,9 @@
 <div class="section level2">
 <h2 id="quick-start">Quick Start<a class="anchor" aria-label="anchor" href="#quick-start"></a>
 </h2>
+<div class="section level3">
+<h3 id="single-cell-analysis">Single-Cell Analysis<a class="anchor" aria-label="anchor" href="#single-cell-analysis"></a>
+</h3>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/Zaoqu-Liu/scMetaLink" class="external-link">scMetaLink</a></span><span class="op">)</span></span>
 <span></span>
@@ -140,6 +146,97 @@
 <p>For Seurat users:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/runScMetaLinkSeurat.html">runScMetaLinkSeurat</a></span><span class="op">(</span><span class="va">seurat_obj</span>, cell_type_column <span class="op">=</span> <span class="st">"cell_type"</span><span class="op">)</span></span></code></pre></div>
+<hr>
+</div>
+</div>
+<div class="section level2">
+<h2 id="spatial-transcriptomics-analysis">Spatial Transcriptomics Analysis<a class="anchor" aria-label="anchor" href="#spatial-transcriptomics-analysis"></a>
+</h2>
+<p>scMetaLink supports <strong>spatial transcriptomics</strong> data with distance-weighted communication analysis.</p>
+<div class="section level3">
+<h3 id="spatial-workflow">Spatial Workflow<a class="anchor" aria-label="anchor" href="#spatial-workflow"></a>
+</h3>
+<p align="center">
+<img src="reference/figures/spatial-flow.png" width="90%"></p>
+</div>
+<div class="section level3">
+<h3 id="spatial-communication-algorithm">Spatial Communication Algorithm<a class="anchor" aria-label="anchor" href="#spatial-communication-algorithm"></a>
+</h3>
+<p align="center">
+<img src="reference/figures/spatial-cal.png" width="90%"></p>
+</div>
+<div class="section level3">
+<h3 id="spatial-quick-start">Spatial Quick Start<a class="anchor" aria-label="anchor" href="#spatial-quick-start"></a>
+</h3>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/Zaoqu-Liu/scMetaLink" class="external-link">scMetaLink</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Load spatial data</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">st_expr</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">st_meta</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">st_scalefactors</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Create spatial scMetaLink object</span></span>
+<span><span class="va">obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/createScMetaLinkFromSpatial.html">createScMetaLinkFromSpatial</a></span><span class="op">(</span></span>
+<span>  expression_data <span class="op">=</span> <span class="va">st_expr</span>,</span>
+<span>  spatial_coords <span class="op">=</span> <span class="va">st_meta</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"x"</span>, <span class="st">"y"</span><span class="op">)</span><span class="op">]</span>,</span>
+<span>  cell_meta <span class="op">=</span> <span class="va">st_meta</span>,</span>
+<span>  cell_type_column <span class="op">=</span> <span class="st">"cell_type"</span>,</span>
+<span>  scale_factors <span class="op">=</span> <span class="va">st_scalefactors</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Infer production and sensing</span></span>
+<span><span class="va">obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/inferProduction.html">inferProduction</a></span><span class="op">(</span><span class="va">obj</span><span class="op">)</span></span>
+<span><span class="va">obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/inferSensing.html">inferSensing</a></span><span class="op">(</span><span class="va">obj</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Compute spatially-weighted communication</span></span>
+<span><span class="va">obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/computeSpatialCommunication.html">computeSpatialCommunication</a></span><span class="op">(</span></span>
+<span>  <span class="va">obj</span>,</span>
+<span>  method <span class="op">=</span> <span class="st">"knn"</span>,        <span class="co"># K-nearest neighbors (recommended for Visium)</span></span>
+<span>  k_neighbors <span class="op">=</span> <span class="fl">6</span>,       <span class="co"># Hexagonal grid neighbors</span></span>
+<span>  n_permutations <span class="op">=</span> <span class="fl">1000</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Filter and visualize</span></span>
+<span><span class="va">obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/filterSignificantInteractions.html">filterSignificantInteractions</a></span><span class="op">(</span><span class="va">obj</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/plotSpatialCellTypes.html">plotSpatialCellTypes</a></span><span class="op">(</span><span class="va">obj</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/plotSpatialCommunicationNetwork.html">plotSpatialCommunicationNetwork</a></span><span class="op">(</span><span class="va">obj</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/plotSpatialFeature.html">plotSpatialFeature</a></span><span class="op">(</span><span class="va">obj</span>, metabolite <span class="op">=</span> <span class="st">"L-Lactic acid"</span>, type <span class="op">=</span> <span class="st">"production"</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="spatial-weighting-methods">Spatial Weighting Methods<a class="anchor" aria-label="anchor" href="#spatial-weighting-methods"></a>
+</h3>
+<table class="table">
+<thead><tr class="header">
+<th align="left">Method</th>
+<th align="left">Formula</th>
+<th align="left">Best for</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left"><code>knn</code></td>
+<td align="left">K-nearest neighbors</td>
+<td align="left">Visium (recommended)</td>
+</tr>
+<tr class="even">
+<td align="left"><code>gaussian</code></td>
+<td align="left">exp(-d²/2σ²)</td>
+<td align="left">Smooth decay</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>exponential</code></td>
+<td align="left">exp(-d/λ)</td>
+<td align="left">Sharp decay</td>
+</tr>
+<tr class="even">
+<td align="left"><code>threshold</code></td>
+<td align="left">Binary cutoff</td>
+<td align="left">Strict distance limit</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</div>
 </div>
 <div class="section level2">
 <h2 id="methodology">Methodology<a class="anchor" aria-label="anchor" href="#methodology"></a>
@@ -160,7 +257,14 @@
 <h3 id="communication-score">Communication Score<a class="anchor" aria-label="anchor" href="#communication-score"></a>
 </h3>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>C</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>s</mi><mo>→</mo><mi>r</mi><mo>,</mo><mi>m</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><msqrt><mrow><mi>M</mi><mi>P</mi><mi>P</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>m</mi><mo>,</mo><mi>s</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>×</mo><mi>M</mi><mi>S</mi><mi>C</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>m</mi><mo>,</mo><mi>r</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow></msqrt></mrow><annotation encoding="application/x-tex">C(s \rightarrow r, m) = \sqrt{MPP(m, s) \times MSC(m, r)}</annotation></semantics></math></p>
+</div>
+<div class="section level3">
+<h3 id="spatial-communication-score">Spatial Communication Score<a class="anchor" aria-label="anchor" href="#spatial-communication-score"></a>
+</h3>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>C</mi><mrow><mi>s</mi><mi>p</mi><mi>a</mi><mi>t</mi><mi>i</mi><mi>a</mi><mi>l</mi></mrow></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>s</mi><mo>→</mo><mi>r</mi><mo>,</mo><mi>m</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><msqrt><mrow><mi>M</mi><mi>P</mi><mi>P</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>m</mi><mo>,</mo><mi>s</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>×</mo><mi>M</mi><mi>S</mi><mi>C</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>m</mi><mo>,</mo><mi>r</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow></msqrt><mo>×</mo><mi>w</mi><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>d</mi><mrow><mi>s</mi><mi>r</mi></mrow></msub><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">C_{spatial}(s \rightarrow r, m) = \sqrt{MPP(m, s) \times MSC(m, r)} \times w(d_{sr})</annotation></semantics></math></p>
+<p>where <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>w</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>d</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">w(d)</annotation></semantics></math> is the spatial weight function (e.g., Gaussian decay).</p>
 <p>Statistical significance is assessed via permutation testing with FDR correction.</p>
+<hr>
 </div>
 </div>
 <div class="section level2">
@@ -177,31 +281,42 @@
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td align="left"><a href="https://Zaoqu-Liu.github.io/scMetaLink/articles/01-quick-start.html">Quick Start</a></td>
+<td align="left"><a href="https://Zaoqu-Liu.github.io/scMetaLink/articles/quick-start.html">Quick Start</a></td>
 <td align="left">Basic workflow</td>
 </tr>
 <tr class="even">
-<td align="left"><a href="https://Zaoqu-Liu.github.io/scMetaLink/articles/02-theory.html">Theory</a></td>
+<td align="left"><a href="https://Zaoqu-Liu.github.io/scMetaLink/articles/theory.html">Theory</a></td>
 <td align="left">Mathematical framework</td>
 </tr>
 <tr class="odd">
-<td align="left"><a href="https://Zaoqu-Liu.github.io/scMetaLink/articles/03-production-sensing.html">Production &amp; Sensing</a></td>
+<td align="left"><a href="https://Zaoqu-Liu.github.io/scMetaLink/articles/production-sensing.html">Production &amp; Sensing</a></td>
 <td align="left">Inference details</td>
 </tr>
 <tr class="even">
-<td align="left"><a href="https://Zaoqu-Liu.github.io/scMetaLink/articles/04-communication.html">Communication</a></td>
+<td align="left"><a href="https://Zaoqu-Liu.github.io/scMetaLink/articles/communication.html">Communication</a></td>
 <td align="left">Statistical analysis</td>
 </tr>
 <tr class="odd">
-<td align="left"><a href="https://Zaoqu-Liu.github.io/scMetaLink/articles/05-visualization.html">Visualization</a></td>
-<td align="left">Plotting functions</td>
+<td align="left"><a href="https://Zaoqu-Liu.github.io/scMetaLink/articles/spatial-analysis.html">Spatial Analysis</a></td>
+<td align="left">Spatial transcriptomics</td>
 </tr>
 <tr class="even">
-<td align="left"><a href="https://Zaoqu-Liu.github.io/scMetaLink/articles/06-applications.html">Applications</a></td>
+<td align="left"><a href="https://Zaoqu-Liu.github.io/scMetaLink/articles/visualization.html">Visualization</a></td>
+<td align="left">Plotting functions</td>
+</tr>
+<tr class="odd">
+<td align="left"><a href="https://Zaoqu-Liu.github.io/scMetaLink/articles/applications.html">Applications</a></td>
 <td align="left">Case studies</td>
 </tr>
 </tbody>
 </table>
+</div>
+<div class="section level2">
+<h2 id="citation">Citation<a class="anchor" aria-label="anchor" href="#citation"></a>
+</h2>
+<p>If you use scMetaLink in your research, please cite:</p>
+<pre><code>Liu Z, et al. (2026). scMetaLink: Inferring metabolite-mediated cell-cell
+communication from single-cell and spatial transcriptomics data.</code></pre>
 </div>
 <div class="section level2">
 <h2 id="contact">Contact<a class="anchor" aria-label="anchor" href="#contact"></a>
@@ -229,9 +344,8 @@
 <div class="license">
 <h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
-<li>
-<a href="https://opensource.org/licenses/mit-license.php" class="external-link">MIT</a> + file <a href="LICENSE-text.html">LICENSE</a>
-</li>
+<li><a href="LICENSE.html">Full license</a></li>
+<li><small><a href="https://opensource.org/licenses/mit-license.php" class="external-link">MIT</a> + file <a href="LICENSE-text.html">LICENSE</a></small></li>
 </ul>
 </div>
 

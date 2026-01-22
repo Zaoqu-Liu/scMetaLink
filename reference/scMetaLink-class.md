@@ -3,6 +3,19 @@
 S4 class for storing metabolite-mediated cell communication analysis
 results
 
+## Usage
+
+``` r
+# S4 method for class 'scMetaLink'
+show(object)
+```
+
+## Arguments
+
+- object:
+
+  scMetaLink object
+
 ## Slots
 
 - `expression_data`:

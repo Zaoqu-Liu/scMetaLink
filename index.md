@@ -1,7 +1,8 @@
 # scMetaLink
 
 **scMetaLink** is an R package for inferring metabolite-mediated
-cell-cell communication from single-cell RNA sequencing data.
+cell-cell communication from single-cell and spatial transcriptomics
+data.
 
 📖 **Documentation**: <https://Zaoqu-Liu.github.io/scMetaLink/>
 
@@ -29,7 +30,10 @@ to reconstruct metabolite-mediated communication networks.
   multiple hypothesis correction
 - **Pathway Integration**: Aggregate communication patterns at the
   pathway level
-- **Visualization**: Heatmaps, chord diagrams, and network plots
+- **Spatial Transcriptomics**: Distance-weighted communication analysis
+  for spatial data
+- **Visualization**: Heatmaps, chord diagrams, network plots, and
+  spatial maps
 
 ## Database
 
@@ -48,6 +52,8 @@ devtools::install_github("Zaoqu-Liu/scMetaLink")
 ```
 
 ## Quick Start
+
+### Single-Cell Analysis
 
 ``` r
 library(scMetaLink)
@@ -78,6 +84,70 @@ For Seurat users:
 result <- runScMetaLinkSeurat(seurat_obj, cell_type_column = "cell_type")
 ```
 
+------------------------------------------------------------------------
+
+## Spatial Transcriptomics Analysis
+
+scMetaLink supports **spatial transcriptomics** data with
+distance-weighted communication analysis.
+
+### Spatial Workflow
+
+![](reference/figures/spatial-flow.png)
+
+### Spatial Communication Algorithm
+
+![](reference/figures/spatial-cal.png)
+
+### Spatial Quick Start
+
+``` r
+library(scMetaLink)
+
+# Load spatial data
+data(st_expr)
+data(st_meta)
+data(st_scalefactors)
+
+# Create spatial scMetaLink object
+obj <- createScMetaLinkFromSpatial(
+  expression_data = st_expr,
+  spatial_coords = st_meta[, c("x", "y")],
+  cell_meta = st_meta,
+  cell_type_column = "cell_type",
+  scale_factors = st_scalefactors
+)
+
+# Infer production and sensing
+obj <- inferProduction(obj)
+obj <- inferSensing(obj)
+
+# Compute spatially-weighted communication
+obj <- computeSpatialCommunication(
+  obj,
+  method = "knn",        # K-nearest neighbors (recommended for Visium)
+  k_neighbors = 6,       # Hexagonal grid neighbors
+  n_permutations = 1000
+)
+
+# Filter and visualize
+obj <- filterSignificantInteractions(obj)
+plotSpatialCellTypes(obj)
+plotSpatialCommunicationNetwork(obj)
+plotSpatialFeature(obj, metabolite = "L-Lactic acid", type = "production")
+```
+
+### Spatial Weighting Methods
+
+| Method        | Formula             | Best for              |
+|:--------------|:--------------------|:----------------------|
+| `knn`         | K-nearest neighbors | Visium (recommended)  |
+| `gaussian`    | exp(-d²/2σ²)        | Smooth decay          |
+| `exponential` | exp(-d/λ)           | Sharp decay           |
+| `threshold`   | Binary cutoff       | Strict distance limit |
+
+------------------------------------------------------------------------
+
 ## Methodology
 
 ### Metabolite Production Potential (MPP)
@@ -99,19 +169,35 @@ and $\tau(r)$ is the receptor type weight.
 
 $$C\left( s\rightarrow r,m \right) = \sqrt{MPP(m,s) \times MSC(m,r)}$$
 
+### Spatial Communication Score
+
+$$C_{spatial}\left( s\rightarrow r,m \right) = \sqrt{MPP(m,s) \times MSC(m,r)} \times w\left( d_{sr} \right)$$
+
+where $w(d)$ is the spatial weight function (e.g., Gaussian decay).
+
 Statistical significance is assessed via permutation testing with FDR
 correction.
 
+------------------------------------------------------------------------
+
 ## Tutorials
 
-| Tutorial                                                                                           | Description            |
-|:---------------------------------------------------------------------------------------------------|:-----------------------|
-| [Quick Start](https://Zaoqu-Liu.github.io/scMetaLink/articles/01-quick-start.html)                 | Basic workflow         |
-| [Theory](https://Zaoqu-Liu.github.io/scMetaLink/articles/02-theory.html)                           | Mathematical framework |
-| [Production & Sensing](https://Zaoqu-Liu.github.io/scMetaLink/articles/03-production-sensing.html) | Inference details      |
-| [Communication](https://Zaoqu-Liu.github.io/scMetaLink/articles/04-communication.html)             | Statistical analysis   |
-| [Visualization](https://Zaoqu-Liu.github.io/scMetaLink/articles/05-visualization.html)             | Plotting functions     |
-| [Applications](https://Zaoqu-Liu.github.io/scMetaLink/articles/06-applications.html)               | Case studies           |
+| Tutorial                                                                                        | Description             |
+|:------------------------------------------------------------------------------------------------|:------------------------|
+| [Quick Start](https://Zaoqu-Liu.github.io/scMetaLink/articles/quick-start.html)                 | Basic workflow          |
+| [Theory](https://Zaoqu-Liu.github.io/scMetaLink/articles/theory.html)                           | Mathematical framework  |
+| [Production & Sensing](https://Zaoqu-Liu.github.io/scMetaLink/articles/production-sensing.html) | Inference details       |
+| [Communication](https://Zaoqu-Liu.github.io/scMetaLink/articles/communication.html)             | Statistical analysis    |
+| [Spatial Analysis](https://Zaoqu-Liu.github.io/scMetaLink/articles/spatial-analysis.html)       | Spatial transcriptomics |
+| [Visualization](https://Zaoqu-Liu.github.io/scMetaLink/articles/visualization.html)             | Plotting functions      |
+| [Applications](https://Zaoqu-Liu.github.io/scMetaLink/articles/applications.html)               | Case studies            |
+
+## Citation
+
+If you use scMetaLink in your research, please cite:
+
+    Liu Z, et al. (2026). scMetaLink: Inferring metabolite-mediated cell-cell
+    communication from single-cell and spatial transcriptomics data.
 
 ## Contact
 

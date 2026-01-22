@@ -1,0 +1,36 @@
+# Spatial Permutation Test - Consistent with Non-Spatial Version
+
+Permutation test for spatial communication significance. This version
+RECALCULATES production/sensing scores for each permutation, consistent
+with the non-spatial version in communication.R.
+
+## Usage
+
+``` r
+.run_spatial_permutation_consistent(
+  object,
+  comm_scores,
+  weight_matrix,
+  common_mets,
+  n_permutations,
+  n_cores,
+  comm_method,
+  min_production,
+  min_sensing,
+  verbose
+)
+```
+
+## Details
+
+The null hypothesis is: "The observed communication pattern between cell
+types is not associated with the actual cell type labels."
+
+This is tested by: 1. Shuffling cell type labels 2. Recalculating
+expression profiles for each cell type 3. Recalculating production and
+sensing scores (with all adjustments) 4. Computing spatial communication
+with the new scores 5. Keeping spatial weight matrix UNCHANGED
+(preserving spatial structure)
+
+This approach is scientifically correct and consistent with the
+non-spatial permutation test in communication.R.

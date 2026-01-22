@@ -2,13 +2,14 @@ pandoc: 3.1.11
 pkgdown: 2.2.0
 pkgdown_sha: ~
 articles:
-  01-quick-start: 01-quick-start.html
-  02-theory: 02-theory.html
-  03-production-sensing: 03-production-sensing.html
-  04-communication: 04-communication.html
-  05-visualization: 05-visualization.html
-  06-applications: 06-applications.html
-last_built: 2026-01-21T16:28Z
+  applications: applications.html
+  communication: communication.html
+  production-sensing: production-sensing.html
+  quick-start: quick-start.html
+  spatial-analysis: spatial-analysis.html
+  theory: theory.html
+  visualization: visualization.html
+last_built: 2026-01-22T04:44Z
 urls:
   reference: https://Zaoqu-Liu.github.io/scMetaLink/reference
   article: https://Zaoqu-Liu.github.io/scMetaLink/articles

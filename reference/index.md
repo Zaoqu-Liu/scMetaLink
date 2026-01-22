@@ -50,6 +50,38 @@ Compute cell-cell communication scores
 - [`identifyCellTypeSpecificMetabolites()`](https://Zaoqu-Liu.github.io/scMetaLink/reference/identifyCellTypeSpecificMetabolites.md)
   : Identify Cell Type Specific Metabolites
 
+## Spatial Analysis
+
+Spatial transcriptomics support
+
+- [`createScMetaLinkFromSpatial()`](https://Zaoqu-Liu.github.io/scMetaLink/reference/createScMetaLinkFromSpatial.md)
+  : Create scMetaLink Object from Spatial Data
+- [`createScMetaLinkFromSeuratSpatial()`](https://Zaoqu-Liu.github.io/scMetaLink/reference/createScMetaLinkFromSeuratSpatial.md)
+  : Create scMetaLink from Seurat Spatial Object
+- [`computeSpatialCommunication()`](https://Zaoqu-Liu.github.io/scMetaLink/reference/computeSpatialCommunication.md)
+  : Compute Spatial Communication
+- [`getSpatialDistanceStats()`](https://Zaoqu-Liu.github.io/scMetaLink/reference/getSpatialDistanceStats.md)
+  : Get Spatial Distance Statistics
+- [`identifyCommunicationHotspots()`](https://Zaoqu-Liu.github.io/scMetaLink/reference/identifyCommunicationHotspots.md)
+  : Identify Communication Hotspots
+
+## Spatial Visualization
+
+Spatial plotting functions
+
+- [`plotSpatialCellTypes()`](https://Zaoqu-Liu.github.io/scMetaLink/reference/plotSpatialCellTypes.md)
+  : Plot Spatial Cell Types
+- [`plotSpatialFeature()`](https://Zaoqu-Liu.github.io/scMetaLink/reference/plotSpatialFeature.md)
+  : Plot Spatial Communication Heatmap
+- [`plotSpatialCommunicationNetwork()`](https://Zaoqu-Liu.github.io/scMetaLink/reference/plotSpatialCommunicationNetwork.md)
+  : Plot Spatial Communication Network
+- [`plotSpatialDistanceDistribution()`](https://Zaoqu-Liu.github.io/scMetaLink/reference/plotSpatialDistanceDistribution.md)
+  : Plot Spatial Distance Distribution
+- [`plotSpatialHotspots()`](https://Zaoqu-Liu.github.io/scMetaLink/reference/plotSpatialHotspots.md)
+  : Plot Spatial Hotspots
+- [`plotSpatialComparison()`](https://Zaoqu-Liu.github.io/scMetaLink/reference/plotSpatialComparison.md)
+  : Plot Spatial Communication Comparison
+
 ## Pathway Analysis
 
 Pathway-level aggregation and enrichment
@@ -71,7 +103,7 @@ Pathway-level aggregation and enrichment
 
 ## Visualization
 
-Plotting functions
+General plotting functions
 
 - [`plotCommunicationHeatmap()`](https://Zaoqu-Liu.github.io/scMetaLink/reference/plotCommunicationHeatmap.md)
   : Plot Communication Heatmap
@@ -124,7 +156,7 @@ Export results and helper functions
 
 S4 methods and class definition
 
-- [`scMetaLink-class`](https://Zaoqu-Liu.github.io/scMetaLink/reference/scMetaLink-class.md)
+- [`show(`*`<scMetaLink>`*`)`](https://Zaoqu-Liu.github.io/scMetaLink/reference/scMetaLink-class.md)
   : scMetaLink Class Definition
 - [`getProductionScores()`](https://Zaoqu-Liu.github.io/scMetaLink/reference/accessors.md)
   [`getSensingScores()`](https://Zaoqu-Liu.github.io/scMetaLink/reference/accessors.md)
@@ -132,9 +164,7 @@ S4 methods and class definition
   [`getSignificantInteractions()`](https://Zaoqu-Liu.github.io/scMetaLink/reference/accessors.md)
   [`getPathwayAggregated()`](https://Zaoqu-Liu.github.io/scMetaLink/reference/accessors.md)
   [`getParameters()`](https://Zaoqu-Liu.github.io/scMetaLink/reference/accessors.md)
-  : Accessor Functions
-- [`show(`*`<scMetaLink>`*`)`](https://Zaoqu-Liu.github.io/scMetaLink/reference/show-scMetaLink-method.md)
-  : Show Method for scMetaLink
+  : Accessor Functions for scMetaLink Objects
 
 ## Example Data
 
@@ -146,3 +176,18 @@ Built-in datasets for tutorials
   : CRC Example Cell Metadata
 - [`metalinksdb`](https://Zaoqu-Liu.github.io/scMetaLink/reference/metalinksdb.md)
   : MetalinksDB Database
+- [`st_expr`](https://Zaoqu-Liu.github.io/scMetaLink/reference/st_expr.md)
+  : Colon Spatial Transcriptomics Expression Data
+- [`st_meta`](https://Zaoqu-Liu.github.io/scMetaLink/reference/st_meta.md)
+  : Colon Spatial Transcriptomics Metadata
+- [`st_scalefactors`](https://Zaoqu-Liu.github.io/scMetaLink/reference/st_scalefactors.md)
+  : Colon Spatial Transcriptomics Scale Factors
+
+## Package
+
+Package documentation
+
+- [`scMetaLink`](https://Zaoqu-Liu.github.io/scMetaLink/reference/scMetaLink-package.md)
+  [`scMetaLink-package`](https://Zaoqu-Liu.github.io/scMetaLink/reference/scMetaLink-package.md)
+  : scMetaLink: Single-Cell Metabolite-Mediated Cell Communication
+  Analysis

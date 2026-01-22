@@ -44,7 +44,6 @@ data(crc_meta)
 
 # Run scMetaLink analysis
 obj <- createScMetaLink(crc_expr, crc_meta, "cell_type")
-#> Loading required namespace: Matrix
 #> Created scMetaLink object with 4210 genes, 2850 cells, 15 cell types
 # }
 ```
