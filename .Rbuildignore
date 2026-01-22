@@ -23,3 +23,5 @@
 ^\.Rproj\.user$
 ^cran-comments\.md$
 ^universe-config$
+^\.cursorrules$
+^scMetaLink.*\.tar\.gz$

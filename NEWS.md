@@ -1,8 +1,8 @@
-# scMetaLink 0.99.0
+# scMetaLink 1.0.0
 
 ## New Features
 
-* Initial Bioconductor submission
+* Initial CRAN release
 * `createScMetaLink()` - Create scMetaLink object from expression data
 * `createScMetaLinkFromSeurat()` - Create from Seurat object
 * `createScMetaLinkFromSCE()` - Create from SingleCellExperiment

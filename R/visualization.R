@@ -28,7 +28,10 @@ plotCommunicationHeatmap <- function(object,
                                      colors = NULL,
                                      title = NULL) {
   if (!requireNamespace("ComplexHeatmap", quietly = TRUE)) {
-    stop("Package 'ComplexHeatmap' is required")
+    stop("Package 'ComplexHeatmap' is required. Install with: BiocManager::install('ComplexHeatmap')")
+  }
+  if (!requireNamespace("circlize", quietly = TRUE)) {
+    stop("Package 'circlize' is required. Install with: install.packages('circlize')")
   }
   if (!inherits(object, "scMetaLink")) {
     stop("object must be a scMetaLink object")
@@ -508,7 +511,10 @@ plotPathwayCommunication <- function(object, top_pathways = 20, type = "bar") {
 
   if (type == "heatmap") {
     if (!requireNamespace("ComplexHeatmap", quietly = TRUE)) {
-      stop("Package 'ComplexHeatmap' is required for heatmap")
+      stop("Package 'ComplexHeatmap' is required for heatmap. Install with: BiocManager::install('ComplexHeatmap')")
+    }
+    if (!requireNamespace("viridis", quietly = TRUE)) {
+      stop("Package 'viridis' is required for heatmap")
     }
 
     # Create pathway x cell type matrix

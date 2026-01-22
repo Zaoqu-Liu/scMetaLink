@@ -1365,11 +1365,11 @@ plotLactateSignaling <- function(object,
 
     # Order by clustering if requested
     if (cluster_rows) {
-      row_order <- hclust(dist(mat))$order
+      row_order <- stats::hclust(stats::dist(mat))$order
       mat <- mat[row_order, ]
     }
     if (cluster_cols) {
-      col_order <- hclust(dist(t(mat)))$order
+      col_order <- stats::hclust(stats::dist(t(mat)))$order
       mat <- mat[, col_order]
     }
 
