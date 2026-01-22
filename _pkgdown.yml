@@ -23,20 +23,22 @@ navbar:
       text: Articles
       menu:
       - text: Quick Start Guide
-        href: articles/01-quick-start.html
+        href: articles/quick-start.html
       - text: "---"
       - text: Theory & Methods
-        href: articles/02-theory.html
+        href: articles/theory.html
       - text: "---"
       - text: Production & Sensing Analysis
-        href: articles/03-production-sensing.html
+        href: articles/production-sensing.html
       - text: Communication Analysis
-        href: articles/04-communication.html
+        href: articles/communication.html
+      - text: Spatial Transcriptomics
+        href: articles/spatial-analysis.html
       - text: Visualization Gallery
-        href: articles/05-visualization.html
+        href: articles/visualization.html
       - text: "---"
       - text: Application Examples
-        href: articles/06-applications.html
+        href: articles/applications.html
     github:
       icon: fab fa-github
       href: https://github.com/Zaoqu-Liu/scMetaLink
@@ -46,24 +48,25 @@ articles:
 - title: Getting Started
   navbar: ~
   contents:
-  - 01-quick-start
+  - quick-start
 
 - title: Methodology
   navbar: ~
   contents:
-  - 02-theory
+  - theory
 
 - title: Detailed Tutorials
   navbar: ~
   contents:
-  - 03-production-sensing
-  - 04-communication
-  - 05-visualization
+  - production-sensing
+  - communication
+  - spatial-analysis
+  - visualization
 
 - title: Applications
   navbar: ~
   contents:
-  - 06-applications
+  - applications
 
 reference:
 - title: Main Workflow
@@ -97,6 +100,25 @@ reference:
   - compareCommunication
   - identifyCellTypeSpecificMetabolites
 
+- title: Spatial Analysis
+  desc: Spatial transcriptomics support
+  contents:
+  - createScMetaLinkFromSpatial
+  - createScMetaLinkFromSeuratSpatial
+  - computeSpatialCommunication
+  - getSpatialDistanceStats
+  - identifyCommunicationHotspots
+
+- title: Spatial Visualization
+  desc: Spatial plotting functions
+  contents:
+  - plotSpatialCellTypes
+  - plotSpatialFeature
+  - plotSpatialCommunicationNetwork
+  - plotSpatialDistanceDistribution
+  - plotSpatialHotspots
+  - plotSpatialComparison
+
 - title: Pathway Analysis
   desc: Pathway-level aggregation and enrichment
   contents:
@@ -109,7 +131,7 @@ reference:
   - listTopPathways
 
 - title: Visualization
-  desc: Plotting functions
+  desc: General plotting functions
   contents:
   - plotCommunicationHeatmap
   - plotCommunicationCircle
@@ -151,3 +173,6 @@ reference:
   - crc_expr
   - crc_meta
   - metalinksdb
+  - st_expr
+  - st_meta
+  - st_scalefactors
