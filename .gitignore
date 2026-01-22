@@ -4,3 +4,8 @@
 .Ruserdata
 *.Rproj
 inst/doc
+.DS_Store
+
+# Local development folders
+benchmark/
+data-raw/
