@@ -148,7 +148,7 @@ GPCRs.
 <tr class="odd">
 <td>Primary importer</td>
 <td>MCT1 (SLC16A1) - high affinity, oxidative cells</td>
-<td>iScience 2019</td>
+<td>Nature 2025</td>
 </tr>
 <tr class="even">
 <td>MCT chaperone</td>
@@ -160,32 +160,38 @@ GPCRs.
 </div>
 </div>
 <div class="section level2">
-<h2 id="quick-start">Quick Start<a class="anchor" aria-label="anchor" href="#quick-start"></a>
+<h2 id="load-data-and-run-analysis">Load Data and Run Analysis<a class="anchor" aria-label="anchor" href="#load-data-and-run-analysis"></a>
 </h2>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/Zaoqu-Liu/scMetaLink" class="external-link">scMetaLink</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://Matrix.R-forge.R-project.org" class="external-link">Matrix</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Load example data</span></span>
+<span><span class="co"># Load built-in colorectal cancer example data</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">crc_example</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Create scMetaLink object</span></span>
 <span><span class="va">obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/createScMetaLink.html">createScMetaLink</a></span><span class="op">(</span><span class="va">crc_expr</span>, <span class="va">crc_meta</span>, <span class="st">"cell_type"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Run lactate signaling analysis</span></span>
-<span><span class="va">obj</span> <span class="op">&lt;-</span> <span class="fu">inferLactateSignaling</span><span class="op">(</span><span class="va">obj</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># View results</span></span>
-<span><span class="fu">getLactateSignalingSummary</span><span class="op">(</span><span class="va">obj</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"Cell types in data:\n"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Cell types in data:</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">crc_meta</span><span class="op">$</span><span class="va">cell_type</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;                 B               CAF       Endothelial          Gliacyte </span></span>
+<span><span class="co">#&gt;               150               200               100                20 </span></span>
+<span><span class="co">#&gt;              Mast          Monocyte Normal Epithelial Normal Fibroblast </span></span>
+<span><span class="co">#&gt;                30               120               300               200 </span></span>
+<span><span class="co">#&gt; Normal Macrophage          Pericyte            Plasma               SMC </span></span>
+<span><span class="co">#&gt;               150                50               250                30 </span></span>
+<span><span class="co">#&gt;                 T               TAM  Tumor Epithelial </span></span>
+<span><span class="co">#&gt;               500               150               600</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="gene-sets">Gene Sets<a class="anchor" aria-label="anchor" href="#gene-sets"></a>
 </h2>
 <p>The lactate module uses scientifically curated gene sets:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/Zaoqu-Liu/scMetaLink" class="external-link">scMetaLink</a></span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Get all gene sets</span></span>
-<span><span class="va">genes</span> <span class="op">&lt;-</span> <span class="fu">getLactateGenes</span><span class="op">(</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="co"># Get all gene sets</span></span>
+<span><span class="va">genes</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getLactateGenes.html">getLactateGenes</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"=== PRODUCTION ===\n"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; === PRODUCTION ===</span></span>
@@ -275,50 +281,198 @@ acids</p>
 </div>
 </div>
 <div class="section level2">
-<h2 id="running-analysis">Running Analysis<a class="anchor" aria-label="anchor" href="#running-analysis"></a>
+<h2 id="check-gene-availability">Check Gene Availability<a class="anchor" aria-label="anchor" href="#check-gene-availability"></a>
 </h2>
-<div class="section level3">
-<h3 id="basic-analysis">Basic Analysis<a class="anchor" aria-label="anchor" href="#basic-analysis"></a>
-</h3>
+<p>Before running analysis, check which lactate genes are available in
+your data:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Full analysis with both pathways</span></span>
-<span><span class="va">obj</span> <span class="op">&lt;-</span> <span class="fu">inferLactateSignaling</span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="va">gene_check</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/checkLactateGenes.html">checkLactateGenes</a></span><span class="op">(</span><span class="va">obj</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Lactate Gene Availability Summary:</span></span>
+<span><span class="co">#&gt; ==================================</span></span>
+<span><span class="co">#&gt;          category    available</span></span>
+<span><span class="co">#&gt;       degradation   2/2 (100%)</span></span>
+<span><span class="co">#&gt;    direct_sensing   1/1 (100%)</span></span>
+<span><span class="co">#&gt;  indirect_sensing   4/4 (100%)</span></span>
+<span><span class="co">#&gt;        production 10/10 (100%)</span></span>
+<span><span class="co">#&gt;            uptake   3/3 (100%)</span></span>
+<span></span>
+<span><span class="co"># Visualize gene availability</span></span>
+<span><span class="va">categories</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Production"</span>, <span class="st">"Degradation"</span>, <span class="st">"Direct Sensing"</span>, <span class="st">"Indirect Sensing"</span>, <span class="st">"Uptake"</span><span class="op">)</span></span>
+<span><span class="va">available</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">gene_check</span><span class="op">$</span><span class="va">production</span><span class="op">$</span><span class="va">available</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">gene_check</span><span class="op">$</span><span class="va">degradation</span><span class="op">$</span><span class="va">available</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">gene_check</span><span class="op">$</span><span class="va">direct_sensing</span><span class="op">$</span><span class="va">available</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">gene_check</span><span class="op">$</span><span class="va">indirect_sensing</span><span class="op">$</span><span class="va">available</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">gene_check</span><span class="op">$</span><span class="va">uptake</span><span class="op">$</span><span class="va">available</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="va">total</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">gene_check</span><span class="op">$</span><span class="va">production</span><span class="op">$</span><span class="va">total</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">gene_check</span><span class="op">$</span><span class="va">degradation</span><span class="op">$</span><span class="va">total</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">gene_check</span><span class="op">$</span><span class="va">direct_sensing</span><span class="op">$</span><span class="va">total</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">gene_check</span><span class="op">$</span><span class="va">indirect_sensing</span><span class="op">$</span><span class="va">total</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">gene_check</span><span class="op">$</span><span class="va">uptake</span><span class="op">$</span><span class="va">total</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mar <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">5</span>, <span class="fl">8</span>, <span class="fl">4</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/barplot.html" class="external-link">barplot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">available</span>, <span class="va">total</span> <span class="op">-</span> <span class="va">available</span><span class="op">)</span>,</span>
+<span>        beside <span class="op">=</span> <span class="cn">FALSE</span>, horiz <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>        names.arg <span class="op">=</span> <span class="va">categories</span>, las <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>        col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"#4CAF50"</span>, <span class="st">"#FFCDD2"</span><span class="op">)</span>,</span>
+<span>        main <span class="op">=</span> <span class="st">"Lactate Gene Availability"</span>,</span>
+<span>        xlab <span class="op">=</span> <span class="st">"Number of Genes"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/legend.html" class="external-link">legend</a></span><span class="op">(</span><span class="st">"bottomright"</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Available"</span>, <span class="st">"Missing"</span><span class="op">)</span>, fill <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"#4CAF50"</span>, <span class="st">"#FFCDD2"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<img src="lactate-signaling_files/figure-html/check_genes-1.png" alt="**Figure 2: Lactate Gene Availability.** Presence of lactate-related genes in the dataset." width="100%"><p class="caption">
+<strong>Figure 2: Lactate Gene Availability.</strong> Presence of
+lactate-related genes in the dataset.
+</p>
+</div>
+</div>
+<div class="section level2">
+<h2 id="run-lactate-signaling-analysis">Run Lactate Signaling Analysis<a class="anchor" aria-label="anchor" href="#run-lactate-signaling-analysis"></a>
+</h2>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Run full lactate signaling analysis</span></span>
+<span><span class="va">obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/inferLactateSignaling.html">inferLactateSignaling</a></span><span class="op">(</span></span>
 <span>  <span class="va">obj</span>,</span>
 <span>  include_direct <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  include_indirect <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  method <span class="op">=</span> <span class="st">"combined"</span>,</span>
 <span>  normalize <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  n_permutations <span class="op">=</span> <span class="fl">100</span>,</span>
+<span>  n_permutations <span class="op">=</span> <span class="fl">100</span>,  <span class="co"># Use more for real analysis</span></span>
 <span>  verbose <span class="op">=</span> <span class="cn">TRUE</span></span>
-<span><span class="op">)</span></span></code></pre></div>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt;   |                                                                              |                                                                      |   0%  |                                                                              |=                                                                     |   1%  |                                                                              |=                                                                     |   2%  |                                                                              |==                                                                    |   3%  |                                                                              |===                                                                   |   4%  |                                                                              |====                                                                  |   5%  |                                                                              |====                                                                  |   6%  |                                                                              |=====                                                                 |   7%  |                                                                              |======                                                                |   8%  |                                                                              |======                                                                |   9%  |                                                                              |=======                                                               |  10%  |                                                                              |========                                                              |  11%  |                                                                              |========                                                              |  12%  |                                                                              |=========                                                             |  13%  |                                                                              |==========                                                            |  14%  |                                                                              |==========                                                            |  15%  |                                                                              |===========                                                           |  16%  |                                                                              |============                                                          |  17%  |                                                                              |=============                                                         |  18%  |                                                                              |=============                                                         |  19%  |                                                                              |==============                                                        |  20%  |                                                                              |===============                                                       |  21%  |                                                                              |===============                                                       |  22%  |                                                                              |================                                                      |  23%  |                                                                              |=================                                                     |  24%  |                                                                              |==================                                                    |  25%  |                                                                              |==================                                                    |  26%  |                                                                              |===================                                                   |  27%  |                                                                              |====================                                                  |  28%  |                                                                              |====================                                                  |  29%  |                                                                              |=====================                                                 |  30%  |                                                                              |======================                                                |  31%  |                                                                              |======================                                                |  32%  |                                                                              |=======================                                               |  33%  |                                                                              |========================                                              |  34%  |                                                                              |========================                                              |  35%  |                                                                              |=========================                                             |  36%  |                                                                              |==========================                                            |  37%  |                                                                              |===========================                                           |  38%  |                                                                              |===========================                                           |  39%  |                                                                              |============================                                          |  40%  |                                                                              |=============================                                         |  41%  |                                                                              |=============================                                         |  42%  |                                                                              |==============================                                        |  43%  |                                                                              |===============================                                       |  44%  |                                                                              |================================                                      |  45%  |                                                                              |================================                                      |  46%  |                                                                              |=================================                                     |  47%  |                                                                              |==================================                                    |  48%  |                                                                              |==================================                                    |  49%  |                                                                              |===================================                                   |  50%  |                                                                              |====================================                                  |  51%  |                                                                              |====================================                                  |  52%  |                                                                              |=====================================                                 |  53%  |                                                                              |======================================                                |  54%  |                                                                              |======================================                                |  55%  |                                                                              |=======================================                               |  56%  |                                                                              |========================================                              |  57%  |                                                                              |=========================================                             |  58%  |                                                                              |=========================================                             |  59%  |                                                                              |==========================================                            |  60%  |                                                                              |===========================================                           |  61%  |                                                                              |===========================================                           |  62%  |                                                                              |============================================                          |  63%  |                                                                              |=============================================                         |  64%  |                                                                              |==============================================                        |  65%  |                                                                              |==============================================                        |  66%  |                                                                              |===============================================                       |  67%  |                                                                              |================================================                      |  68%  |                                                                              |================================================                      |  69%  |                                                                              |=================================================                     |  70%  |                                                                              |==================================================                    |  71%  |                                                                              |==================================================                    |  72%  |                                                                              |===================================================                   |  73%  |                                                                              |====================================================                  |  74%  |                                                                              |====================================================                  |  75%  |                                                                              |=====================================================                 |  76%  |                                                                              |======================================================                |  77%  |                                                                              |=======================================================               |  78%  |                                                                              |=======================================================               |  79%  |                                                                              |========================================================              |  80%  |                                                                              |=========================================================             |  81%  |                                                                              |=========================================================             |  82%  |                                                                              |==========================================================            |  83%  |                                                                              |===========================================================           |  84%  |                                                                              |============================================================          |  85%  |                                                                              |============================================================          |  86%  |                                                                              |=============================================================         |  87%  |                                                                              |==============================================================        |  88%  |                                                                              |==============================================================        |  89%  |                                                                              |===============================================================       |  90%  |                                                                              |================================================================      |  91%  |                                                                              |================================================================      |  92%  |                                                                              |=================================================================     |  93%  |                                                                              |==================================================================    |  94%  |                                                                              |==================================================================    |  95%  |                                                                              |===================================================================   |  96%  |                                                                              |====================================================================  |  97%  |                                                                              |===================================================================== |  98%  |                                                                              |===================================================================== |  99%  |                                                                              |======================================================================| 100%</span></span>
+<span><span class="co">#&gt;   |                                                                              |                                                                      |   0%  |                                                                              |=                                                                     |   1%  |                                                                              |=                                                                     |   2%  |                                                                              |==                                                                    |   3%  |                                                                              |===                                                                   |   4%  |                                                                              |====                                                                  |   5%  |                                                                              |====                                                                  |   6%  |                                                                              |=====                                                                 |   7%  |                                                                              |======                                                                |   8%  |                                                                              |======                                                                |   9%  |                                                                              |=======                                                               |  10%  |                                                                              |========                                                              |  11%  |                                                                              |========                                                              |  12%  |                                                                              |=========                                                             |  13%  |                                                                              |==========                                                            |  14%  |                                                                              |==========                                                            |  15%  |                                                                              |===========                                                           |  16%  |                                                                              |============                                                          |  17%  |                                                                              |=============                                                         |  18%  |                                                                              |=============                                                         |  19%  |                                                                              |==============                                                        |  20%  |                                                                              |===============                                                       |  21%  |                                                                              |===============                                                       |  22%  |                                                                              |================                                                      |  23%  |                                                                              |=================                                                     |  24%  |                                                                              |==================                                                    |  25%  |                                                                              |==================                                                    |  26%  |                                                                              |===================                                                   |  27%  |                                                                              |====================                                                  |  28%  |                                                                              |====================                                                  |  29%  |                                                                              |=====================                                                 |  30%  |                                                                              |======================                                                |  31%  |                                                                              |======================                                                |  32%  |                                                                              |=======================                                               |  33%  |                                                                              |========================                                              |  34%  |                                                                              |========================                                              |  35%  |                                                                              |=========================                                             |  36%  |                                                                              |==========================                                            |  37%  |                                                                              |===========================                                           |  38%  |                                                                              |===========================                                           |  39%  |                                                                              |============================                                          |  40%  |                                                                              |=============================                                         |  41%  |                                                                              |=============================                                         |  42%  |                                                                              |==============================                                        |  43%  |                                                                              |===============================                                       |  44%  |                                                                              |================================                                      |  45%  |                                                                              |================================                                      |  46%  |                                                                              |=================================                                     |  47%  |                                                                              |==================================                                    |  48%  |                                                                              |==================================                                    |  49%  |                                                                              |===================================                                   |  50%  |                                                                              |====================================                                  |  51%  |                                                                              |====================================                                  |  52%  |                                                                              |=====================================                                 |  53%  |                                                                              |======================================                                |  54%  |                                                                              |======================================                                |  55%  |                                                                              |=======================================                               |  56%  |                                                                              |========================================                              |  57%  |                                                                              |=========================================                             |  58%  |                                                                              |=========================================                             |  59%  |                                                                              |==========================================                            |  60%  |                                                                              |===========================================                           |  61%  |                                                                              |===========================================                           |  62%  |                                                                              |============================================                          |  63%  |                                                                              |=============================================                         |  64%  |                                                                              |==============================================                        |  65%  |                                                                              |==============================================                        |  66%  |                                                                              |===============================================                       |  67%  |                                                                              |================================================                      |  68%  |                                                                              |================================================                      |  69%  |                                                                              |=================================================                     |  70%  |                                                                              |==================================================                    |  71%  |                                                                              |==================================================                    |  72%  |                                                                              |===================================================                   |  73%  |                                                                              |====================================================                  |  74%  |                                                                              |====================================================                  |  75%  |                                                                              |=====================================================                 |  76%  |                                                                              |======================================================                |  77%  |                                                                              |=======================================================               |  78%  |                                                                              |=======================================================               |  79%  |                                                                              |========================================================              |  80%  |                                                                              |=========================================================             |  81%  |                                                                              |=========================================================             |  82%  |                                                                              |==========================================================            |  83%  |                                                                              |===========================================================           |  84%  |                                                                              |============================================================          |  85%  |                                                                              |============================================================          |  86%  |                                                                              |=============================================================         |  87%  |                                                                              |==============================================================        |  88%  |                                                                              |==============================================================        |  89%  |                                                                              |===============================================================       |  90%  |                                                                              |================================================================      |  91%  |                                                                              |================================================================      |  92%  |                                                                              |=================================================================     |  93%  |                                                                              |==================================================================    |  94%  |                                                                              |==================================================================    |  95%  |                                                                              |===================================================================   |  96%  |                                                                              |====================================================================  |  97%  |                                                                              |===================================================================== |  98%  |                                                                              |===================================================================== |  99%  |                                                                              |======================================================================| 100%</span></span></code></pre></div>
 </div>
+<div class="section level2">
+<h2 id="visualize-results">Visualize Results<a class="anchor" aria-label="anchor" href="#visualize-results"></a>
+</h2>
 <div class="section level3">
-<h3 id="pathway-specific-analysis">Pathway-Specific Analysis<a class="anchor" aria-label="anchor" href="#pathway-specific-analysis"></a>
+<h3 id="production-scores">Production Scores<a class="anchor" aria-label="anchor" href="#production-scores"></a>
 </h3>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Direct pathway only (lactate → HCAR1)</span></span>
-<span><span class="va">obj</span> <span class="op">&lt;-</span> <span class="fu">inferLactateSignaling</span><span class="op">(</span><span class="va">obj</span>, include_direct <span class="op">=</span> <span class="cn">TRUE</span>, include_indirect <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Indirect pathway only (lactate → H+ → GPCRs)</span></span>
-<span><span class="va">obj</span> <span class="op">&lt;-</span> <span class="fu">inferLactateSignaling</span><span class="op">(</span><span class="va">obj</span>, include_direct <span class="op">=</span> <span class="cn">FALSE</span>, include_indirect <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-</div>
-<div class="section level3">
-<h3 id="check-gene-availability">Check Gene Availability<a class="anchor" aria-label="anchor" href="#check-gene-availability"></a>
-</h3>
-<p>Before running analysis, check which lactate genes are available:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">checkLactateGenes</span><span class="op">(</span><span class="va">obj</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># Get lactate results</span></span>
+<span><span class="va">lactate_results</span> <span class="op">&lt;-</span> <span class="va">obj</span><span class="op">@</span><span class="va">parameters</span><span class="op">$</span><span class="va">lactate_signaling</span></span>
+<span></span>
+<span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NULL.html" class="external-link">is.null</a></span><span class="op">(</span><span class="va">lactate_results</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="va">prod_scores</span> <span class="op">&lt;-</span> <span class="va">lactate_results</span><span class="op">$</span><span class="va">production</span></span>
+<span>  </span>
+<span>  <span class="co"># Sort and plot</span></span>
+<span>  <span class="va">prod_sorted</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sort.html" class="external-link">sort</a></span><span class="op">(</span><span class="va">prod_scores</span>, decreasing <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span>  </span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mar <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">5</span>, <span class="fl">10</span>, <span class="fl">4</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/graphics/barplot.html" class="external-link">barplot</a></span><span class="op">(</span><span class="va">prod_sorted</span>, horiz <span class="op">=</span> <span class="cn">TRUE</span>, las <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>          col <span class="op">=</span> <span class="st">"#FF7043"</span>, border <span class="op">=</span> <span class="cn">NA</span>,</span>
+<span>          main <span class="op">=</span> <span class="st">"Lactate Production by Cell Type"</span>,</span>
+<span>          xlab <span class="op">=</span> <span class="st">"Production Score"</span><span class="op">)</span></span>
+<span><span class="op">}</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<img src="lactate-signaling_files/figure-html/production_viz-1.png" alt="**Figure 3: Lactate Production Scores.** Higher scores indicate greater lactate production potential (high LDHA, MCT4 expression)." width="100%"><p class="caption">
+<strong>Figure 3: Lactate Production Scores.</strong> Higher scores
+indicate greater lactate production potential (high LDHA, MCT4
+expression).
+</p>
+</div>
+</div>
+<div class="section level3">
+<h3 id="sensing-scores-comparison">Sensing Scores Comparison<a class="anchor" aria-label="anchor" href="#sensing-scores-comparison"></a>
+</h3>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NULL.html" class="external-link">is.null</a></span><span class="op">(</span><span class="va">lactate_results</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="va">direct_sens</span> <span class="op">&lt;-</span> <span class="va">lactate_results</span><span class="op">$</span><span class="va">direct_sensing</span></span>
+<span>  <span class="va">indirect_sens</span> <span class="op">&lt;-</span> <span class="va">lactate_results</span><span class="op">$</span><span class="va">indirect_sensing</span></span>
+<span>  </span>
+<span>  <span class="co"># Combine for plotting</span></span>
+<span>  <span class="va">cell_types</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">direct_sens</span><span class="op">)</span></span>
+<span>  </span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mar <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">5</span>, <span class="fl">10</span>, <span class="fl">4</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
+<span>  </span>
+<span>  <span class="co"># Create grouped barplot</span></span>
+<span>  <span class="va">sens_mat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span>Direct <span class="op">=</span> <span class="va">direct_sens</span>, Indirect <span class="op">=</span> <span class="va">indirect_sens</span><span class="op">)</span></span>
+<span>  </span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/graphics/barplot.html" class="external-link">barplot</a></span><span class="op">(</span><span class="va">sens_mat</span>, beside <span class="op">=</span> <span class="cn">TRUE</span>, horiz <span class="op">=</span> <span class="cn">TRUE</span>, las <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>          col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"#1565C0"</span>, <span class="st">"#2E7D32"</span><span class="op">)</span>, border <span class="op">=</span> <span class="cn">NA</span>,</span>
+<span>          main <span class="op">=</span> <span class="st">"Lactate Sensing: Direct vs Indirect Pathways"</span>,</span>
+<span>          xlab <span class="op">=</span> <span class="st">"Sensing Score"</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/graphics/legend.html" class="external-link">legend</a></span><span class="op">(</span><span class="st">"bottomright"</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Direct (HCAR1)"</span>, <span class="st">"Indirect (H+/GPCRs)"</span><span class="op">)</span>,</span>
+<span>         fill <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"#1565C0"</span>, <span class="st">"#2E7D32"</span><span class="op">)</span>, bty <span class="op">=</span> <span class="st">"n"</span><span class="op">)</span></span>
+<span><span class="op">}</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<img src="lactate-signaling_files/figure-html/sensing_viz-1.png" alt="**Figure 4: Lactate Sensing Scores.** Comparison of direct (HCAR1) vs indirect (proton GPCRs) sensing across cell types." width="100%"><p class="caption">
+<strong>Figure 4: Lactate Sensing Scores.</strong> Comparison of direct
+(HCAR1) vs indirect (proton GPCRs) sensing across cell types.
+</p>
+</div>
+</div>
+<div class="section level3">
+<h3 id="communication-heatmap">Communication Heatmap<a class="anchor" aria-label="anchor" href="#communication-heatmap"></a>
+</h3>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NULL.html" class="external-link">is.null</a></span><span class="op">(</span><span class="va">lactate_results</span><span class="op">)</span> <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NULL.html" class="external-link">is.null</a></span><span class="op">(</span><span class="va">lactate_results</span><span class="op">$</span><span class="va">combined_communication</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="co"># Plot using the built-in function</span></span>
+<span>  <span class="fu"><a href="../reference/plotLactateSignaling.html">plotLactateSignaling</a></span><span class="op">(</span><span class="va">obj</span>, pathway <span class="op">=</span> <span class="st">"combined"</span><span class="op">)</span></span>
+<span><span class="op">}</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<img src="lactate-signaling_files/figure-html/heatmap-1.png" alt="**Figure 5: Lactate Communication Heatmap.** Communication strength from sender (rows) to receiver (columns) cell types via lactate signaling." width="100%"><p class="caption">
+<strong>Figure 5: Lactate Communication Heatmap.</strong> Communication
+strength from sender (rows) to receiver (columns) cell types via lactate
+signaling.
+</p>
+</div>
+</div>
+<div class="section level3">
+<h3 id="pathway-comparison">Pathway Comparison<a class="anchor" aria-label="anchor" href="#pathway-comparison"></a>
+</h3>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NULL.html" class="external-link">is.null</a></span><span class="op">(</span><span class="va">lactate_results</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="fu"><a href="../reference/plotLactatePathwayComparison.html">plotLactatePathwayComparison</a></span><span class="op">(</span><span class="va">obj</span>, show_production <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="op">}</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<img src="lactate-signaling_files/figure-html/pathway_comparison-1.png" alt="**Figure 6: Production vs Sensing Comparison.** Cell types positioned by their lactate production (orange) and sensing (blue) capabilities." width="100%"><p class="caption">
+<strong>Figure 6: Production vs Sensing Comparison.</strong> Cell types
+positioned by their lactate production (orange) and sensing (blue)
+capabilities.
+</p>
+</div>
+</div>
+<div class="section level3">
+<h3 id="cell-type-roles">Cell Type Roles<a class="anchor" aria-label="anchor" href="#cell-type-roles"></a>
+</h3>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NULL.html" class="external-link">is.null</a></span><span class="op">(</span><span class="va">lactate_results</span><span class="op">)</span> <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NULL.html" class="external-link">is.null</a></span><span class="op">(</span><span class="va">lactate_results</span><span class="op">$</span><span class="va">combined_communication</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="va">comm</span> <span class="op">&lt;-</span> <span class="va">lactate_results</span><span class="op">$</span><span class="va">combined_communication</span></span>
+<span>  </span>
+<span>  <span class="co"># Calculate net flow</span></span>
+<span>  <span class="va">cell_types</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">comm</span><span class="op">)</span></span>
+<span>  <span class="va">net_flow</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/Matrix/man/colSums-methods.html" class="external-link">rowSums</a></span><span class="op">(</span><span class="va">comm</span><span class="op">)</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/pkg/Matrix/man/colSums-methods.html" class="external-link">colSums</a></span><span class="op">(</span><span class="va">comm</span><span class="op">)</span></span>
+<span>  <span class="va">net_flow</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sort.html" class="external-link">sort</a></span><span class="op">(</span><span class="va">net_flow</span><span class="op">)</span></span>
+<span>  </span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mar <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">5</span>, <span class="fl">10</span>, <span class="fl">4</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="va">cols</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">net_flow</span> <span class="op">&gt;</span> <span class="fl">0</span>, <span class="st">"#FF7043"</span>, <span class="st">"#42A5F5"</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/graphics/barplot.html" class="external-link">barplot</a></span><span class="op">(</span><span class="va">net_flow</span>, horiz <span class="op">=</span> <span class="cn">TRUE</span>, las <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>          col <span class="op">=</span> <span class="va">cols</span>, border <span class="op">=</span> <span class="cn">NA</span>,</span>
+<span>          main <span class="op">=</span> <span class="st">"Net Lactate Communication Flow"</span>,</span>
+<span>          xlab <span class="op">=</span> <span class="st">"Net Flow (Outgoing - Incoming)"</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/graphics/abline.html" class="external-link">abline</a></span><span class="op">(</span>v <span class="op">=</span> <span class="fl">0</span>, lty <span class="op">=</span> <span class="fl">2</span>, col <span class="op">=</span> <span class="st">"gray50"</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/graphics/legend.html" class="external-link">legend</a></span><span class="op">(</span><span class="st">"bottomright"</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Net Producer"</span>, <span class="st">"Net Sensor"</span><span class="op">)</span>,</span>
+<span>         fill <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"#FF7043"</span>, <span class="st">"#42A5F5"</span><span class="op">)</span>, bty <span class="op">=</span> <span class="st">"n"</span><span class="op">)</span></span>
+<span><span class="op">}</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<img src="lactate-signaling_files/figure-html/roles-1.png" alt="**Figure 7: Cell Type Metabolic Roles in Lactate Signaling.** Net lactate flow: positive = net producer, negative = net sensor." width="100%"><p class="caption">
+<strong>Figure 7: Cell Type Metabolic Roles in Lactate
+Signaling.</strong> Net lactate flow: positive = net producer, negative
+= net sensor.
+</p>
+</div>
 </div>
 </div>
 <div class="section level2">
 <h2 id="interpreting-results">Interpreting Results<a class="anchor" aria-label="anchor" href="#interpreting-results"></a>
 </h2>
 <div class="section level3">
-<h3 id="production-scores">Production Scores<a class="anchor" aria-label="anchor" href="#production-scores"></a>
+<h3 id="production-scores-1">Production Scores<a class="anchor" aria-label="anchor" href="#production-scores-1"></a>
 </h3>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Get top lactate producers</span></span>
-<span><span class="fu">getTopLactateProducers</span><span class="op">(</span><span class="va">obj</span>, top_n <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span></code></pre></div>
 <p>High production indicates: - High expression of LDHA (synthesis) -
 High expression of MCT4/BSG (export) - Low expression of LDHB
 (degradation)</p>
@@ -326,66 +480,33 @@ High expression of MCT4/BSG (export) - Low expression of LDHB
 <div class="section level3">
 <h3 id="sensing-scores">Sensing Scores<a class="anchor" aria-label="anchor" href="#sensing-scores"></a>
 </h3>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Get top sensors for indirect pathway</span></span>
-<span><span class="fu">getTopLactateSensors</span><span class="op">(</span><span class="va">obj</span>, pathway <span class="op">=</span> <span class="st">"indirect"</span>, top_n <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Get top sensors for direct pathway</span></span>
-<span><span class="fu">getTopLactateSensors</span><span class="op">(</span><span class="va">obj</span>, pathway <span class="op">=</span> <span class="st">"direct"</span>, top_n <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span></code></pre></div>
+<p><strong>Direct pathway</strong> (HCAR1): - Indicates cells that can
+directly respond to lactate - Important in anti-inflammatory
+signaling</p>
+<p><strong>Indirect pathway</strong> (H+/proton GPCRs): - Indicates
+cells sensing acidification from lactate dissociation - Critical for
+immune cell function in TME</p>
 </div>
 <div class="section level3">
-<h3 id="communication-summary">Communication Summary<a class="anchor" aria-label="anchor" href="#communication-summary"></a>
-</h3>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Get top cell-cell communications</span></span>
-<span><span class="fu">getLactateSignalingSummary</span><span class="op">(</span><span class="va">obj</span>, pathway <span class="op">=</span> <span class="st">"combined"</span>, top_n <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span></code></pre></div>
-</div>
-</div>
-<div class="section level2">
-<h2 id="visualization">Visualization<a class="anchor" aria-label="anchor" href="#visualization"></a>
-</h2>
-<div class="section level3">
-<h3 id="heatmap">Heatmap<a class="anchor" aria-label="anchor" href="#heatmap"></a>
-</h3>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Plot communication heatmap</span></span>
-<span><span class="fu">plotLactateSignaling</span><span class="op">(</span><span class="va">obj</span>, pathway <span class="op">=</span> <span class="st">"indirect"</span><span class="op">)</span></span></code></pre></div>
-</div>
-<div class="section level3">
-<h3 id="pathway-comparison">Pathway Comparison<a class="anchor" aria-label="anchor" href="#pathway-comparison"></a>
+<h3 id="top-communicators">Top Communicators<a class="anchor" aria-label="anchor" href="#top-communicators"></a>
 </h3>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Compare production and sensing across cell types</span></span>
-<span><span class="fu">plotLactatePathwayComparison</span><span class="op">(</span><span class="va">obj</span>, show_production <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NULL.html" class="external-link">is.null</a></span><span class="op">(</span><span class="va">lactate_results</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="va">summary_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getLactateSignalingSummary.html">getLactateSignalingSummary</a></span><span class="op">(</span><span class="va">obj</span>, pathway <span class="op">=</span> <span class="st">"combined"</span>, top_n <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">summary_df</span><span class="op">)</span></span>
+<span><span class="op">}</span></span>
+<span><span class="co">#&gt;               sender          receiver communication_score rank</span></span>
+<span><span class="co">#&gt; 1  Normal Macrophage               TAM           1.5176455    1</span></span>
+<span><span class="co">#&gt; 2  Normal Macrophage Normal Macrophage           1.4345244    2</span></span>
+<span><span class="co">#&gt; 3  Normal Macrophage          Pericyte           1.3311660    3</span></span>
+<span><span class="co">#&gt; 4  Normal Macrophage              Mast           1.2868515    4</span></span>
+<span><span class="co">#&gt; 5  Normal Macrophage               CAF           1.2522300    5</span></span>
+<span><span class="co">#&gt; 6  Normal Macrophage Normal Fibroblast           1.2392587    6</span></span>
+<span><span class="co">#&gt; 7  Normal Macrophage                 T           1.2179554    7</span></span>
+<span><span class="co">#&gt; 8  Normal Macrophage       Endothelial           1.2001152    8</span></span>
+<span><span class="co">#&gt; 9  Normal Macrophage               SMC           1.1799733    9</span></span>
+<span><span class="co">#&gt; 10 Normal Macrophage                 B           0.7686704   10</span></span></code></pre></div>
 </div>
-</div>
-<div class="section level2">
-<h2 id="spatial-analysis">Spatial Analysis<a class="anchor" aria-label="anchor" href="#spatial-analysis"></a>
-</h2>
-<p>For spatial transcriptomics data:</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Create spatial object</span></span>
-<span><span class="va">obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/createScMetaLinkFromSpatial.html">createScMetaLinkFromSpatial</a></span><span class="op">(</span></span>
-<span>  expression_data <span class="op">=</span> <span class="va">st_expr</span>,</span>
-<span>  spatial_coords <span class="op">=</span> <span class="va">st_meta</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"x"</span>, <span class="st">"y"</span><span class="op">)</span><span class="op">]</span>,</span>
-<span>  cell_meta <span class="op">=</span> <span class="va">st_meta</span>,</span>
-<span>  cell_type_column <span class="op">=</span> <span class="st">"cell_type"</span>,</span>
-<span>  scale_factors <span class="op">=</span> <span class="va">st_scalefactors</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Run spatial lactate analysis</span></span>
-<span><span class="va">obj</span> <span class="op">&lt;-</span> <span class="fu">inferSpatialLactateSignaling</span><span class="op">(</span></span>
-<span>  <span class="va">obj</span>,</span>
-<span>  max_distance <span class="op">=</span> <span class="fl">200</span>,      <span class="co"># Maximum communication distance (um)</span></span>
-<span>  distance_decay <span class="op">=</span> <span class="st">"gaussian"</span>,</span>
-<span>  sigma <span class="op">=</span> <span class="fl">50</span>               <span class="co"># Characteristic decay distance (um)</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Visualize</span></span>
-<span><span class="fu">plotSpatialLactate</span><span class="op">(</span><span class="va">obj</span>, type <span class="op">=</span> <span class="st">"production"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Get hotspots</span></span>
-<span><span class="fu">getSpatialLactateHotspots</span><span class="op">(</span><span class="va">obj</span>, type <span class="op">=</span> <span class="st">"all"</span>, top_n <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="algorithm-details">Algorithm Details<a class="anchor" aria-label="anchor" href="#algorithm-details"></a>
@@ -511,7 +632,62 @@ Mathematical framework</li>
 <li>
 <strong><a href="spatial-analysis.html">Spatial
 Analysis</a></strong>: Spatial transcriptomics support</li>
+<li>
+<strong><a href="visualization.html">Visualization</a></strong>:
+Complete visualization guide</li>
 </ul>
+</div>
+<div class="section level2">
+<h2 id="session-info">Session Info<a class="anchor" aria-label="anchor" href="#session-info"></a>
+</h2>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt; R version 4.4.0 (2024-04-24)</span></span>
+<span><span class="co">#&gt; Platform: aarch64-apple-darwin20</span></span>
+<span><span class="co">#&gt; Running under: macOS 15.6.1</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Matrix products: default</span></span>
+<span><span class="co">#&gt; BLAS:   /Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/lib/libRblas.0.dylib </span></span>
+<span><span class="co">#&gt; LAPACK: /Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.0</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; locale:</span></span>
+<span><span class="co">#&gt; [1] C</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; time zone: Asia/Shanghai</span></span>
+<span><span class="co">#&gt; tzcode source: internal</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; attached base packages:</span></span>
+<span><span class="co">#&gt; [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; other attached packages:</span></span>
+<span><span class="co">#&gt; [1] Matrix_1.7-4     scMetaLink_1.0.0</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; loaded via a namespace (and not attached):</span></span>
+<span><span class="co">#&gt;  [1] gtable_0.3.6          circlize_0.4.17       shape_1.4.6.1        </span></span>
+<span><span class="co">#&gt;  [4] rjson_0.2.23          xfun_0.56             bslib_0.9.0          </span></span>
+<span><span class="co">#&gt;  [7] ggplot2_4.0.1         htmlwidgets_1.6.4     GlobalOptions_0.1.3  </span></span>
+<span><span class="co">#&gt; [10] lattice_0.22-7        Cairo_1.7-0           vctrs_0.7.0          </span></span>
+<span><span class="co">#&gt; [13] tools_4.4.0           generics_0.1.4        stats4_4.4.0         </span></span>
+<span><span class="co">#&gt; [16] parallel_4.4.0        tibble_3.3.1          cluster_2.1.8.1      </span></span>
+<span><span class="co">#&gt; [19] pkgconfig_2.0.3       RColorBrewer_1.1-3    S7_0.2.1             </span></span>
+<span><span class="co">#&gt; [22] desc_1.4.3            S4Vectors_0.44.0      lifecycle_1.0.5      </span></span>
+<span><span class="co">#&gt; [25] compiler_4.4.0        farver_2.1.2          textshaping_1.0.4    </span></span>
+<span><span class="co">#&gt; [28] codetools_0.2-20      ComplexHeatmap_2.22.0 clue_0.3-66          </span></span>
+<span><span class="co">#&gt; [31] htmltools_0.5.9       sass_0.4.10           yaml_2.3.12          </span></span>
+<span><span class="co">#&gt; [34] pillar_1.11.1         pkgdown_2.1.3         crayon_1.5.3         </span></span>
+<span><span class="co">#&gt; [37] jquerylib_0.1.4       cachem_1.1.0          magick_2.8.7         </span></span>
+<span><span class="co">#&gt; [40] iterators_1.0.14      viridis_0.6.5         foreach_1.5.2        </span></span>
+<span><span class="co">#&gt; [43] tidyselect_1.2.1      digest_0.6.39         dplyr_1.1.4          </span></span>
+<span><span class="co">#&gt; [46] labeling_0.4.3        fastmap_1.2.0         grid_4.4.0           </span></span>
+<span><span class="co">#&gt; [49] colorspace_2.1-2      cli_3.6.5             magrittr_2.0.4       </span></span>
+<span><span class="co">#&gt; [52] dichromat_2.0-0.1     withr_3.0.2           scales_1.4.0         </span></span>
+<span><span class="co">#&gt; [55] rmarkdown_2.30        matrixStats_1.5.0     otel_0.2.0           </span></span>
+<span><span class="co">#&gt; [58] gridExtra_2.3         ragg_1.5.0            png_0.1-8            </span></span>
+<span><span class="co">#&gt; [61] GetoptLong_1.1.0      evaluate_1.0.5        knitr_1.51           </span></span>
+<span><span class="co">#&gt; [64] IRanges_2.40.1        doParallel_1.0.17     viridisLite_0.4.2    </span></span>
+<span><span class="co">#&gt; [67] rlang_1.1.7           Rcpp_1.1.1            glue_1.8.0           </span></span>
+<span><span class="co">#&gt; [70] BiocGenerics_0.52.0   jsonlite_2.0.0        R6_2.6.1             </span></span>
+<span><span class="co">#&gt; [73] systemfonts_1.3.1     fs_1.6.6</span></span></code></pre></div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
