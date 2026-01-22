@@ -147,6 +147,7 @@ Before running analysis, check which lactate genes are available in your
 data:
 
 ``` r
+# Check gene availability (returns a data.frame with category, subcategory, gene, available)
 gene_check <- checkLactateGenes(obj)
 #> Lactate Gene Availability Summary:
 #> ==================================
@@ -157,22 +158,16 @@ gene_check <- checkLactateGenes(obj)
 #>        production 10/10 (100%)
 #>            uptake   3/3 (100%)
 
-# Visualize gene availability
+# Visualize gene availability by category
 categories <- c("Production", "Degradation", "Direct Sensing", "Indirect Sensing", "Uptake")
-available <- c(
-  length(gene_check$production$available),
-  length(gene_check$degradation$available),
-  length(gene_check$direct_sensing$available),
-  length(gene_check$indirect_sensing$available),
-  length(gene_check$uptake$available)
-)
-total <- c(
-  length(gene_check$production$total),
-  length(gene_check$degradation$total),
-  length(gene_check$direct_sensing$total),
-  length(gene_check$indirect_sensing$total),
-  length(gene_check$uptake$total)
-)
+category_keys <- c("production", "degradation", "direct_sensing", "indirect_sensing", "uptake")
+
+available <- sapply(category_keys, function(cat) {
+  sum(gene_check$available[gene_check$category == cat])
+})
+total <- sapply(category_keys, function(cat) {
+  sum(gene_check$category == cat)
+})
 
 par(mar = c(5, 8, 4, 2))
 barplot(rbind(available, total - available),

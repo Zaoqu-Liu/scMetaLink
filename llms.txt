@@ -46,8 +46,18 @@ scMetaLink utilizes MetalinksDB, containing:
 
 ## Installation
 
+### From r-universe (Recommended)
+
 ``` r
-# Install from GitHub
+install.packages("scMetaLink", repos = "https://zaoqu-liu.r-universe.dev")
+```
+
+### From GitHub
+
+``` r
+# Install devtools if needed
+if (!require("devtools")) install.packages("devtools")
+
 devtools::install_github("Zaoqu-Liu/scMetaLink")
 ```
 
