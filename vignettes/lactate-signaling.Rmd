@@ -79,25 +79,23 @@ text(8.5, 3, "GPR65+\nImmune", cex = 0.7)
 | Direct receptor | HCAR1 (GPR81) - **only confirmed lactate GPCR** | PLOS Biology 2024 |
 | Proton sensors | GPR4, GPR65, GPR68, GPR132 | Reactome R-HSA-444731 |
 | Primary exporter | MCT4 (SLC16A3) - low affinity, glycolytic cells | iScience 2019 |
-| Primary importer | MCT1 (SLC16A1) - high affinity, oxidative cells | iScience 2019 |
+| Primary importer | MCT1 (SLC16A1) - high affinity, oxidative cells | Nature 2025 |
 | MCT chaperone | BSG/CD147 - essential for membrane localization | Nature 2025 |
 
-## Quick Start
+## Load Data and Run Analysis
 
-```{r quickstart, eval=FALSE}
+```{r load_data}
 library(scMetaLink)
+library(Matrix)
 
-# Load example data
+# Load built-in colorectal cancer example data
 data(crc_example)
 
 # Create scMetaLink object
 obj <- createScMetaLink(crc_expr, crc_meta, "cell_type")
 
-# Run lactate signaling analysis
-obj <- inferLactateSignaling(obj)
-
-# View results
-getLactateSignalingSummary(obj)
+cat("Cell types in data:\n")
+print(table(crc_meta$cell_type))
 ```
 
 ## Gene Sets
@@ -105,8 +103,6 @@ getLactateSignalingSummary(obj)
 The lactate module uses scientifically curated gene sets:
 
 ```{r genesets}
-library(scMetaLink)
-
 # Get all gene sets
 genes <- getLactateGenes()
 
@@ -156,49 +152,144 @@ print(genes$uptake$import)
 | HTR2B, HTR2C | Serotonin receptors, not pH sensors |
 | TLR7, TLR9 | Nucleic acid sensors; pH is activation condition, not signal |
 
-## Running Analysis
+## Check Gene Availability
 
-### Basic Analysis
+Before running analysis, check which lactate genes are available in your data:
 
-```{r basic_analysis, eval=FALSE}
-# Full analysis with both pathways
+```{r check_genes, fig.height=5, fig.cap="**Figure 2: Lactate Gene Availability.** Presence of lactate-related genes in the dataset."}
+gene_check <- checkLactateGenes(obj)
+
+# Visualize gene availability
+categories <- c("Production", "Degradation", "Direct Sensing", "Indirect Sensing", "Uptake")
+available <- c(
+  length(gene_check$production$available),
+  length(gene_check$degradation$available),
+  length(gene_check$direct_sensing$available),
+  length(gene_check$indirect_sensing$available),
+  length(gene_check$uptake$available)
+)
+total <- c(
+  length(gene_check$production$total),
+  length(gene_check$degradation$total),
+  length(gene_check$direct_sensing$total),
+  length(gene_check$indirect_sensing$total),
+  length(gene_check$uptake$total)
+)
+
+par(mar = c(5, 8, 4, 2))
+barplot(rbind(available, total - available),
+        beside = FALSE, horiz = TRUE,
+        names.arg = categories, las = 1,
+        col = c("#4CAF50", "#FFCDD2"),
+        main = "Lactate Gene Availability",
+        xlab = "Number of Genes")
+legend("bottomright", c("Available", "Missing"), fill = c("#4CAF50", "#FFCDD2"))
+```
+
+## Run Lactate Signaling Analysis
+
+```{r run_analysis}
+# Run full lactate signaling analysis
 obj <- inferLactateSignaling(
   obj,
   include_direct = TRUE,
   include_indirect = TRUE,
   method = "combined",
   normalize = TRUE,
-  n_permutations = 100,
+  n_permutations = 100,  # Use more for real analysis
   verbose = TRUE
 )
 ```
 
-### Pathway-Specific Analysis
+## Visualize Results
 
-```{r pathway_specific, eval=FALSE}
-# Direct pathway only (lactate → HCAR1)
-obj <- inferLactateSignaling(obj, include_direct = TRUE, include_indirect = FALSE)
+### Production Scores
 
-# Indirect pathway only (lactate → H+ → GPCRs)
-obj <- inferLactateSignaling(obj, include_direct = FALSE, include_indirect = TRUE)
+```{r production_viz, fig.height=5, fig.cap="**Figure 3: Lactate Production Scores.** Higher scores indicate greater lactate production potential (high LDHA, MCT4 expression)."}
+# Get lactate results
+lactate_results <- obj@parameters$lactate_signaling
+
+if (!is.null(lactate_results)) {
+  prod_scores <- lactate_results$production_scores
+  
+  # Sort and plot
+  prod_sorted <- sort(prod_scores, decreasing = TRUE)
+  
+  par(mar = c(5, 10, 4, 2))
+  barplot(prod_sorted, horiz = TRUE, las = 1,
+          col = "#FF7043", border = NA,
+          main = "Lactate Production by Cell Type",
+          xlab = "Production Score")
+}
 ```
 
-### Check Gene Availability
+### Sensing Scores Comparison
 
-Before running analysis, check which lactate genes are available:
+```{r sensing_viz, fig.height=6, fig.cap="**Figure 4: Lactate Sensing Scores.** Comparison of direct (HCAR1) vs indirect (proton GPCRs) sensing across cell types."}
+if (!is.null(lactate_results)) {
+  direct_sens <- lactate_results$direct_sensing_scores
+  indirect_sens <- lactate_results$indirect_sensing_scores
+  
+  # Combine for plotting
+  cell_types <- names(direct_sens)
+  
+  par(mar = c(5, 10, 4, 2))
+  
+  # Create grouped barplot
+  sens_mat <- rbind(Direct = direct_sens, Indirect = indirect_sens)
+  
+  barplot(sens_mat, beside = TRUE, horiz = TRUE, las = 1,
+          col = c("#1565C0", "#2E7D32"), border = NA,
+          main = "Lactate Sensing: Direct vs Indirect Pathways",
+          xlab = "Sensing Score")
+  legend("bottomright", c("Direct (HCAR1)", "Indirect (H+/GPCRs)"),
+         fill = c("#1565C0", "#2E7D32"), bty = "n")
+}
+```
 
-```{r check_genes, eval=FALSE}
-checkLactateGenes(obj)
+### Communication Heatmap
+
+```{r heatmap, fig.height=7, fig.width=8, fig.cap="**Figure 5: Lactate Communication Heatmap.** Communication strength from sender (rows) to receiver (columns) cell types via lactate signaling."}
+if (!is.null(lactate_results) && !is.null(lactate_results$communication)) {
+  # Plot using the built-in function
+  plotLactateSignaling(obj, pathway = "combined")
+}
+```
+
+### Pathway Comparison
+
+```{r pathway_comparison, fig.height=6, fig.width=10, fig.cap="**Figure 6: Production vs Sensing Comparison.** Cell types positioned by their lactate production (orange) and sensing (blue) capabilities."}
+if (!is.null(lactate_results)) {
+  plotLactatePathwayComparison(obj, show_production = TRUE)
+}
+```
+
+### Cell Type Roles
+
+```{r roles, fig.height=6, fig.cap="**Figure 7: Cell Type Metabolic Roles in Lactate Signaling.** Net lactate flow: positive = net producer, negative = net sensor."}
+if (!is.null(lactate_results) && !is.null(lactate_results$communication)) {
+  comm <- lactate_results$communication$combined
+  
+  # Calculate net flow
+  cell_types <- rownames(comm)
+  net_flow <- rowSums(comm) - colSums(comm)
+  net_flow <- sort(net_flow)
+  
+  par(mar = c(5, 10, 4, 2))
+  cols <- ifelse(net_flow > 0, "#FF7043", "#42A5F5")
+  barplot(net_flow, horiz = TRUE, las = 1,
+          col = cols, border = NA,
+          main = "Net Lactate Communication Flow",
+          xlab = "Net Flow (Outgoing - Incoming)")
+  abline(v = 0, lty = 2, col = "gray50")
+  legend("bottomright", c("Net Producer", "Net Sensor"),
+         fill = c("#FF7043", "#42A5F5"), bty = "n")
+}
 ```
 
 ## Interpreting Results
 
 ### Production Scores
-
-```{r production, eval=FALSE}
-# Get top lactate producers
-getTopLactateProducers(obj, top_n = 5)
-```
 
 High production indicates:
 - High expression of LDHA (synthesis)
@@ -207,64 +298,21 @@ High production indicates:
 
 ### Sensing Scores
 
-```{r sensing, eval=FALSE}
-# Get top sensors for indirect pathway
-getTopLactateSensors(obj, pathway = "indirect", top_n = 5)
+**Direct pathway** (HCAR1):
+- Indicates cells that can directly respond to lactate
+- Important in anti-inflammatory signaling
 
-# Get top sensors for direct pathway
-getTopLactateSensors(obj, pathway = "direct", top_n = 5)
-```
+**Indirect pathway** (H+/proton GPCRs):
+- Indicates cells sensing acidification from lactate dissociation
+- Critical for immune cell function in TME
 
-### Communication Summary
+### Top Communicators
 
-```{r summary, eval=FALSE}
-# Get top cell-cell communications
-getLactateSignalingSummary(obj, pathway = "combined", top_n = 10)
-```
-
-## Visualization
-
-### Heatmap
-
-```{r heatmap, eval=FALSE}
-# Plot communication heatmap
-plotLactateSignaling(obj, pathway = "indirect")
-```
-
-### Pathway Comparison
-
-```{r comparison, eval=FALSE}
-# Compare production and sensing across cell types
-plotLactatePathwayComparison(obj, show_production = TRUE)
-```
-
-## Spatial Analysis
-
-For spatial transcriptomics data:
-
-```{r spatial, eval=FALSE}
-# Create spatial object
-obj <- createScMetaLinkFromSpatial(
-  expression_data = st_expr,
-  spatial_coords = st_meta[, c("x", "y")],
-  cell_meta = st_meta,
-  cell_type_column = "cell_type",
-  scale_factors = st_scalefactors
-)
-
-# Run spatial lactate analysis
-obj <- inferSpatialLactateSignaling(
-  obj,
-  max_distance = 200,      # Maximum communication distance (um)
-  distance_decay = "gaussian",
-  sigma = 50               # Characteristic decay distance (um)
-)
-
-# Visualize
-plotSpatialLactate(obj, type = "production")
-
-# Get hotspots
-getSpatialLactateHotspots(obj, type = "all", top_n = 20)
+```{r top_comm}
+if (!is.null(lactate_results)) {
+  summary_df <- getLactateSignalingSummary(obj, pathway = "combined", top_n = 10)
+  print(summary_df)
+}
 ```
 
 ## Algorithm Details
@@ -332,3 +380,10 @@ The indirect pathway is particularly relevant for tumor immunology:
 - **[Quick Start](quick-start.html)**: Getting started with scMetaLink
 - **[Theory & Methods](theory.html)**: Mathematical framework
 - **[Spatial Analysis](spatial-analysis.html)**: Spatial transcriptomics support
+- **[Visualization](visualization.html)**: Complete visualization guide
+
+## Session Info
+
+```{r session}
+sessionInfo()
+```

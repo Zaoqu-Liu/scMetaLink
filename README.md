@@ -183,6 +183,7 @@ Statistical significance is assessed via permutation testing with FDR correction
 | [Production & Sensing](https://Zaoqu-Liu.github.io/scMetaLink/articles/production-sensing.html) | Inference details |
 | [Communication](https://Zaoqu-Liu.github.io/scMetaLink/articles/communication.html) | Statistical analysis |
 | [Spatial Analysis](https://Zaoqu-Liu.github.io/scMetaLink/articles/spatial-analysis.html) | Spatial transcriptomics |
+| [Lactate Signaling](https://Zaoqu-Liu.github.io/scMetaLink/articles/lactate-signaling.html) | Lactate-mediated communication |
 | [Visualization](https://Zaoqu-Liu.github.io/scMetaLink/articles/visualization.html) | Plotting functions |
 | [Applications](https://Zaoqu-Liu.github.io/scMetaLink/articles/applications.html) | Case studies |
 
