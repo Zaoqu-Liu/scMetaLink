@@ -32,7 +32,9 @@ Technical specifications:
 }
 \examples{
 \donttest{
-data(st_colon)
+data(st_expr)
+data(st_meta)
+data(st_scalefactors)
 
 # Check dimensions
 dim(st_expr)

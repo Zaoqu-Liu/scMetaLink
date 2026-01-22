@@ -43,7 +43,9 @@ Visualize metabolite communication on spatial coordinates
 }
 \examples{
 \donttest{
-data(st_colon)
+data(st_expr)
+data(st_meta)
+data(st_scalefactors)
 obj <- createScMetaLinkFromSpatial(st_expr, st_meta[,c("x","y")],
                                    st_meta, "cell_type", st_scalefactors)
 obj <- inferProduction(obj)

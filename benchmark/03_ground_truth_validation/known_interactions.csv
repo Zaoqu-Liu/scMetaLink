@@ -1,0 +1,21 @@
+metabolite,hmdb,sender_cell_type,receiver_cell_type,expected_effect,receptor_gene,downstream_markers,evidence_pmid,evidence_strength
+L-Lactic acid,HMDB0000190,Tumor,Macrophage,M2 polarization (ARG1 CD206),GPR81/GPR132/MCT1,ARG1 CD206 IL10 VEGF,30431439;29468929,Strong
+L-Lactic acid,HMDB0000190,Tumor,CD8 T cell,Cytotoxicity suppression,MCT1/SLC16A1,IFNG_down GZMB_down PRF1_down,33603751,Strong
+L-Lactic acid,HMDB0000190,Tumor,Treg,Enhanced suppressive function,MCT1,FOXP3_up IL10_up,30431439,Medium
+L-Lactic acid,HMDB0000190,Tumor,Dendritic cell,Reduced antigen presentation,MCT1,CD80_down CD86_down MHCII_down,31857391,Medium
+Adenosine,HMDB0000050,Treg,CD8 T cell,Suppression via A2A receptor,ADORA2A,IFNG_down IL2_down CD69_down,27066002,Strong
+Adenosine,HMDB0000050,Tumor,Macrophage,M2 polarization,ADORA2A/ADORA2B,ARG1_up IL10_up VEGF_up,32398639,Strong
+Adenosine,HMDB0000050,Hypoxic cells,T cell,Immunosuppression,ADORA2A,IFNG_down Exhaustion_up,27066002,Strong
+Adenosine,HMDB0000050,Tumor,NK cell,Reduced cytotoxicity,ADORA2A,GZMB_down IFNG_down,30487485,Strong
+L-Glutamine,HMDB0000641,Endothelial,Adipocyte,Promote differentiation,SLC1A5/SLC38A2,PPARG_up ADIPOQ_up,MEBOCOST_paper,Strong
+L-Glutamine,HMDB0000641,Stromal,T cell,Support activation/proliferation,SLC1A5,MYC_up Proliferation_up,29686425,Strong
+L-Glutamic acid,HMDB0000148,Neuron,Astrocyte,Glutamate signaling,GRIA1-4/GRIN1-2,Calcium_signaling,Various,Strong
+Glucose,HMDB0000122,Any,T cell,Activation fuel,SLC2A1/GLUT1,Glycolysis_genes HIF1A_up,Metabolic_competition,Strong
+ATP,HMDB0000538,Dying cells,Macrophage,Inflammation/DAMP,P2RX7/P2RY2,IL1B_up IL18_up NLRP3_up,28098234,Strong
+Prostaglandin E2,HMDB0001220,Tumor,T cell,Immunosuppression,PTGER2/PTGER4,IFNG_down cAMP_up,30038218,Strong
+Prostaglandin E2,HMDB0001220,Fibroblast,Macrophage,M2 polarization,PTGER2/PTGER4,ARG1_up IL10_up,29549266,Medium
+Kynurenine,HMDB0000684,Tumor/DC,T cell,Immunosuppression via AHR,AHR,Exhaustion_up FOXP3_up,29549266,Strong
+Itaconate,HMDB0002092,Macrophage,T cell,Anti-inflammatory,SLC13A3,Nrf2_pathway,31257014,Medium
+Succinate,HMDB0000254,Tumor,Macrophage,Pro-inflammatory initially,SUCNR1,IL1B_up HIF1A_up,23827788,Strong
+Arginine,HMDB0000517,Myeloid,T cell,T cell suppression (via depletion),SLC7A1/SLC7A2,T_cell_anergy,31127033,Strong
+Tryptophan,HMDB0000929,Tumor/DC,T cell,Immunosuppression (via depletion),SLC7A5,T_cell_anergy Kyn_pathway,29549266,Strong

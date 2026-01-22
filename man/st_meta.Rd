@@ -38,7 +38,7 @@ Cell type distribution in this example:
 }
 \examples{
 \donttest{
-data(st_colon)
+data(st_meta)
 
 # View spot distribution
 table(st_meta$cell_type)

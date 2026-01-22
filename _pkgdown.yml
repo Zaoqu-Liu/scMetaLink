@@ -176,3 +176,8 @@ reference:
   - st_expr
   - st_meta
   - st_scalefactors
+
+- title: Package
+  desc: Package documentation
+  contents:
+  - scMetaLink-package

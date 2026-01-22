@@ -30,6 +30,22 @@ scMetaLink supports **spatial transcriptomics** data, enabling the analysis of m
 3. Visualize communication patterns on tissue coordinates
 4. Identify communication hotspots
 
+## Spatial Analysis Workflow
+
+The following diagram illustrates the complete spatial transcriptomics analysis workflow in scMetaLink:
+
+```{r spatial-workflow, echo=FALSE, out.width="100%", fig.cap="**Figure 1: Spatial scMetaLink Workflow.** Overview of the spatial transcriptomics analysis pipeline, from data input through spatially-weighted communication inference to visualization."}
+knitr::include_graphics("spatial-flow.png")
+```
+
+## Spatial Communication Algorithm
+
+scMetaLink incorporates spatial distance to weight cell-cell communication. The computational framework is illustrated below:
+
+```{r spatial-algorithm, echo=FALSE, out.width="100%", fig.cap="**Figure 2: Spatial Communication Algorithm.** Mathematical framework showing how spatial distances are incorporated into metabolite production, sensing, and communication score calculations."}
+knitr::include_graphics("spatial-cal.png")
+```
+
 ## Why Spatial Analysis?
 
 Traditional single-cell analysis treats cells as independent units, ignoring their physical locations. However, metabolite signaling is fundamentally spatial:
@@ -78,7 +94,9 @@ library(scMetaLink)
 library(Matrix)
 
 # Load spatial colon data
-data(st_colon)
+data(st_expr)
+data(st_meta)
+data(st_scalefactors)
 
 # Check the data
 cat("=== Spatial Transcriptomics Data ===\n")
@@ -150,7 +168,7 @@ obj <- createScMetaLinkFromSeuratSpatial(
 
 Before analysis, visualize the spatial distribution of cell types.
 
-```{r plot_celltypes, fig.height=8, fig.cap="**Figure 1: Spatial Cell Type Distribution.** Each spot is colored by its assigned cell type. For Visium data, cell types typically come from deconvolution methods (RCTD, cell2location, etc.)."}
+```{r plot_celltypes, fig.height=8, fig.cap="**Figure 3: Spatial Cell Type Distribution.** Each spot is colored by its assigned cell type. For Visium data, cell types typically come from deconvolution methods (RCTD, cell2location, etc.)."}
 plotSpatialCellTypes(obj, point_size = 2, alpha = 0.8)
 ```
 
@@ -182,7 +200,7 @@ obj <- inferSensing(
 
 Visualize production and sensing scores on spatial coordinates.
 
-```{r plot_production, fig.height=6, fig.cap="**Figure 2: Lactate Production Potential.** Spots are colored by lactate production score based on their cell type. Warmer colors indicate higher production potential."}
+```{r plot_production, fig.height=6, fig.cap="**Figure 4: Lactate Production Potential.** Spots are colored by lactate production score based on their cell type. Warmer colors indicate higher production potential."}
 plotSpatialFeature(
   obj,
   metabolite = "L-Lactic acid",
@@ -191,7 +209,7 @@ plotSpatialFeature(
 )
 ```
 
-```{r plot_sensing, fig.height=6, fig.cap="**Figure 3: Lactate Sensing Capability.** Spots are colored by lactate sensing score. This shows which regions can detect and respond to lactate signaling."}
+```{r plot_sensing, fig.height=6, fig.cap="**Figure 5: Lactate Sensing Capability.** Spots are colored by lactate sensing score. This shows which regions can detect and respond to lactate signaling."}
 plotSpatialFeature(
   obj,
   metabolite = "L-Lactic acid",
@@ -204,7 +222,7 @@ plotSpatialFeature(
 
 ### Compare Multiple Metabolites
 
-```{r compare_mets, fig.height=10, fig.width=12, fig.cap="**Figure 4: Spatial Comparison of Key Metabolites.** Production patterns for multiple metabolites shown side by side, revealing distinct spatial organization of metabolic activities."}
+```{r compare_mets, fig.height=10, fig.width=12, fig.cap="**Figure 6: Spatial Comparison of Key Metabolites.** Production patterns for multiple metabolites shown side by side, revealing distinct spatial organization of metabolic activities."}
 plotSpatialComparison(
   obj,
   metabolites = c("L-Lactic acid", "L-Glutamic acid", "Adenosine", "L-Alanine"),
@@ -230,7 +248,7 @@ scMetaLink offers several spatial weighting methods:
 | `linear` | $\max(0, 1 - d/d_{max})$ | Simple model |
 | `threshold` | Binary cutoff | Strict distance limit |
 
-```{r weighting, echo=FALSE, fig.height=4, fig.width=12, fig.cap="**Figure 5: Spatial Weighting Functions.** Different methods model the decay of communication potential with distance. KNN (not shown) uses a binary approach based on nearest neighbors."}
+```{r weighting, echo=FALSE, fig.height=4, fig.width=12, fig.cap="**Figure 7: Spatial Weighting Functions.** Different methods model the decay of communication potential with distance. KNN (not shown) uses a binary approach based on nearest neighbors."}
 d <- seq(0, 200, 1)
 
 par(mfrow = c(1, 4), mar = c(4, 4, 3, 1))
@@ -312,7 +330,7 @@ head(obj@significant_interactions[, c("sender", "receiver", "metabolite_name",
 
 ## Visualize Spatial Communication Network
 
-```{r network, fig.height=9, fig.width=10, fig.cap="**Figure 6: Spatial Communication Network.** Arrows connect cell type centroids, with width proportional to communication strength. Background spots show the tissue context."}
+```{r network, fig.height=9, fig.width=10, fig.cap="**Figure 8: Spatial Communication Network.** Arrows connect cell type centroids, with width proportional to communication strength. Background spots show the tissue context."}
 plotSpatialCommunicationNetwork(
   obj,
   metabolite = NULL,  # Aggregate all metabolites
@@ -325,7 +343,7 @@ plotSpatialCommunicationNetwork(
 
 ### Metabolite-Specific Network
 
-```{r network_met, fig.height=9, fig.width=10, fig.cap="**Figure 7: Lactate Communication Network.** Spatial communication pattern for lactate specifically, showing which cell types communicate via this metabolite."}
+```{r network_met, fig.height=9, fig.width=10, fig.cap="**Figure 9: Lactate Communication Network.** Spatial communication pattern for lactate specifically, showing which cell types communicate via this metabolite."}
 plotSpatialCommunicationNetwork(
   obj,
   metabolite = "L-Lactic acid",
@@ -401,7 +419,7 @@ plotSpatialHotspots(obj_spot, metabolite = "L-Lactic acid", type = "sender")
 
 Understand the spatial relationships in your data:
 
-```{r distance_dist, fig.height=5, fig.cap="**Figure 8: Spatial Distance Distribution.** Histogram showing the distribution of pairwise distances between spots. Red lines mark common distance thresholds (100, 200, 500 um)."}
+```{r distance_dist, fig.height=5, fig.cap="**Figure 10: Spatial Distance Distribution.** Histogram showing the distribution of pairwise distances between spots. Red lines mark common distance thresholds (100, 200, 500 um)."}
 plotSpatialDistanceDistribution(obj, max_distance = 1000, bins = 50)
 ```
 
@@ -432,7 +450,9 @@ plotSpatialDistanceDistribution(obj, max_distance = 1000, bins = 50)
 library(scMetaLink)
 
 # 1. Load data
-data(st_colon)
+data(st_expr)
+data(st_meta)
+data(st_scalefactors)
 
 # 2. Create spatial object
 obj <- createScMetaLinkFromSpatial(

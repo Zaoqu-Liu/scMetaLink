@@ -56,7 +56,9 @@ NULL
 #'
 #' @examples
 #' \donttest{
-#' data(st_colon)
+#' data(st_expr)
+#' data(st_meta)
+#' data(st_scalefactors)
 #'
 #' obj <- createScMetaLinkFromSpatial(
 #'   expression_data = st_expr,
@@ -372,7 +374,9 @@ createScMetaLinkFromSeuratSpatial <- function(seurat_obj,
 #'
 #' @examples
 #' \donttest{
-#' data(st_colon)
+#' data(st_expr)
+#' data(st_meta)
+#' data(st_scalefactors)
 #'
 #' # Create object and run analysis
 #' obj <- createScMetaLinkFromSpatial(st_expr, st_meta[,c("x","y")],

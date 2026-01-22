@@ -30,7 +30,7 @@ micrometers to enable biologically meaningful distance thresholds.
 }
 \examples{
 \donttest{
-data(st_colon)
+data(st_scalefactors)
 
 # Convert pixel distance to micrometers
 pixel_distance <- 500

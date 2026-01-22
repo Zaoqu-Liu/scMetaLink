@@ -66,7 +66,9 @@ as 50 pixels instead of 50 micrometers.
 }
 \examples{
 \donttest{
-data(st_colon)
+data(st_expr)
+data(st_meta)
+data(st_scalefactors)
 
 obj <- createScMetaLinkFromSpatial(
   expression_data = st_expr,

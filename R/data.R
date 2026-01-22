@@ -404,7 +404,9 @@ listGenes <- function(role = "all") {
 #'
 #' @examples
 #' \donttest{
-#' data(st_colon)
+#' data(st_expr)
+#' data(st_meta)
+#' data(st_scalefactors)
 #'
 #' # Check dimensions
 #' dim(st_expr)
@@ -454,7 +456,7 @@ listGenes <- function(role = "all") {
 #'
 #' @examples
 #' \donttest{
-#' data(st_colon)
+#' data(st_meta)
 #'
 #' # View spot distribution
 #' table(st_meta$cell_type)
@@ -488,7 +490,7 @@ listGenes <- function(role = "all") {
 #'
 #' @examples
 #' \donttest{
-#' data(st_colon)
+#' data(st_scalefactors)
 #'
 #' # Convert pixel distance to micrometers
 #' pixel_distance <- 500

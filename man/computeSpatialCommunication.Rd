@@ -134,7 +134,9 @@ where w(d) is the spatial weight function:
 }
 \examples{
 \donttest{
-data(st_colon)
+data(st_expr)
+data(st_meta)
+data(st_scalefactors)
 
 # Create object and run analysis
 obj <- createScMetaLinkFromSpatial(st_expr, st_meta[,c("x","y")],
