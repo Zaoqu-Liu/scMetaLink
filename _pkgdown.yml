@@ -34,6 +34,8 @@ navbar:
         href: articles/communication.html
       - text: Spatial Transcriptomics
         href: articles/spatial-analysis.html
+      - text: Lactate Signaling
+        href: articles/lactate-signaling.html
       - text: Visualization Gallery
         href: articles/visualization.html
       - text: "---"
@@ -61,6 +63,7 @@ articles:
   - production-sensing
   - communication
   - spatial-analysis
+  - lactate-signaling
   - visualization
 
 - title: Applications
@@ -118,6 +121,21 @@ reference:
   - plotSpatialDistanceDistribution
   - plotSpatialHotspots
   - plotSpatialComparison
+
+- title: Lactate Signaling
+  desc: Specialized lactate-mediated communication analysis
+  contents:
+  - inferLactateSignaling
+  - inferSpatialLactateSignaling
+  - getLactateGenes
+  - getTopLactateProducers
+  - getTopLactateSensors
+  - getLactateSignalingSummary
+  - getSpatialLactateHotspots
+  - checkLactateGenes
+  - plotLactateSignaling
+  - plotLactatePathwayComparison
+  - plotSpatialLactate
 
 - title: Pathway Analysis
   desc: Pathway-level aggregation and enrichment
