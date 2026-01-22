@@ -210,7 +210,7 @@ obj <- inferLactateSignaling(
 lactate_results <- obj@parameters$lactate_signaling
 
 if (!is.null(lactate_results)) {
-  prod_scores <- lactate_results$production_scores
+  prod_scores <- lactate_results$production
   
   # Sort and plot
   prod_sorted <- sort(prod_scores, decreasing = TRUE)
@@ -227,8 +227,8 @@ if (!is.null(lactate_results)) {
 
 ```{r sensing_viz, fig.height=6, fig.cap="**Figure 4: Lactate Sensing Scores.** Comparison of direct (HCAR1) vs indirect (proton GPCRs) sensing across cell types."}
 if (!is.null(lactate_results)) {
-  direct_sens <- lactate_results$direct_sensing_scores
-  indirect_sens <- lactate_results$indirect_sensing_scores
+  direct_sens <- lactate_results$direct_sensing
+  indirect_sens <- lactate_results$indirect_sensing
   
   # Combine for plotting
   cell_types <- names(direct_sens)
@@ -250,7 +250,7 @@ if (!is.null(lactate_results)) {
 ### Communication Heatmap
 
 ```{r heatmap, fig.height=7, fig.width=8, fig.cap="**Figure 5: Lactate Communication Heatmap.** Communication strength from sender (rows) to receiver (columns) cell types via lactate signaling."}
-if (!is.null(lactate_results) && !is.null(lactate_results$communication)) {
+if (!is.null(lactate_results) && !is.null(lactate_results$combined_communication)) {
   # Plot using the built-in function
   plotLactateSignaling(obj, pathway = "combined")
 }
@@ -267,8 +267,8 @@ if (!is.null(lactate_results)) {
 ### Cell Type Roles
 
 ```{r roles, fig.height=6, fig.cap="**Figure 7: Cell Type Metabolic Roles in Lactate Signaling.** Net lactate flow: positive = net producer, negative = net sensor."}
-if (!is.null(lactate_results) && !is.null(lactate_results$communication)) {
-  comm <- lactate_results$communication$combined
+if (!is.null(lactate_results) && !is.null(lactate_results$combined_communication)) {
+  comm <- lactate_results$combined_communication
   
   # Calculate net flow
   cell_types <- rownames(comm)

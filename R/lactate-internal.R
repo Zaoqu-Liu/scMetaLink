@@ -547,14 +547,17 @@
   prod_available <- intersect(prod_genes, rownames(gene_scores))
 
   if (length(prod_available) > 0) {
+    prod_mat <- as.matrix(gene_scores[prod_available, , drop = FALSE])
     prod_contrib <- data.frame(
       gene = prod_available,
       category = ifelse(prod_available %in% gene_sets$production$synthesis,
         "synthesis", "export"),
-      t(gene_scores[prod_available, , drop = FALSE]),
       stringsAsFactors = FALSE,
       row.names = NULL
     )
+    for (ct in colnames(prod_mat)) {
+      prod_contrib[[ct]] <- prod_mat[, ct]
+    }
   } else {
     prod_contrib <- data.frame()
   }
@@ -568,16 +571,19 @@
   sens_available <- intersect(sens_genes, rownames(gene_scores))
 
   if (length(sens_available) > 0) {
+    sens_mat <- as.matrix(gene_scores[sens_available, , drop = FALSE])
     sens_contrib <- data.frame(
       gene = sens_available,
       category = ifelse(sens_available %in% gene_sets$direct_sensing$receptor,
         "direct_receptor",
         ifelse(sens_available %in% gene_sets$indirect_sensing$proton_receptors,
           "proton_receptor", "uptake")),
-      t(gene_scores[sens_available, , drop = FALSE]),
       stringsAsFactors = FALSE,
       row.names = NULL
     )
+    for (ct in colnames(sens_mat)) {
+      sens_contrib[[ct]] <- sens_mat[, ct]
+    }
   } else {
     sens_contrib <- data.frame()
   }
