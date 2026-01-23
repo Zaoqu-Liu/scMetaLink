@@ -38,11 +38,10 @@ data.frame with differential communication results
 ## Examples
 
 ``` r
-# \donttest{
-# Compare tumor vs normal
+if (FALSE) { # \dontrun{
+# Compare tumor vs normal (requires two scMetaLink objects)
 diff <- compareCommunication(tumor_obj, normal_obj,
   condition_names = c("Tumor", "Normal")
 )
-#> Error: object 'tumor_obj' not found
-# }
+} # }
 ```
