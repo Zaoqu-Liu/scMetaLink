@@ -25,3 +25,4 @@
 ^universe-config$
 ^\.cursorrules$
 ^scMetaLink.*\.tar\.gz$
+^CRAN-SUBMISSION$
