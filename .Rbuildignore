@@ -26,3 +26,4 @@
 ^\.cursorrules$
 ^scMetaLink.*\.tar\.gz$
 ^CRAN-SUBMISSION$
+^inst/extdata/vignettes_extra$

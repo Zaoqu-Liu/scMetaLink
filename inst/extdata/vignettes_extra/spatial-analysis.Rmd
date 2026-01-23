@@ -1,0 +1,509 @@
+---
+title: "Spatial Transcriptomics Analysis"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Spatial Transcriptomics Analysis}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 10,
+  fig.height = 8,
+  fig.align = "center",
+  out.width = "100%",
+  dpi = 72,
+  warning = FALSE,
+  message = FALSE
+)
+```
+
+## Overview
+
+scMetaLink supports **spatial transcriptomics** data, enabling the analysis of metabolite-mediated cell communication with spatial context. This vignette demonstrates how to:
+
+1. Create a spatial scMetaLink object
+2. Compute spatially-weighted communication
+3. Visualize communication patterns on tissue coordinates
+4. Identify communication hotspots
+
+## Spatial Analysis Workflow
+
+The following diagram illustrates the complete spatial transcriptomics analysis workflow in scMetaLink:
+
+```{r spatial-workflow, echo=FALSE, out.width="100%", fig.cap="**Figure 1: Spatial scMetaLink Workflow.** Overview of the spatial transcriptomics analysis pipeline, from data input through spatially-weighted communication inference to visualization."}
+knitr::include_graphics("spatial-flow.png")
+```
+
+## Spatial Communication Algorithm
+
+scMetaLink incorporates spatial distance to weight cell-cell communication. The computational framework is illustrated below:
+
+```{r spatial-algorithm, echo=FALSE, out.width="100%", fig.cap="**Figure 2: Spatial Communication Algorithm.** Mathematical framework showing how spatial distances are incorporated into metabolite production, sensing, and communication score calculations."}
+knitr::include_graphics("spatial-cal.png")
+```
+
+## Why Spatial Analysis?
+
+Traditional single-cell analysis treats cells as independent units, ignoring their physical locations. However, metabolite signaling is fundamentally spatial:
+
+- **Metabolites diffuse** through tissue with distance-dependent decay
+- **Nearby cells** are more likely to communicate via metabolites
+- **Spatial organization** of cell types affects signaling patterns
+
+scMetaLink's spatial module incorporates these biological realities.
+
+```{r concept, echo=FALSE, fig.height=4, fig.width=10}
+par(mfrow = c(1, 2), mar = c(2, 2, 3, 1))
+
+# Non-spatial view
+set.seed(42)
+plot(runif(50), runif(50), pch = 19, col = c(rep("#E64B35", 25), rep("#4DBBD5", 25)),
+     xlab = "", ylab = "", main = "Traditional: All pairs equal", axes = FALSE)
+box()
+
+# Spatial view
+x <- c(runif(25, 0.1, 0.4), runif(25, 0.6, 0.9))
+y <- c(runif(25, 0.1, 0.9), runif(25, 0.1, 0.9))
+plot(x, y, pch = 19, col = c(rep("#E64B35", 25), rep("#4DBBD5", 25)),
+     xlab = "", ylab = "", main = "Spatial: Distance matters", axes = FALSE)
+# Draw some connection lines for nearby cells
+for (i in 1:25) {
+  for (j in 26:50) {
+    d <- sqrt((x[i] - x[j])^2 + (y[i] - y[j])^2)
+    if (d < 0.15) {
+      lines(c(x[i], x[j]), c(y[i], y[j]), col = "gray70", lwd = 1)
+    }
+  }
+}
+points(x, y, pch = 19, col = c(rep("#E64B35", 25), rep("#4DBBD5", 25)))
+box()
+
+par(mfrow = c(1, 1))
+```
+
+## Load Example Data
+
+scMetaLink includes a colon spatial transcriptomics dataset for demonstration.
+
+```{r load}
+library(scMetaLink)
+library(Matrix)
+
+# Load spatial colon data
+data(st_expr)
+data(st_meta)
+data(st_scalefactors)
+
+# Check the data
+cat("=== Spatial Transcriptomics Data ===\n")
+cat("Expression matrix:", dim(st_expr)[1], "genes x", dim(st_expr)[2], "spots\n")
+cat("\nSpot metadata:\n")
+head(st_meta)
+
+cat("\nCell type distribution:\n")
+print(table(st_meta$cell_type))
+
+cat("\nScale factors:\n")
+print(st_scalefactors)
+```
+
+## Create Spatial scMetaLink Object
+
+Use `createScMetaLinkFromSpatial()` to create an object with spatial coordinates.
+
+```{r create}
+# Create spatial scMetaLink object
+obj <- createScMetaLinkFromSpatial(
+  expression_data = st_expr,
+  spatial_coords = st_meta[, c("x", "y")],
+  cell_meta = st_meta,
+  cell_type_column = "cell_type",
+  scale_factors = st_scalefactors,  # Important for correct distance calculation!
+  min_cells = 5
+)
+
+# Check the object
+obj
+```
+
+### Important: Coordinate Units
+
+For **10x Visium** data:
+
+- Raw coordinates are in **pixels**, not micrometers
+- You **must** provide `scale_factors` with `pixels_per_um` for correct distance calculations
+- Without proper scaling, distance parameters (sigma, threshold) will be interpreted as pixels!
+
+```{r coords}
+# Check spatial distance statistics
+dist_stats <- getSpatialDistanceStats(obj)
+
+cat("=== Spatial Distance Statistics ===\n")
+cat("Number of spots:", dist_stats$n_spots, "\n")
+cat("Min distance:", round(dist_stats$min_distance_um, 1), "um\n")
+cat("Median distance:", round(dist_stats$median_distance_um, 1), "um\n")
+cat("Max distance:", round(dist_stats$max_distance_um, 1), "um\n")
+cat("Coordinate unit:", dist_stats$coord_unit, "\n")
+```
+
+### Working with Seurat Objects
+
+If you have a Seurat spatial object, use `createScMetaLinkFromSeuratSpatial()`:
+
+```{r seurat, eval=FALSE}
+# From Seurat spatial object
+obj <- createScMetaLinkFromSeuratSpatial(
+  seurat_obj = seurat_spatial,
+  cell_type_column = "cell_type",  # Column with deconvolution results
+  assay = "Spatial",
+  image = "slice1"  # Name of the spatial image
+)
+```
+
+## Visualize Spatial Cell Types
+
+Before analysis, visualize the spatial distribution of cell types.
+
+```{r plot_celltypes, fig.height=8, fig.cap="**Figure 3: Spatial Cell Type Distribution.** Each spot is colored by its assigned cell type. For Visium data, cell types typically come from deconvolution methods (RCTD, cell2location, etc.)."}
+plotSpatialCellTypes(obj, point_size = 2, alpha = 0.8)
+```
+
+## Infer Production and Sensing
+
+Run the standard production and sensing inference.
+
+```{r inference}
+# Infer metabolite production
+obj <- inferProduction(
+  obj,
+  method = "combined",
+  consider_degradation = TRUE,
+  consider_secretion = TRUE,
+  verbose = TRUE
+)
+
+# Infer metabolite sensing
+obj <- inferSensing(
+  obj,
+  method = "combined",
+  weight_by_affinity = TRUE,
+  include_transporters = TRUE,
+  verbose = TRUE
+)
+```
+
+## Visualize Spatial Metabolite Patterns
+
+Visualize production and sensing scores on spatial coordinates.
+
+```{r plot_production, fig.height=6, fig.cap="**Figure 4: Lactate Production Potential.** Spots are colored by lactate production score based on their cell type. Warmer colors indicate higher production potential."}
+plotSpatialFeature(
+  obj,
+  metabolite = "L-Lactic acid",
+  type = "production",
+  point_size = 2
+)
+```
+
+```{r plot_sensing, fig.height=6, fig.cap="**Figure 5: Lactate Sensing Capability.** Spots are colored by lactate sensing score. This shows which regions can detect and respond to lactate signaling."}
+plotSpatialFeature(
+  obj,
+  metabolite = "L-Lactic acid",
+  type = "sensing",
+  point_size = 2,
+  low_color = "#EBF5FB",
+  high_color = "#1A5276"
+)
+```
+
+### Compare Multiple Metabolites
+
+```{r compare_mets, fig.height=10, fig.width=12, fig.cap="**Figure 6: Spatial Comparison of Key Metabolites.** Production patterns for multiple metabolites shown side by side, revealing distinct spatial organization of metabolic activities."}
+plotSpatialComparison(
+  obj,
+  metabolites = c("L-Lactic acid", "L-Glutamic acid", "Adenosine", "L-Alanine"),
+  type = "production",
+  ncol = 2,
+  point_size = 1.5
+)
+```
+
+## Compute Spatial Communication
+
+The key innovation is **spatially-weighted communication**. Nearby cell type pairs receive higher communication scores.
+
+### Spatial Weighting Methods
+
+scMetaLink offers several spatial weighting methods:
+
+| Method | Formula | Best for |
+|--------|---------|----------|
+| `knn` | K-nearest neighbors only | Visium (recommended) |
+| `gaussian` | $e^{-d^2/2\sigma^2}$ | Smooth decay |
+| `exponential` | $e^{-d/\lambda}$ | Sharp decay |
+| `linear` | $\max(0, 1 - d/d_{max})$ | Simple model |
+| `threshold` | Binary cutoff | Strict distance limit |
+
+```{r weighting, echo=FALSE, fig.height=4, fig.width=12, fig.cap="**Figure 7: Spatial Weighting Functions.** Different methods model the decay of communication potential with distance. KNN (not shown) uses a binary approach based on nearest neighbors."}
+d <- seq(0, 200, 1)
+
+par(mfrow = c(1, 4), mar = c(4, 4, 3, 1))
+
+# Gaussian
+plot(d, exp(-d^2 / (2 * 50^2)), type = "l", lwd = 2, col = "#E64B35",
+     xlab = "Distance (um)", ylab = "Weight", main = "Gaussian (sigma=50)")
+abline(v = 50, lty = 2, col = "gray")
+
+# Exponential
+plot(d, exp(-d / 50), type = "l", lwd = 2, col = "#4DBBD5",
+     xlab = "Distance (um)", ylab = "Weight", main = "Exponential (lambda=50)")
+abline(v = 50, lty = 2, col = "gray")
+
+# Linear
+plot(d, pmax(0, 1 - d / 150), type = "l", lwd = 2, col = "#00A087",
+     xlab = "Distance (um)", ylab = "Weight", main = "Linear (max=150)")
+abline(v = 150, lty = 2, col = "gray")
+
+# Threshold
+plot(d, as.numeric(d <= 100), type = "l", lwd = 2, col = "#F39B7F",
+     xlab = "Distance (um)", ylab = "Weight", main = "Threshold (100)")
+abline(v = 100, lty = 2, col = "gray")
+
+par(mfrow = c(1, 1))
+```
+
+### Run Spatial Communication Analysis
+
+For **Visium data**, we recommend the `knn` method with k=6 (hexagonal grid neighbors):
+
+```{r spatial_comm}
+# Compute spatially-weighted communication
+obj <- computeSpatialCommunication(
+  obj,
+  method = "knn",           # K-nearest neighbors (recommended for Visium)
+  k_neighbors = 6,          # 6 neighbors for hexagonal grid
+  symmetric = TRUE,         # Bidirectional communication potential
+  comm_method = "geometric", # sqrt(production x sensing)
+  min_production = 0.1,
+  min_sensing = 0.1,
+  n_permutations = 100,     # Use >=1000 for publication
+  n_cores = 1,
+  seed = 42,
+  verbose = TRUE
+)
+```
+
+### Alternative: Gaussian Decay
+
+For more continuous distance weighting:
+
+```{r gaussian_method, eval=FALSE}
+obj <- computeSpatialCommunication(
+  obj,
+  method = "gaussian",
+  sigma = 50,               # 50 um characteristic decay
+  distance_threshold = 150, # Max communication distance
+  n_permutations = 100,
+  verbose = TRUE
+)
+```
+
+## Filter Significant Interactions
+
+```{r filter}
+# Filter significant spatial interactions
+obj <- filterSignificantInteractions(
+  obj,
+  pvalue_threshold = 0.05,
+  adjust_method = "none"  # Use "BH" for real analysis with more permutations
+)
+
+# View results
+cat("Significant spatial interactions:", nrow(obj@significant_interactions), "\n\n")
+head(obj@significant_interactions[, c("sender", "receiver", "metabolite_name",
+                                       "communication_score", "pvalue_adjusted")])
+```
+
+## Visualize Spatial Communication Network
+
+```{r network, fig.height=9, fig.width=10, fig.cap="**Figure 8: Spatial Communication Network.** Arrows connect cell type centroids, with width proportional to communication strength. Background spots show the tissue context."}
+plotSpatialCommunicationNetwork(
+  obj,
+  metabolite = NULL,  # Aggregate all metabolites
+  top_n = 15,
+  arrow_scale = 1.5,
+  point_size = 6,
+  show_labels = TRUE
+)
+```
+
+### Metabolite-Specific Network
+
+```{r network_met, fig.height=9, fig.width=10, fig.cap="**Figure 9: Lactate Communication Network.** Spatial communication pattern for lactate specifically, showing which cell types communicate via this metabolite."}
+plotSpatialCommunicationNetwork(
+  obj,
+  metabolite = "L-Lactic acid",
+  top_n = 10,
+  arrow_scale = 2,
+  point_size = 6
+)
+```
+
+## Analyze Communication Patterns
+
+### Top Spatial Interactions
+
+```{r top_interactions}
+sig <- obj@significant_interactions
+
+# Top metabolites in spatial communication
+cat("=== Top Metabolite Mediators (Spatial) ===\n")
+met_counts <- table(sig$metabolite_name)
+print(head(sort(met_counts, decreasing = TRUE), 15))
+```
+
+### Cell Type Communication Summary
+
+```{r comm_summary, fig.height=6, fig.width=12}
+par(mfrow = c(1, 2))
+
+# Outgoing (sender) strength
+outgoing <- aggregate(communication_score ~ sender, data = sig, FUN = sum)
+outgoing <- outgoing[order(-outgoing$communication_score), ]
+barplot(outgoing$communication_score, names.arg = outgoing$sender,
+        las = 2, col = "#E64B35", main = "Outgoing Spatial Communication")
+
+# Incoming (receiver) strength
+incoming <- aggregate(communication_score ~ receiver, data = sig, FUN = sum)
+incoming <- incoming[order(-incoming$communication_score), ]
+barplot(incoming$communication_score, names.arg = incoming$receiver,
+        las = 2, col = "#4DBBD5", main = "Incoming Spatial Communication")
+
+par(mfrow = c(1, 1))
+```
+
+## Communication Hotspot Identification
+
+For spot-level analysis, scMetaLink can identify spatial hotspots of communication activity.
+
+```{r hotspots, eval=FALSE}
+# Note: Requires running computeSpatialCommunication with analysis_level="spot"
+obj_spot <- computeSpatialCommunication(
+  obj,
+  method = "knn",
+  k_neighbors = 6,
+  analysis_level = "spot",  # Spot-level analysis
+  n_permutations = 0,       # Skip permutation for speed
+  verbose = TRUE
+)
+
+# Identify hotspots
+hotspots <- identifyCommunicationHotspots(
+  obj_spot,
+  metabolite = "L-Lactic acid",
+  type = "sender",
+  n_hotspots = 5
+)
+
+print(hotspots)
+
+# Visualize hotspots
+plotSpatialHotspots(obj_spot, metabolite = "L-Lactic acid", type = "sender")
+```
+
+## Spatial Distance Distribution
+
+Understand the spatial relationships in your data:
+
+```{r distance_dist, fig.height=5, fig.cap="**Figure 10: Spatial Distance Distribution.** Histogram showing the distribution of pairwise distances between spots. Red lines mark common distance thresholds (100, 200, 500 um)."}
+plotSpatialDistanceDistribution(obj, max_distance = 1000, bins = 50)
+```
+
+## Parameter Guidelines
+
+### Distance Thresholds by Metabolite Type
+
+| Metabolite Category | Typical Range | Recommended sigma |
+|---------------------|---------------|-------------------|
+| ATP, Adenosine | 20-50 um | 20-30 um |
+| Lactate | 50-100 um | 50-80 um |
+| Amino acids | 80-150 um | 80-120 um |
+| Lipid mediators | 100-200 um | 100-150 um |
+
+### Platform-Specific Recommendations
+
+| Platform | Spot Size | Spacing | Recommended Method |
+|----------|-----------|---------|-------------------|
+| 10x Visium | 55 um | ~100 um | knn (k=6) |
+| Slide-seq | 10 um | ~10 um | gaussian (sigma=30) |
+| MERFISH | subcellular | variable | gaussian (sigma=10-20) |
+| Stereo-seq | 0.5 um | variable | knn or gaussian |
+
+## Complete Workflow Example
+
+```{r workflow, eval=FALSE}
+# Complete spatial analysis workflow
+library(scMetaLink)
+
+# 1. Load data
+data(st_expr)
+data(st_meta)
+data(st_scalefactors)
+
+# 2. Create spatial object
+obj <- createScMetaLinkFromSpatial(
+  expression_data = st_expr,
+  spatial_coords = st_meta[, c("x", "y")],
+  cell_meta = st_meta,
+  cell_type_column = "cell_type",
+  scale_factors = st_scalefactors
+)
+
+# 3. Infer production and sensing
+obj <- inferProduction(obj)
+obj <- inferSensing(obj)
+
+# 4. Compute spatial communication
+obj <- computeSpatialCommunication(
+  obj,
+  method = "knn",
+  k_neighbors = 6,
+  n_permutations = 1000  # More permutations for publication
+)
+
+# 5. Filter significant interactions
+obj <- filterSignificantInteractions(obj, adjust_method = "BH")
+
+# 6. Visualize results
+plotSpatialCellTypes(obj)
+plotSpatialCommunicationNetwork(obj)
+
+# 7. Export results
+exportResults(obj, output_dir = "spatial_results")
+```
+
+## Key Differences from Non-Spatial Analysis
+
+| Aspect | Non-Spatial | Spatial |
+|--------|-------------|---------|
+| **Cell relationships** | All pairs equal | Distance-weighted |
+| **Communication score** | $\sqrt{P \times S}$ | $\sqrt{P \times S} \times w(d)$ |
+| **Visualization** | Network/heatmap | Tissue coordinates |
+| **Biological meaning** | Potential communication | Likely communication |
+
+## Limitations and Considerations
+
+1. **Resolution**: Visium spots contain multiple cells; cell type assignments are approximations
+2. **Deconvolution**: Use proper deconvolution methods (RCTD, cell2location) for cell type assignment
+3. **Diffusion assumptions**: Metabolite diffusion is simplified as distance-dependent decay
+4. **3D tissue**: Current analysis is 2D; vertical diffusion is not modeled
+
+## Session Info
+
+```{r session}
+sessionInfo()
+```

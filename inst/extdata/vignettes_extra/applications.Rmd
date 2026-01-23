@@ -1,0 +1,449 @@
+---
+title: "Application Examples"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Application Examples}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 10,
+  fig.height = 7,
+  fig.align = "center",
+  out.width = "100%",
+  dpi = 72,
+  warning = FALSE,
+  message = FALSE
+)
+```
+
+## Overview
+
+This tutorial demonstrates practical applications of scMetaLink using the colorectal cancer (CRC) example dataset. We'll explore:
+
+1. Tumor metabolism and communication
+2. Immune cell metabolic interactions
+3. Stromal-epithelial crosstalk
+4. Pathway-level analysis
+5. Hypothesis generation
+
+```{r load}
+library(scMetaLink)
+library(Matrix)
+
+# Load data and run full analysis
+data(crc_example)
+
+# Check cell types available
+cat("Cell types in CRC dataset:\n")
+print(table(crc_meta$cell_type))
+```
+
+## Application 1: Tumor Metabolic Communication
+
+### Question: How do tumor cells communicate with their microenvironment?
+
+```{r tumor_analysis}
+# Run scMetaLink
+obj <- createScMetaLink(crc_expr, crc_meta, "cell_type")
+obj <- inferProduction(obj, verbose = FALSE)
+obj <- inferSensing(obj, verbose = FALSE)
+obj <- computeCommunication(obj, n_permutations = 100, verbose = FALSE)
+obj <- filterSignificantInteractions(obj, adjust_method = "none") # For demo
+
+# Get significant interactions
+sig <- obj@significant_interactions
+
+# Filter for tumor as sender or receiver
+tumor_types <- c("Tumor Epithelial")
+tumor_sender <- sig[sig$sender %in% tumor_types, ]
+tumor_receiver <- sig[sig$receiver %in% tumor_types, ]
+
+cat("Interactions with tumor cells:\n")
+cat("  As sender:", nrow(tumor_sender), "\n")
+cat("  As receiver:", nrow(tumor_receiver), "\n")
+```
+
+### Tumor Outgoing Signals
+
+```{r tumor_outgoing, fig.height=6, fig.cap="**Figure 1: Tumor-Secreted Metabolites.** Bar plot showing the top metabolites produced by tumor cells and the number of different cell types that sense each metabolite."}
+if (nrow(tumor_sender) > 0) {
+  # What metabolites do tumors secrete?
+  tumor_secreted <- table(tumor_sender$metabolite_name)
+  tumor_secreted <- sort(tumor_secreted, decreasing = TRUE)
+
+  par(mar = c(10, 4, 4, 2))
+  barplot(head(tumor_secreted, 15),
+    las = 2, col = "#E57373",
+    main = "Metabolites Secreted by Tumor Cells",
+    ylab = "Number of Target Cell Types"
+  )
+}
+```
+
+### Tumor Incoming Signals
+
+```{r tumor_incoming, fig.height=6, fig.cap="**Figure 1b: Tumor-Sensed Metabolites.** Top metabolites detected or taken up by tumor cells. These metabolites may provide nutrients or signaling molecules that support tumor growth."}
+if (nrow(tumor_receiver) > 0) {
+  # What metabolites do tumors sense?
+  tumor_sensed <- table(tumor_receiver$metabolite_name)
+  tumor_sensed <- sort(tumor_sensed, decreasing = TRUE)
+
+  par(mar = c(10, 4, 4, 2))
+  barplot(head(tumor_sensed, 15),
+    las = 2, col = "#64B5F6",
+    main = "Metabolites Sensed by Tumor Cells",
+    ylab = "Number of Source Cell Types"
+  )
+}
+```
+
+### The Warburg Effect: Lactate Signaling
+
+Lactate is a hallmark metabolite of the Warburg effect in cancer metabolism. Tumor cells produce excess lactate even in the presence of oxygen.
+
+```{r warburg, fig.height=6, fig.width=10, fig.cap="**Figure 2: Lactate-Mediated Communication (Warburg Effect).** Left: Cell types that produce lactate. Right: Cell types that sense/uptake lactate. Tumor cells are typically major producers, while immune cells are important sensors."}
+# Lactate is a hallmark of tumor metabolism (Warburg effect)
+lactate_sig <- sig[sig$metabolite_name == "L-Lactic acid", ]
+
+if (nrow(lactate_sig) > 0) {
+  cat("Lactate-mediated interactions:", nrow(lactate_sig), "\n\n")
+
+  # Who produces lactate?
+  lactate_prod <- aggregate(communication_score ~ sender, data = lactate_sig, FUN = sum)
+  lactate_prod <- lactate_prod[order(-lactate_prod$communication_score), ]
+
+  # Who senses lactate?
+  lactate_sens <- aggregate(communication_score ~ receiver, data = lactate_sig, FUN = sum)
+  lactate_sens <- lactate_sens[order(-lactate_sens$communication_score), ]
+
+  par(mfrow = c(1, 2))
+  barplot(lactate_prod$communication_score,
+    names.arg = lactate_prod$sender,
+    las = 2, col = "#FF8A65", main = "Lactate Producers"
+  )
+  barplot(lactate_sens$communication_score,
+    names.arg = lactate_sens$receiver,
+    las = 2, col = "#4FC3F7", main = "Lactate Sensors"
+  )
+  par(mfrow = c(1, 1))
+}
+```
+
+**Biological Insight**: Tumor cells often produce high levels of lactate even in the presence of oxygen (Warburg effect). This lactate can modulate immune cell function and promote tumor progression.
+
+---
+
+## Application 2: Immune Cell Metabolic Interactions
+
+### Question: How do immune cells communicate via metabolites?
+
+```{r immune_analysis}
+# Define immune cell types
+immune_types <- c("T", "B", "Plasma", "TAM", "Monocyte", "Normal Macrophage", "Mast")
+
+# Filter for immune-immune interactions
+immune_sig <- sig[sig$sender %in% immune_types & sig$receiver %in% immune_types, ]
+cat("Immune-immune interactions:", nrow(immune_sig), "\n")
+```
+
+### Immune Communication Network
+
+```{r immune_network, fig.height=8, fig.cap="**Figure 3: Immune Cell Communication Network.** Heatmap showing metabolite-mediated communication strength between immune cell types. T cells, macrophages, and B cells often form key communication hubs."}
+if (nrow(immune_sig) > 0) {
+  # Build communication matrix for immune cells
+  immune_cells <- unique(c(immune_sig$sender, immune_sig$receiver))
+  immune_mat <- matrix(0, length(immune_cells), length(immune_cells),
+    dimnames = list(immune_cells, immune_cells)
+  )
+
+  for (i in 1:nrow(immune_sig)) {
+    immune_mat[immune_sig$sender[i], immune_sig$receiver[i]] <-
+      immune_mat[immune_sig$sender[i], immune_sig$receiver[i]] +
+      immune_sig$communication_score[i]
+  }
+
+  heatmap(immune_mat,
+    col = hcl.colors(50, "YlOrRd"), scale = "none",
+    main = "Immune Cell Metabolic Communication"
+  )
+}
+```
+
+### Macrophage Polarization Metabolites
+
+```{r macrophage, fig.height=5, fig.width=10}
+# TAM (Tumor-Associated Macrophages) vs Normal Macrophages
+mac_types <- c("TAM", "Normal Macrophage")
+mac_sig <- sig[sig$sender %in% mac_types | sig$receiver %in% mac_types, ]
+
+if (nrow(mac_sig) > 0) {
+  # Compare metabolites
+  tam_mets <- mac_sig$metabolite_name[mac_sig$sender == "TAM" | mac_sig$receiver == "TAM"]
+  normal_mac_mets <- mac_sig$metabolite_name[mac_sig$sender == "Normal Macrophage" |
+    mac_sig$receiver == "Normal Macrophage"]
+
+  cat("TAM-associated metabolites:", length(unique(tam_mets)), "\n")
+  cat("Normal Macrophage-associated metabolites:", length(unique(normal_mac_mets)), "\n")
+
+  # Unique to each
+  tam_unique <- setdiff(unique(tam_mets), unique(normal_mac_mets))
+  normal_unique <- setdiff(unique(normal_mac_mets), unique(tam_mets))
+
+  cat("\nUnique to TAM:\n")
+  print(head(tam_unique, 10))
+  cat("\nUnique to Normal Macrophage:\n")
+  print(head(normal_unique, 10))
+}
+```
+
+---
+
+## Application 3: Stromal-Epithelial Crosstalk
+
+### Question: How do CAFs communicate with tumor and normal epithelium?
+
+```{r stromal_analysis}
+# Define cell type groups
+stromal <- c("CAF", "Normal Fibroblast", "Pericyte", "SMC", "Endothelial")
+epithelial <- c("Tumor Epithelial", "Normal Epithelial")
+
+# Stromal to epithelial
+stroma_to_epi <- sig[sig$sender %in% stromal & sig$receiver %in% epithelial, ]
+# Epithelial to stromal
+epi_to_stroma <- sig[sig$sender %in% epithelial & sig$receiver %in% stromal, ]
+
+cat("Stromal -> Epithelial:", nrow(stroma_to_epi), "interactions\n")
+cat("Epithelial -> Stromal:", nrow(epi_to_stroma), "interactions\n")
+```
+
+### CAF-Tumor Communication
+
+```{r caf_tumor, fig.height=6}
+caf_tumor <- sig[(sig$sender == "CAF" & sig$receiver == "Tumor Epithelial") |
+  (sig$sender == "Tumor Epithelial" & sig$receiver == "CAF"), ]
+
+if (nrow(caf_tumor) > 0) {
+  cat("CAF-Tumor interactions:", nrow(caf_tumor), "\n\n")
+
+  # Split by direction
+  caf_to_tumor <- caf_tumor[caf_tumor$sender == "CAF", ]
+  tumor_to_caf <- caf_tumor[caf_tumor$sender == "Tumor Epithelial", ]
+
+  par(mfrow = c(1, 2))
+
+  if (nrow(caf_to_tumor) > 0) {
+    caf_mets <- table(caf_to_tumor$metabolite_name)
+    barplot(sort(caf_mets, decreasing = TRUE),
+      las = 2, col = "#A5D6A7",
+      main = "CAF -> Tumor", cex.names = 0.7
+    )
+  }
+
+  if (nrow(tumor_to_caf) > 0) {
+    tumor_mets <- table(tumor_to_caf$metabolite_name)
+    barplot(sort(tumor_mets, decreasing = TRUE),
+      las = 2, col = "#EF9A9A",
+      main = "Tumor -> CAF", cex.names = 0.7
+    )
+  }
+
+  par(mfrow = c(1, 1))
+}
+```
+
+**Biological Insight**: Cancer-Associated Fibroblasts (CAFs) can provide metabolic support to tumor cells and receive metabolic signals that promote their activation.
+
+---
+
+## Application 4: Pathway-Level Analysis
+
+### Question: Which metabolic pathways are most active in communication?
+
+```{r pathway_prep}
+# Aggregate by pathway
+obj <- aggregateByPathway(obj)
+
+# View pathway-level results
+pathway_data <- obj@pathway_aggregated
+
+if (!is.null(pathway_data) && nrow(pathway_data) > 0) {
+  cat("Pathway analysis available\n")
+  cat("Number of pathway entries:", nrow(pathway_data), "\n")
+  cat("Unique pathways:", length(unique(pathway_data$pathway)), "\n")
+}
+```
+
+### Top Active Pathways
+
+```{r pathway_analysis, fig.height=7}
+# Get pathway enrichment
+pathway_enrichment <- enrichPathways(obj)
+
+if (!is.null(pathway_enrichment) && nrow(pathway_enrichment) > 0) {
+  # Top enriched pathways
+  top_pathways <- head(pathway_enrichment[order(pathway_enrichment$pvalue), ], 15)
+
+  par(mar = c(4, 15, 4, 2))
+  barplot(-log10(top_pathways$pvalue),
+    horiz = TRUE,
+    names.arg = top_pathways$pathway, las = 1,
+    col = "#9575CD", main = "Enriched Metabolic Pathways",
+    xlab = "-log10(p-value)"
+  )
+  abline(v = -log10(0.05), lty = 2, col = "red")
+}
+```
+
+### Specific Pathway Focus: Amino Acid Metabolism
+
+```{r amino_acid_pathway, fig.height=6}
+# Filter for amino acid-related metabolites
+amino_acids <- c(
+  "L-Glutamic acid", "L-Glutamine", "L-Alanine", "Glycine",
+  "L-Serine", "L-Proline", "L-Aspartic acid", "L-Arginine",
+  "L-Leucine", "L-Isoleucine", "L-Valine", "L-Tryptophan"
+)
+
+aa_sig <- sig[sig$metabolite_name %in% amino_acids, ]
+cat("Amino acid-mediated interactions:", nrow(aa_sig), "\n")
+
+if (nrow(aa_sig) > 0) {
+  # Which amino acids are most involved?
+  aa_counts <- table(aa_sig$metabolite_name)
+  aa_counts <- sort(aa_counts, decreasing = TRUE)
+
+  barplot(aa_counts,
+    las = 2, col = "#FFB74D",
+    main = "Amino Acid Communication",
+    ylab = "Number of Interactions"
+  )
+}
+```
+
+---
+
+## Application 5: Hypothesis Generation
+
+### Identifying Novel Communication Axes
+
+```{r novel_axes}
+# Find unexpected interactions (high score, unique combinations)
+sig_sorted <- sig[order(-sig$communication_score), ]
+
+cat("=== Top Novel Communication Axes ===\n\n")
+
+# Show top interactions with context
+for (i in 1:min(10, nrow(sig_sorted))) {
+  row <- sig_sorted[i, ]
+  cat(sprintf("%d. %s -> %s via %s\n", i, row$sender, row$receiver, row$metabolite_name))
+  cat(sprintf(
+    "   Score: %.3f, Adjusted p-value: %.4f\n\n",
+    row$communication_score, row$pvalue_adjusted
+  ))
+}
+```
+
+### Autocrine Signaling
+
+```{r autocrine, fig.height=5}
+# Cells signaling to themselves
+autocrine <- sig[sig$sender == sig$receiver, ]
+cat("Autocrine interactions:", nrow(autocrine), "\n\n")
+
+if (nrow(autocrine) > 0) {
+  # Which cell types have autocrine signaling?
+  auto_counts <- table(autocrine$sender)
+
+  barplot(sort(auto_counts, decreasing = TRUE),
+    las = 2, col = "#81D4FA",
+    main = "Autocrine Metabolite Signaling",
+    ylab = "Number of Autocrine Interactions"
+  )
+
+  # What metabolites are involved in autocrine signaling?
+  cat("\nTop autocrine metabolites:\n")
+  print(head(sort(table(autocrine$metabolite_name), decreasing = TRUE), 10))
+}
+```
+
+### Hub Cell Types
+
+```{r hub_analysis, fig.height=6, fig.width=10}
+# Which cell types are communication hubs?
+cell_types <- unique(c(sig$sender, sig$receiver))
+
+hub_stats <- data.frame(
+  cell_type = cell_types,
+  out_degree = sapply(cell_types, function(ct) length(unique(sig$receiver[sig$sender == ct]))),
+  in_degree = sapply(cell_types, function(ct) length(unique(sig$sender[sig$receiver == ct]))),
+  out_strength = sapply(cell_types, function(ct) sum(sig$communication_score[sig$sender == ct])),
+  in_strength = sapply(cell_types, function(ct) sum(sig$communication_score[sig$receiver == ct]))
+)
+hub_stats$total_degree <- hub_stats$out_degree + hub_stats$in_degree
+hub_stats <- hub_stats[order(-hub_stats$total_degree), ]
+
+cat("=== Communication Hub Analysis ===\n")
+print(hub_stats)
+
+# Visualize
+par(mfrow = c(1, 2))
+plot(hub_stats$out_strength, hub_stats$in_strength,
+  pch = 19, cex = 2, col = "#1976D2",
+  xlab = "Outgoing Strength", ylab = "Incoming Strength",
+  main = "Cell Type Communication Profile"
+)
+text(hub_stats$out_strength, hub_stats$in_strength,
+  hub_stats$cell_type,
+  pos = 3, cex = 0.7
+)
+abline(0, 1, lty = 2, col = "gray")
+
+# Degree distribution
+barplot(hub_stats$total_degree,
+  names.arg = hub_stats$cell_type,
+  las = 2, col = "#4CAF50", main = "Communication Degree"
+)
+par(mfrow = c(1, 1))
+```
+
+---
+
+## Summary: Key Findings from CRC Analysis
+
+```{r summary}
+cat("=== Analysis Summary ===\n\n")
+cat("Dataset: Colorectal Cancer Single-Cell Data\n")
+cat("Cells:", ncol(crc_expr), "\n")
+cat("Cell Types:", length(unique(crc_meta$cell_type)), "\n")
+cat("Significant Interactions:", nrow(sig), "\n")
+cat("Metabolites Involved:", length(unique(sig$metabolite_name)), "\n\n")
+
+cat("Key Observations:\n")
+cat("1. Tumor cells are active metabolic communicators\n")
+cat("2. Lactate (Warburg effect) mediates tumor-stroma crosstalk\n")
+cat("3. Immune cells form a metabolic communication network\n")
+cat("4. CAF-tumor axis shows bidirectional signaling\n")
+cat("5. Amino acid metabolism is highly connected\n")
+```
+
+## Export Results for Further Analysis
+
+```{r export, eval=FALSE}
+# Export all results
+exportResults(obj, output_dir = "scMetaLink_CRC_results")
+
+# Export specific tables
+write.csv(sig, "significant_interactions.csv", row.names = FALSE)
+write.csv(hub_stats, "cell_type_hub_analysis.csv", row.names = FALSE)
+```
+
+## Session Info
+
+```{r session}
+sessionInfo()
+```
