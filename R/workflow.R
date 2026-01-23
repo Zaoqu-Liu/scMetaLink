@@ -174,8 +174,8 @@ runScMetaLinkSeurat <- function(seurat_obj,
 #' @export
 #'
 #' @examples
-#' \donttest{
-#' # Compare tumor vs normal
+#' \dontrun{
+#' # Compare tumor vs normal (requires two scMetaLink objects)
 #' diff <- compareCommunication(tumor_obj, normal_obj,
 #'   condition_names = c("Tumor", "Normal")
 #' )
