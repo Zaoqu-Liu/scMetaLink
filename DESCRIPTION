@@ -1,6 +1,6 @@
 Package: scMetaLink
 Type: Package
-Title: Single-Cell Metabolite-Mediated Cell Communication Analysis
+Title: 'scMetaLink' - Single-Cell Metabolite-Mediated Cell Communication Analysis
 Version: 1.0.0
 Date: 2026-01-21
 Authors@R: person("Zaoqu", "Liu", email = "liuzaoqu@163.com", role = c("aut", "cre"), 
@@ -8,13 +8,14 @@ Authors@R: person("Zaoqu", "Liu", email = "liuzaoqu@163.com", role = c("aut", "c
 Author: Zaoqu Liu [aut, cre] (<https://orcid.org/0000-0002-0452-742X>)
 Maintainer: Zaoqu Liu <liuzaoqu@163.com>
 Description: A comprehensive framework for inferring metabolite-mediated cell-cell 
-    communication from single-cell transcriptomic data. scMetaLink integrates 
+    communication from single-cell transcriptomic data. 'scMetaLink' integrates 
     metabolite production potential via enzyme expression, metabolite sensing 
     capability via receptor and transporter expression, and secretion potential 
     to construct intercellular metabolic communication networks. The package 
-    leverages the MetalinksDB database containing 41894 metabolite-protein 
-    interactions covering 1128 metabolites and 4374 proteins. Key features 
-    include probabilistic inference of metabolite production, receptor-mediated 
+    leverages the 'MetalinksDB' database containing 41894 metabolite-protein 
+    interactions covering 1128 metabolites and 4374 proteins as described in 
+    Farr et al. (2024) <doi:10.1093/nar/gkae001>. Key features include 
+    probabilistic inference of metabolite production, receptor-mediated 
     metabolite sensing quantification, permutation-based statistical testing 
     with multiple hypothesis correction, pathway-level aggregation analysis, 
     and publication-ready visualization.
