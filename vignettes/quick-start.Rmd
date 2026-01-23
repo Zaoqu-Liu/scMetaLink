@@ -206,11 +206,14 @@ exportResults(obj, output_dir = "scMetaLink_results")
 ## Next Steps
 
 - **[Theory & Methods](theory.html)**: Understand the mathematical framework
-- **[Production & Sensing](production-sensing.html)**: Deep dive into inference
-- **[Communication Analysis](communication.html)**: Advanced communication analysis
-- **[Spatial Analysis](spatial-analysis.html)**: Spatial transcriptomics support
-- **[Visualization](visualization.html)**: Complete visualization guide
-- **[Applications](applications.html)**: Real-world analysis examples
+
+For more advanced tutorials, visit our website:
+
+- **[Production & Sensing](https://Zaoqu-Liu.github.io/scMetaLink/articles/production-sensing.html)**: Deep dive into inference
+- **[Communication Analysis](https://Zaoqu-Liu.github.io/scMetaLink/articles/communication.html)**: Advanced communication analysis
+- **[Spatial Analysis](https://Zaoqu-Liu.github.io/scMetaLink/articles/spatial-analysis.html)**: Spatial transcriptomics support
+- **[Visualization](https://Zaoqu-Liu.github.io/scMetaLink/articles/visualization.html)**: Complete visualization guide
+- **[Applications](https://Zaoqu-Liu.github.io/scMetaLink/articles/applications.html)**: Real-world analysis examples
 
 ## Session Info
 
