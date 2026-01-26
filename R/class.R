@@ -189,6 +189,80 @@ createScMetaLinkFromSeurat <- function(seurat_obj,
   )
 }
 
+#' @title Create scMetaLink from SingleCellExperiment
+#' @description Initialize a scMetaLink object from a SingleCellExperiment object
+#'
+#' @param sce A SingleCellExperiment object
+#' @param cell_type_column Character. Column name in colData for cell type annotations
+#' @param assay_name Character. Name of assay to use (default: "logcounts")
+#' @param min_cells Integer. Minimum cells per cell type
+#'
+#' @return A scMetaLink object
+#' @export
+#'
+#' @examples
+#' \donttest{
+#' if (requireNamespace("SingleCellExperiment", quietly = TRUE)) {
+#'   library(SingleCellExperiment)
+#'   # Create example SCE
+#'   counts <- matrix(rpois(1000, 5), nrow = 100, ncol = 10)
+#'   rownames(counts) <- paste0("Gene", 1:100)
+#'   colnames(counts) <- paste0("Cell", 1:10)
+#'   sce <- SingleCellExperiment(assays = list(counts = counts, logcounts = log1p(counts)))
+#'   colData(sce)$cell_type <- rep(c("TypeA", "TypeB"), each = 5)
+#'   # obj <- createScMetaLinkFromSCE(sce, "cell_type")
+#' }
+#' }
+createScMetaLinkFromSCE <- function(sce,
+                                    cell_type_column = "cell_type",
+                                    assay_name = "logcounts",
+                                    min_cells = 10) {
+  if (!requireNamespace("SingleCellExperiment", quietly = TRUE)) {
+    stop("Package 'SingleCellExperiment' is required. Please install it with:\n",
+         "  BiocManager::install('SingleCellExperiment')")
+  }
+
+  if (!requireNamespace("SummarizedExperiment", quietly = TRUE)) {
+    stop("Package 'SummarizedExperiment' is required. Please install it with:\n",
+         "  BiocManager::install('SummarizedExperiment')")
+  }
+
+  # Check if SCE object
+
+  if (!inherits(sce, "SingleCellExperiment")) {
+    stop("sce must be a SingleCellExperiment object")
+  }
+
+  # Check assay exists
+  if (!assay_name %in% SummarizedExperiment::assayNames(sce)) {
+    available <- paste(SummarizedExperiment::assayNames(sce), collapse = ", ")
+    stop(sprintf("Assay '%s' not found. Available assays: %s", assay_name, available))
+  }
+
+  # Check cell type column exists
+  col_data <- SummarizedExperiment::colData(sce)
+  if (!cell_type_column %in% colnames(col_data)) {
+    stop(sprintf("Column '%s' not found in colData", cell_type_column))
+  }
+
+  # Extract expression data
+  expr_data <- SummarizedExperiment::assay(sce, assay_name)
+
+  # Extract cell metadata
+  cell_meta <- as.data.frame(col_data)
+  rownames(cell_meta) <- colnames(sce)
+
+  message("Converting SingleCellExperiment to scMetaLink object...")
+
+  # Create scMetaLink object
+  createScMetaLink(
+    expression_data = expr_data,
+    cell_meta = cell_meta,
+    cell_type_column = cell_type_column,
+    min_cells = min_cells
+  )
+}
+
 #' @title Show Method for scMetaLink
 #' @param object scMetaLink object
 #' @rdname scMetaLink-class

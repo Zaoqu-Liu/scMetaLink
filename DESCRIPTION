@@ -1,8 +1,8 @@
 Package: scMetaLink
 Type: Package
 Title: Single-Cell Metabolite-Mediated Cell Communication Analysis
-Version: 0.99.0
-Date: 2026-01-21
+Version: 0.99.1
+Date: 2026-01-26
 Authors@R: person("Zaoqu", "Liu", email = "liuzaoqu@163.com", role = c("aut", "cre"), 
                   comment = c(ORCID = "0000-0002-0452-742X"))
 Author: Zaoqu Liu [aut, cre] (<https://orcid.org/0000-0002-0452-742X>)

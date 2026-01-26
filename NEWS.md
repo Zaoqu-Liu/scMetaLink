@@ -1,3 +1,11 @@
+# scMetaLink 0.99.1
+
+## Bug Fixes and Improvements
+
+* Added `createScMetaLinkFromSCE()` function for SingleCellExperiment support
+* Cleaned repository structure for Bioconductor submission
+* Reduced package size by optimizing vignettes
+
 # scMetaLink 0.99.0
 
 ## New Features
