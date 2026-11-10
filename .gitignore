@@ -22,3 +22,7 @@ docs/
 # Local development folders
 benchmark/
 data-raw/
+
+# Built package tarballs
+*.tar.gz
+*.tgz
