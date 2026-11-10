@@ -25,3 +25,5 @@
 ^universe-config$
 ^inst/extdata/vignettes_extra$
 ^\.cursorrules$
+^.*\.tar\.gz$
+^.*\.tgz$
